@@ -7,6 +7,7 @@ const EditHomeItems = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [categories, setCategories] = useState([]);
     const [formData, setFormData] = useState({
         title: '',
         price: '',
@@ -19,27 +20,39 @@ const EditHomeItems = () => {
     const [isSaving, setIsSaving] = useState(false);
 
     useEffect(() => {
-        const fetchItem = async () => {
+        const fetchData = async () => {
             try {
-                const response = await fetch(`https://mahaspice.desoftimp.com/ms3/getHomeItemsById.php?id=${id}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                if (data.success) {
-                    setFormData(data.item);
-                    setCurrentImage(`https://mahaspice.desoftimp.com/ms3/uploads/homeCategory/${data.item.image_path}`);
-                } else {
-                    throw new Error(data.message || 'Failed to fetch item');
+                setLoading(true);
+                const itemResponse = await fetch(`https://mahaspice.desoftimp.com/ms3/getHomeItemsById.php?id=${id}`);
+                const itemData = await itemResponse.json();
+
+                const categoryResponse = await fetch('https://mahaspice.desoftimp.com/ms3/getHomeCategory.php');
+                const categoryData = await categoryResponse.json();
+
+                if (itemData.success && categoryData.success) {
+                    const item = itemData.item;
+                    setFormData({
+                        title: item.title || '',
+                        price: item.price || '',
+                        category_type: item.category_type || '',
+                        veg_non: item.veg_non || 'veg',
+                        image_path: item.image_path || ''
+                    });
+
+                    setCategories(categoryData.categories || []);
+
+                    if (item.image_path) {
+                        setCurrentImage(`https://mahaspice.desoftimp.com/ms3/uploads/homeCategory/${item.image_path}`);
+                    }
                 }
             } catch (error) {
-                setError(error.message);
+                setError('Failed to load data');
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchItem();
+        fetchData();
     }, [id]);
 
     const handleInputChange = (e) => {
@@ -54,6 +67,8 @@ const EditHomeItems = () => {
         const file = e.target.files[0];
         if (file) {
             setNewImage(file);
+            const previewUrl = URL.createObjectURL(file);
+            setCurrentImage(previewUrl);
         }
     };
 
@@ -67,6 +82,7 @@ const EditHomeItems = () => {
                 formDataToSend.append(key, formData[key]);
             });
             formDataToSend.append('id', id);
+            
             if (newImage) {
                 formDataToSend.append('image', newImage);
             }
@@ -78,19 +94,24 @@ const EditHomeItems = () => {
 
             const data = await response.json();
             if (data.success) {
-                navigate('/'); // Or wherever your display page is
+                navigate('/');
             } else {
-                throw new Error(data.message || 'Failed to update item');
+                setError(data.message || 'Failed to update item');
             }
         } catch (error) {
-            setError(error.message);
+            setError('Failed to update item');
         } finally {
             setIsSaving(false);
         }
     };
 
-    if (loading) return <div className="text-center p-8">Loading...</div>;
-    if (error) return <div className="text-red-500 text-center p-8">{error}</div>;
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <Loader className="animate-spin w-8 h-8 text-blue-600" />
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 p-6">
@@ -100,14 +121,19 @@ const EditHomeItems = () => {
                         onClick={() => navigate(-1)}
                         className="mr-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
                     >
-                        <ArrowLeft size={24} />
+                        <ArrowLeft className="w-6 h-6" />
                     </button>
                     <h1 className="text-2xl font-bold text-gray-800">Edit Menu Item</h1>
                 </div>
 
-                <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-lg p-6">
-                    <div className="space-y-6">
-                        {/* Title Input */}
+                {error && (
+                    <div className="mb-6 bg-red-50 text-red-600 p-4 rounded-lg">
+                        {error}
+                    </div>
+                )}
+
+                <div className="bg-white rounded-xl shadow-lg p-6">
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Title
@@ -117,12 +143,11 @@ const EditHomeItems = () => {
                                 name="title"
                                 value={formData.title}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 required
                             />
                         </div>
 
-                        {/* Price Input */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Price (₹)
@@ -132,27 +157,31 @@ const EditHomeItems = () => {
                                 name="price"
                                 value={formData.price}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 required
                             />
                         </div>
 
-                        {/* Category Input */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Category
                             </label>
-                            <input
-                                type="text"
+                            <select
                                 name="category_type"
                                 value={formData.category_type}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                                 required
-                            />
+                            >
+                                <option value="">Select a category</option>
+                                {categories.map((category) => (
+                                    <option key={category.id} value={category.category_type}>
+                                        {category.category_type}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
-                        {/* Veg/Non-veg Selection */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Type
@@ -161,14 +190,13 @@ const EditHomeItems = () => {
                                 name="veg_non"
                                 value={formData.veg_non}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                             >
                                 <option value="veg">Veg</option>
                                 <option value="non-veg">Non-veg</option>
                             </select>
                         </div>
 
-                        {/* Image Upload */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Image
@@ -184,15 +212,14 @@ const EditHomeItems = () => {
                                 type="file"
                                 accept="image/*"
                                 onChange={handleImageChange}
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
                         </div>
 
-                        {/* Submit Button */}
                         <button
                             type="submit"
                             disabled={isSaving}
-                            className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-400"
+                            className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-400 transition-colors"
                         >
                             {isSaving ? (
                                 <>
@@ -201,13 +228,13 @@ const EditHomeItems = () => {
                                 </>
                             ) : (
                                 <>
-                                    <Save className="mr-2" size={20} />
+                                    <Save className="mr-2 w-5 h-5" />
                                     Save Changes
                                 </>
                             )}
                         </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     );
