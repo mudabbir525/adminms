@@ -131,7 +131,7 @@ const DisplayHomeItems = () => {
                             Menu Items
                         </h2>
                         <button
-                            onClick={() => window.location.href = '/add-home-items'}
+                            onClick={() => window.location.href = '/addhi'}
                             className="flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
                         >
                             <Plus size={20} />
