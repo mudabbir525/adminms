@@ -35,6 +35,7 @@ import EditHomeCategories from "./Admin/EditHomeCategory";
 import AddHomeItems from "./Admin/AddHomeItem";
 import DisplayHomeItems from "./Admin/DisplayHomeItems";
 import EditHomeItems from "./Admin/EditHomeItems";
+import OrderManagement from "./Admin/MealOrderManagement";
 
 function App() {
   const location = useLocation();
@@ -99,6 +100,8 @@ function App() {
             <Route path="/addhi" element={<AddHomeItems />} />
             <Route path="/dishi" element={<DisplayHomeItems />} />
             <Route path="/edit-home-items/:id" element={<EditHomeItems />} />
+            <Route path="/mealorders" element={<OrderManagement />} />
+
 
           </Routes>
         </main>

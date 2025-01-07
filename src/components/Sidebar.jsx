@@ -215,7 +215,7 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
       label: 'Bookings',
       hasDropdown: true,
       dropdownItems: [
-        { label: 'Orders', path: '/oders', icon: <UserIcon className="w-4 h-4" /> },
+        { label: 'Orders', path: '/mealorders', icon: <UserIcon className="w-4 h-4" /> },
         { label: 'Intrests', path: '/users', icon: <UserIcon className="w-4 h-4" /> },
         { label: 'Permissions', path: '/users/permissions', icon: <UserIcon className="w-4 h-4" /> }
       ]
