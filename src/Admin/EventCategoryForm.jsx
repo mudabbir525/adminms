@@ -1,26 +1,53 @@
-import React, { useState } from 'react';
-import { Plus, Upload, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Plus, Upload, X, ChevronDown } from 'lucide-react';
+
+
 
 const EventCategoryForm = () => {
   const [eventName, setEventName] = useState('');
   const [subCategoryCount, setSubCategoryCount] = useState(0);
   const [subCategories, setSubCategories] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [uniqueEventNames, setUniqueEventNames] = useState([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const handleSubCategoryCountChange = (count) => {
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+  
+  useEffect(() => {
+    const unique = [...new Set(events.map(event => event.event_name))];
+    setUniqueEventNames(unique);
+  }, [events]);
+  
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch('https://mahaspice.desoftimp.com/ms3/get_events.php');
+      const data = await response.json();
+      setEvents(data);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
+  };
+
+  const handleEventNameSelect = (name) => {
+    setEventName(name);
+    setIsDropdownOpen(false);
+  };
+
+const handleSubCategoryCountChange = (count) => {
     setSubCategoryCount(count);
-    
-    // Create an array of sub-category objects with independent file uploads
     const newSubCategories = Array.from({ length: count }, () => ({
       eventCategory: '',
       eventVegPrice: '',
       eventNonvegPrice: '',
       eventInfo: '',
-      eventFiles: [], // Array to store multiple files
-      eventFilesPreviews: [] // Array to store file previews
+      eventFiles: [],
+      eventFilesPreviews: []
     }));
-    
     setSubCategories(newSubCategories);
   };
+
 
   const handleSubCategoryChange = (index, field, value) => {
     const updatedSubCategories = [...subCategories];
@@ -101,6 +128,8 @@ const EventCategoryForm = () => {
     }
   };
 
+  
+
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg mt-5">
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -109,16 +138,44 @@ const EventCategoryForm = () => {
           <label htmlFor="eventName" className="block text-gray-700 font-bold mb-2">
             Event Name
           </label>
-          <input
-            type="text"
-            id="eventName"
-            value={eventName}
-            onChange={(e) => setEventName(e.target.value)}
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter Event Name"
-            required
-          />
+          <div className="relative">
+            <div className="flex">
+              <input
+                type="text"
+                id="eventName"
+                value={eventName}
+                onChange={(e) => setEventName(e.target.value)}
+                className="w-full px-3 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter Event Name"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="px-3 py-2 bg-gray-100 border border-l-0 rounded-r-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <ChevronDown className="h-5 w-5 text-gray-500" />
+              </button>
+            </div>
+            
+            {/* Dropdown Menu */}
+            {isDropdownOpen && uniqueEventNames.length > 0 && (
+              <div className="absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                {uniqueEventNames.map((name, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    className="w-full px-4 py-2 text-left hover:bg-gray-100 focus:outline-none"
+                    onClick={() => handleEventNameSelect(name)}
+                  >
+                    {name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
+
 
         {/* Sub Category Count Input */}
         <div className="mb-4">
