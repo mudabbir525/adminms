@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Clock, Zap } from 'lucide-react';
 
 const EditCPTypeModal = ({ cpType, onClose, onUpdate = () => {} }) => {
     const [formData, setFormData] = useState({
@@ -7,6 +8,8 @@ const EditCPTypeModal = ({ cpType, onClose, onUpdate = () => {} }) => {
         cp_name: '',
         cp_type: '',
         veg_non_veg: '',
+        meal_time: '',
+        is_superfast: '',
         description: '',
         price: '',
         image: null
@@ -22,6 +25,8 @@ const EditCPTypeModal = ({ cpType, onClose, onUpdate = () => {} }) => {
                 cp_name: cpType.cp_name || '',
                 cp_type: cpType.cp_type || '',
                 veg_non_veg: cpType.veg_non_veg || '',
+                meal_time: cpType.meal_time || '',
+                is_superfast: cpType.is_superfast || '',
                 description: cpType.description || '',
                 price: cpType.price || '',
                 image: null
@@ -67,6 +72,8 @@ const EditCPTypeModal = ({ cpType, onClose, onUpdate = () => {} }) => {
             formDataToSubmit.append('cp_name', formData.cp_name);
             formDataToSubmit.append('cp_type', formData.cp_type);
             formDataToSubmit.append('veg_non_veg', formData.veg_non_veg);
+            formDataToSubmit.append('meal_time', formData.meal_time);
+            formDataToSubmit.append('is_superfast', formData.is_superfast);
             formDataToSubmit.append('description', formData.description || '');
             formDataToSubmit.append('price', formData.price);
             
@@ -85,9 +92,7 @@ const EditCPTypeModal = ({ cpType, onClose, onUpdate = () => {} }) => {
                 }
             );
     
-            // Call the update callback to refresh the list
-            // Added safe invocation with optional chaining
-            onUpdate && onUpdate();
+            onUpdate?.();
             onClose();
         } catch (err) {
             setError(err.response?.data?.error || 'Failed to update CP Type');
@@ -97,7 +102,7 @@ const EditCPTypeModal = ({ cpType, onClose, onUpdate = () => {} }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
                 <h2 className="text-2xl font-bold mb-4">Edit CP Type</h2>
                 
                 {error && (
@@ -106,8 +111,8 @@ const EditCPTypeModal = ({ cpType, onClose, onUpdate = () => {} }) => {
                     </div>
                 )}
                 
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
                         <label className="block text-gray-700 mb-2">CP Name</label>
                         <input
                             type="text"
@@ -119,7 +124,7 @@ const EditCPTypeModal = ({ cpType, onClose, onUpdate = () => {} }) => {
                         />
                     </div>
 
-                    <div className="mb-4">
+                    <div>
                         <label className="block text-gray-700 mb-2">Type</label>
                         <input
                             type="text"
@@ -131,7 +136,7 @@ const EditCPTypeModal = ({ cpType, onClose, onUpdate = () => {} }) => {
                         />
                     </div>
 
-                    <div className="mb-4">
+                    <div>
                         <label className="block text-gray-700 mb-2">Veg/Non-Veg</label>
                         <select
                             name="veg_non_veg"
@@ -146,17 +151,59 @@ const EditCPTypeModal = ({ cpType, onClose, onUpdate = () => {} }) => {
                         </select>
                     </div>
 
-                    <div className="mb-4">
+                    <div>
+                        <label className="block text-gray-700 mb-2">
+                            <span className="flex items-center gap-2">
+                                <Clock className="h-4 w-4 text-gray-500" />
+                                Meal Time
+                            </span>
+                        </label>
+                        <select
+                            name="meal_time"
+                            value={formData.meal_time}
+                            onChange={handleInputChange}
+                            className="w-full px-3 py-2 border rounded-md"
+                            required
+                        >
+                            <option value="">Select Meal Time</option>
+                            <option value="Breakfast">Breakfast</option>
+                            <option value="Lunch">Lunch</option>
+                            <option value="Dinner">Dinner</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label className="block text-gray-700 mb-2">
+                            <span className="flex items-center gap-2">
+                                <Zap className="h-4 w-4 text-gray-500" />
+                                Superfast Delivery
+                            </span>
+                        </label>
+                        <select
+                            name="is_superfast"
+                            value={formData.is_superfast}
+                            onChange={handleInputChange}
+                            className="w-full px-3 py-2 border rounded-md"
+                            required
+                        >
+                            <option value="">Select Speed</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+
+                    <div>
                         <label className="block text-gray-700 mb-2">Description</label>
                         <textarea
                             name="description"
                             value={formData.description}
                             onChange={handleInputChange}
                             className="w-full px-3 py-2 border rounded-md"
+                            rows="3"
                         />
                     </div>
 
-                    <div className="mb-4">
+                    <div>
                         <label className="block text-gray-700 mb-2">Price</label>
                         <input
                             type="number"
@@ -168,7 +215,7 @@ const EditCPTypeModal = ({ cpType, onClose, onUpdate = () => {} }) => {
                         />
                     </div>
 
-                    {/* <div className="mb-4">
+                    <div>
                         <label className="block text-gray-700 mb-2">Image</label>
                         <input
                             type="file"
@@ -184,19 +231,19 @@ const EditCPTypeModal = ({ cpType, onClose, onUpdate = () => {} }) => {
                                 className="mt-2 w-32 h-32 object-cover rounded-md"
                             />
                         )}
-                    </div> */}
+                    </div>
 
-                    <div className="flex justify-end space-x-4">
+                    <div className="flex justify-end space-x-4 pt-4">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="bg-gray-200 hover:bg-gray-300 text-gray-900 py-2 px-4 rounded"
+                            className="bg-gray-200 hover:bg-gray-300 text-gray-900 py-2 px-4 rounded transition-colors"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+                            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded transition-colors"
                         >
                             Update
                         </button>

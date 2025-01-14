@@ -8,7 +8,9 @@ import {
   Salad,
   Drumstick,
   Utensils,
-  ChevronDown 
+  ChevronDown,
+  Clock,
+  Zap
 } from "lucide-react";
 import EditCPTypeModal from "./EditCpTypeModal";
 
@@ -22,6 +24,8 @@ const CPTypesDisplay = () => {
   // Filter states
   const [selectedVegFilter, setSelectedVegFilter] = useState({ label: "All Items", value: "all" });
   const [selectedCPFilter, setSelectedCPFilter] = useState({ label: "All CPs", value: "all" });
+  const [selectedMealFilter, setSelectedMealFilter] = useState({ label: "All Meals", value: "all" });
+  const [selectedSpeedFilter, setSelectedSpeedFilter] = useState({ label: "All Speed", value: "all" });
 
   useEffect(() => {
     fetchCPTypes();
@@ -29,7 +33,7 @@ const CPTypesDisplay = () => {
 
   useEffect(() => {
     applyFilters();
-  }, [selectedVegFilter, selectedCPFilter, cpTypes]);
+  }, [selectedVegFilter, selectedCPFilter, selectedMealFilter, selectedSpeedFilter, cpTypes]);
 
   const fetchCPTypes = async () => {
     try {
@@ -57,6 +61,14 @@ const CPTypesDisplay = () => {
 
     if (selectedCPFilter.value !== "all") {
       filtered = filtered.filter(item => item.cp_type === selectedCPFilter.value);
+    }
+
+    if (selectedMealFilter.value !== "all") {
+      filtered = filtered.filter(item => item.meal_time === selectedMealFilter.value);
+    }
+
+    if (selectedSpeedFilter.value !== "all") {
+      filtered = filtered.filter(item => item.is_superfast === selectedSpeedFilter.value);
     }
 
     setFilteredCPTypes(filtered);
@@ -90,6 +102,7 @@ const CPTypesDisplay = () => {
   };
 
   const uniqueCPTypes = [...new Set(cpTypes.map(item => item.cp_type))];
+  const uniqueMealTimes = [...new Set(cpTypes.map(item => item.meal_time))];
 
   if (isLoading) {
     return (
@@ -112,7 +125,7 @@ const CPTypesDisplay = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto mt-8">
+    <div className="max-w-7xl mx-auto mt-8">
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <div className="p-6 bg-gray-100 border-b">
           <div className="flex items-center gap-2 mb-4">
@@ -120,7 +133,7 @@ const CPTypesDisplay = () => {
             <h1 className="text-2xl font-bold text-gray-900">CP Types Management</h1>
           </div>
           
-          <div className="flex gap-4">
+          <div className="flex gap-4 flex-wrap">
             {/* Veg/Non-Veg Filter */}
             <Menu as="div" className="relative inline-block text-left">
               <Menu.Button className="inline-flex w-48 justify-between items-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
@@ -219,17 +232,118 @@ const CPTypesDisplay = () => {
                 </div>
               </Menu.Items>
             </Menu>
+
+            {/* Meal Time Filter */}
+            <Menu as="div" className="relative inline-block text-left">
+              <Menu.Button className="inline-flex w-48 justify-between items-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-gray-500" />
+                  {selectedMealFilter.label}
+                </div>
+                <ChevronDown className="h-4 w-4 text-gray-400" />
+              </Menu.Button>
+
+              <Menu.Items className="absolute left-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
+                <div className="py-1">
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        onClick={() => setSelectedMealFilter({ label: "All Meals", value: "all" })}
+                        className={`${
+                          active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+                        } flex w-full items-center px-4 py-2 text-sm`}
+                      >
+                        <Clock className="mr-2 h-4 w-4" />
+                        All Meals
+                      </button>
+                    )}
+                  </Menu.Item>
+                  {uniqueMealTimes.map(mealTime => (
+                    <Menu.Item key={mealTime}>
+                      {({ active }) => (
+                        <button
+                          onClick={() => setSelectedMealFilter({ label: mealTime, value: mealTime })}
+                          className={`${
+                            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+                          } flex w-full items-center px-4 py-2 text-sm`}
+                        >
+                          <Clock className="mr-2 h-4 w-4" />
+                          {mealTime}
+                        </button>
+                      )}
+                    </Menu.Item>
+                  ))}
+                </div>
+              </Menu.Items>
+            </Menu>
+
+            {/* Superfast Filter */}
+            <Menu as="div" className="relative inline-block text-left">
+              <Menu.Button className="inline-flex w-48 justify-between items-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                <div className="flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-gray-500" />
+                  {selectedSpeedFilter.label}
+                </div>
+                <ChevronDown className="h-4 w-4 text-gray-400" />
+              </Menu.Button>
+
+              <Menu.Items className="absolute left-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
+                <div className="py-1">
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        onClick={() => setSelectedSpeedFilter({ label: "All Speed", value: "all" })}
+                        className={`${
+                          active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+                        } flex w-full items-center px-4 py-2 text-sm`}
+                      >
+                        <Zap className="mr-2 h-4 w-4" />
+                        All Speed
+                      </button>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        onClick={() => setSelectedSpeedFilter({ label: "Superfast", value: "Yes" })}
+                        className={`${
+                          active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+                        } flex w-full items-center px-4 py-2 text-sm`}
+                      >
+                        <Zap className="mr-2 h-4 w-4 text-yellow-500" />
+                        Superfast
+                      </button>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        onClick={() => setSelectedSpeedFilter({ label: "Regular", value: "No" })}
+                        className={`${
+                          active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+                        } flex w-full items-center px-4 py-2 text-sm`}
+                      >
+                        <Utensils className="mr-2 h-4 w-4 text-gray-500" />
+                        Regular
+                      </button>
+                    )}
+                  </Menu.Item>
+                </div>
+              </Menu.Items>
+            </Menu>
           </div>
         </div>
 
-        <div className="p-6">
-          <table className="w-full text-left border-collapse">
+        <div className="p-6 overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-max">
             <thead>
               <tr className="bg-gray-200">
                 <th className="p-4 border-b">Thumbnail</th>
                 <th className="p-4 border-b">Name</th>
                 <th className="p-4 border-b">Type</th>
                 <th className="p-4 border-b">Veg/Non-Veg</th>
+                <th className="p-4 border-b">Meal Time</th>
+                <th className="p-4 border-b">Speed</th>
                 <th className="p-4 border-b">Description</th>
                 <th className="p-4 border-b">Price</th>
                 <th className="p-4 border-b">Actions</th>
@@ -237,7 +351,7 @@ const CPTypesDisplay = () => {
             </thead>
             <tbody>
               {filteredCPTypes.map((cpType) => (
-                <tr key={cpType.id} className="border-t">
+                <tr key={cpType.id} className="border-t hover:bg-gray-50">
                   <td className="p-4">
                     <img
                       src={`https://mahaspice.desoftimp.com/ms3/${cpType.image_address}`}
@@ -245,7 +359,7 @@ const CPTypesDisplay = () => {
                       className="w-16 h-16 object-cover rounded-md"
                     />
                   </td>
-                  <td className="p-4">{cpType.cp_name}</td>
+                  <td className="p-4 font-medium">{cpType.cp_name}</td>
                   <td className="p-4">{cpType.cp_type}</td>
                   <td className="p-4">
                     <span className="flex items-center gap-2">
@@ -262,19 +376,44 @@ const CPTypesDisplay = () => {
                       )}
                     </span>
                   </td>
-                  <td className="p-4">{cpType.description}</td>
-                  <td className="p-4">₹{cpType.price}</td>
+                  <td className="p-4">
+                    <span className="flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-blue-600" />
+                      {cpType.meal_time}
+                    </span>
+                  </td>
+                  <td className="p-4">
+                    <span className="flex items-center gap-2">
+                      {cpType.is_superfast === "Yes" ? (
+                        <>
+                          <Zap className="h-4 w-4 text-yellow-500" />
+                          <span className="text-yellow-600 font-semibold">Superfast</span>
+                        </>
+                      ) : (
+                        <>
+                          <Utensils className="h-4 w-4 text-gray-500" />
+                          <span className="text-gray-600">Regular</span>
+                        </>
+                      )}
+                    </span>
+                  </td>
+                  <td className="p-4 max-w-xs truncate" title={cpType.description}>
+                    {cpType.description}
+                  </td>
+                  <td className="p-4">₹{parseFloat(cpType.price).toFixed(2)}</td>
                   <td className="p-4">
                     <div className="flex space-x-2">
                       <button
                         onClick={() => handleEdit(cpType)}
-                        className="p-2 bg-yellow-100 rounded hover:bg-yellow-200"
+                        className="p-2 bg-yellow-100 rounded hover:bg-yellow-200 transition-colors"
+                        title="Edit"
                       >
                         <Edit className="h-5 w-5 text-yellow-600" />
                       </button>
                       <button
                         onClick={() => handleDelete(cpType.id)}
-                        className="p-2 bg-red-100 rounded hover:bg-red-200"
+                        className="p-2 bg-red-100 rounded hover:bg-red-200 transition-colors"
+                        title="Delete"
                       >
                         <Trash2 className="h-5 w-5 text-red-600" />
                       </button>
@@ -285,7 +424,7 @@ const CPTypesDisplay = () => {
             </tbody>
           </table>
           {filteredCPTypes.length === 0 && (
-            <div className="text-center text-gray-500 py-4">
+            <div className="text-center text-gray-500 py-8">
               No CP Types found matching the selected filters.
             </div>
           )}

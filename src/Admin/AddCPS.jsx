@@ -7,6 +7,8 @@ const AddCPS = () => {
         cp_name: '',
         veg_non_veg: 'Veg',
         cp_type: '',
+        meal_time: 'Breakfast',
+        is_superfast: 'No',
         description: '',
         price: '',
         image: null
@@ -64,12 +66,15 @@ const AddCPS = () => {
         formSubmitData.append('cp_name', formData.cp_name);
         formSubmitData.append('veg_non_veg', formData.veg_non_veg);
         formSubmitData.append('cp_type', formData.cp_type);
+        formSubmitData.append('meal_time', formData.meal_time);
+        formSubmitData.append('is_superfast', formData.is_superfast);
         formSubmitData.append('description', formData.description);
         formSubmitData.append('price', formData.price);
         formSubmitData.append('image', formData.image);
 
         try {
-            const response = await axios.post('https://mahaspice.desoftimp.com/ms3/cptypes.php',
+            const response = await axios.post(
+                'https://mahaspice.desoftimp.com/ms3/cptypes.php',
                 formSubmitData,
                 {
                     headers: {
@@ -83,13 +88,15 @@ const AddCPS = () => {
                 cp_name: '',
                 veg_non_veg: 'Veg',
                 cp_type: '',
+                meal_time: 'Breakfast',
+                is_superfast: 'No',
                 description: '',
                 price: '',
                 image: null
             });
 
             // Clear file input
-            if (e.target.image) e.target.image.value = '';
+            document.getElementById('image').value = '';
 
             setMessage('CP Type added successfully');
             setIsError(false);
@@ -184,6 +191,58 @@ const AddCPS = () => {
                     </select>
                 </div>
 
+                {/* Meal Time Dropdown */}
+                <div className="mb-4">
+                    <label
+                        htmlFor="meal_time"
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                    >
+                        Meal Time
+                    </label>
+                    <select
+                        id="meal_time"
+                        name="meal_time"
+                        value={formData.meal_time}
+                        onChange={handleInputChange}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 
+              leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                    >
+                        <option value="Breakfast">Breakfast</option>
+                        <option value="Lunch">Lunch</option>
+                        <option value="Dinner">Dinner</option>
+                    </select>
+                </div>
+
+                {/* Is Superfast */}
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Is Superfast
+                    </label>
+                    <div className="flex items-center">
+                        <input
+                            type="radio"
+                            id="superfast-yes"
+                            name="is_superfast"
+                            value="Yes"
+                            checked={formData.is_superfast === 'Yes'}
+                            onChange={handleInputChange}
+                            className="mr-2"
+                        />
+                        <label htmlFor="superfast-yes" className="mr-4">Yes</label>
+                        <input
+                            type="radio"
+                            id="superfast-no"
+                            name="is_superfast"
+                            value="No"
+                            checked={formData.is_superfast === 'No'}
+                            onChange={handleInputChange}
+                            className="mr-2"
+                        />
+                        <label htmlFor="superfast-no">No</label>
+                    </div>
+                </div>
+
                 {/* Description */}
                 <div className="mb-4">
                     <label
@@ -221,7 +280,7 @@ const AddCPS = () => {
                         step="0.01"
                         min="0"
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 
-              leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Enter Price"
                         required
                     />
@@ -247,28 +306,26 @@ const AddCPS = () => {
                     />
                 </div>
 
-                {/* Message Display */}
-                {message && (
-                    <div
-                        className={`mb-4 p-3 rounded ${isError
-                                ? 'bg-red-100 border border-red-400 text-red-700'
-                                : 'bg-green-100 border border-green-400 text-green-700'
-                            }`}
-                    >
-                        {message}
-                    </div>
-                )}
-
                 {/* Submit Button */}
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-between">
                     <button
                         type="submit"
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 
-              rounded focus:outline-none focus:shadow-outline transition duration-300"
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         Add CP Type
                     </button>
                 </div>
+
+                {/* Message Display */}
+                {message && (
+                    <p
+                        className={`mt-4 text-center text-sm font-bold ${
+                            isError ? 'text-red-500' : 'text-green-500'
+                        }`}
+                    >
+                        {message}
+                    </p>
+                )}
             </form>
         </div>
     );
