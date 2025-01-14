@@ -111,13 +111,13 @@ const DisplayCarousel = () => {
                 <p className="text-gray-600 text-xs truncate">{item.description}</p>
                 {/* Admin Controls */}
                 <div className="absolute bottom-2 right-2 flex space-x-2 z-10 bg-white/80 rounded-lg p-2">
-                  <button
+                  {/* <button
                     onClick={() => window.location.href = `editCarousel/${item.id}`}
                     className="text-blue-600 hover:text-blue-800"
                     title="Edit"
                   >
                     <Pencil size={20} />
-                  </button>
+                  </button> */}
                   <button
                     onClick={() => handleDelete(item.id)}
                     className="text-red-600 hover:text-red-800"
