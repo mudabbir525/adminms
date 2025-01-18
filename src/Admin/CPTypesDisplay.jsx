@@ -19,6 +19,7 @@ const CPTypesDisplay = () => {
   const [filteredCPTypes, setFilteredCPTypes] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  
   const [editingCPType, setEditingCPType] = useState(null);
   
   // Filter states
@@ -125,7 +126,7 @@ const CPTypesDisplay = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto mt-8">
+    <div className="max-w-fill mx-auto mt-8">
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <div className="p-6 bg-gray-100 border-b">
           <div className="flex items-center gap-2 mb-4">

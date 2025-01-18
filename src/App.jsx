@@ -24,6 +24,7 @@ import CPTypesDisplay from "./Admin/CPTypesDisplay";
 import AddCP from './Admin/AddCP';
 import AddCPS from "./Admin/AddCPS";
 import CarouselDisplay from "./Admin/CarouselDisplay";
+import EditCarousel from "./Admin/EditCarousel";
 import MenuItemForm from "./Admin/MenuItemForm";
 import MenuItems from "./Admin/MenuDisplay";
 import MenuPricingForm from "./Admin/MenuPricingForm";
@@ -89,6 +90,7 @@ function App() {
             <Route path="/addcp" element={<AddCP />} />
             <Route path="/addcps" element={<AddCPS />} />
             <Route path="/carousel" element={<CarouselDisplay />} />
+            <Route path="/editcarousel/:id" element={<EditCarousel />} />
             <Route path="/menuitem" element={<MenuItemForm />} />
             <Route path="/menudisplay" element={<MenuItems />} />
             <Route path="/menupricingform" element={<MenuPricingForm />} />

@@ -1,9 +1,12 @@
+// React Component (EditSection.jsx)
 import React, { useEffect, useState } from 'react';
 
 const EditSection = () => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [editingName, setEditingName] = useState(null);
+  const [newName, setNewName] = useState('');
 
   useEffect(() => {
     fetchServices();
@@ -21,6 +24,34 @@ const EditSection = () => {
     }
   };
 
+  const handleNameUpdate = async (oldServiceName) => {
+    try {
+      const response = await fetch('https://mahaspice.desoftimp.com/ms3/updateServiceName.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          old_service_name: oldServiceName,
+          new_service_name: newName
+        })
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        fetchServices();
+        setEditingName(null);
+        setNewName('');
+        alert('Service name updated successfully');
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (err) {
+      alert('Failed to update service name: ' + err.message);
+    }
+  };
+
   const handleImageUpdate = async (serviceName, file) => {
     try {
       const formData = new FormData();
@@ -35,38 +66,13 @@ const EditSection = () => {
       const result = await response.json();
       
       if (result.success) {
-        fetchServices(); // Refresh the list
+        fetchServices();
         alert('Image updated successfully');
       } else {
         throw new Error(result.message);
       }
     } catch (err) {
       alert('Failed to update image: ' + err.message);
-    }
-  };
-
-  const handleDelete = async (serviceName) => {
-    if (!window.confirm('Are you sure you want to delete this service?')) return;
-
-    try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/deleteSection.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ service_name: serviceName })
-      });
-
-      const result = await response.json();
-      
-      if (result.success) {
-        fetchServices(); // Refresh the list
-        alert('Service deleted successfully');
-      } else {
-        throw new Error(result.message);
-      }
-    } catch (err) {
-      alert('Failed to delete service: ' + err.message);
     }
   };
 
@@ -79,13 +85,52 @@ const EditSection = () => {
       <div className="space-y-6">
         {services.map((service) => (
           <div key={service.service_name} className="border rounded-lg p-4 bg-white shadow">
-            <h3 className="text-xl font-semibold mb-2">{service.service_name}</h3>
+            <div className="flex justify-between items-center mb-2">
+              {editingName === service.service_name ? (
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    className="border rounded px-2 py-1"
+                    placeholder="Enter new name"
+                  />
+                  <button
+                    onClick={() => handleNameUpdate(service.service_name)}
+                    className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={() => {
+                      setEditingName(null);
+                      setNewName('');
+                    }}
+                    className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <h3 className="text-xl font-semibold">{service.service_name}</h3>
+                  <button
+                    onClick={() => {
+                      setEditingName(service.service_name);
+                      setNewName(service.service_name);
+                    }}
+                    className="text-blue-500 hover:text-blue-600"
+                  >
+                    Edit Name
+                  </button>
+                </>
+              )}
+            </div>
             <div className="flex items-center gap-4">
               <img
                 src={`https://mahaspice.desoftimp.com/ms3/${service.image_path}`}
                 alt={service.service_name}
                 className="w-32 h-32 object-cover rounded"
-                
               />
               <div className="flex-1 space-y-4">
                 <input
@@ -98,12 +143,6 @@ const EditSection = () => {
                   }}
                   className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                 />
-                {/* <button
-                  onClick={() => handleDelete(service.service_name)}
-                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
-                >
-                  Delete Service
-                </button> */}
               </div>
             </div>
           </div>
