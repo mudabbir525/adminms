@@ -180,6 +180,35 @@ import Admin from '../Admin/Admin';
         },
       ],
     },
+     {
+      category: "Coupons&GST",
+      items: [
+        {
+          icon: <CopyPlus className="w-5 h-5" />,
+          label: "Add Coupon",
+          key: "addcoupon",
+          path: "/coupon",
+        },
+        {
+          icon: <Edit className="w-5 h-5" />,
+          label: "Display Coupons",
+          key: "displaycoupons",
+          path: "/displaycoupons",
+        },
+        {
+          icon: <Edit className="w-5 h-5" />,
+          label: "Add GST",
+          key: "addgst",
+          path: "/addgst",
+        },
+        {
+          icon: <Edit className="w-5 h-5" />,
+          label: "Display GST",
+          key: "gstdisplay",
+          path: "/gst",
+        },
+      ],
+    },
   ];
 
 const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {

@@ -37,6 +37,11 @@ import AddHomeItems from "./Admin/AddHomeItem";
 import DisplayHomeItems from "./Admin/DisplayHomeItems";
 import EditHomeItems from "./Admin/EditHomeItems";
 import OrderManagement from "./Admin/MealOrderManagement";
+import AddCoupon from "./Admin/AddCoupon";
+import DisplayCoupons from "./Admin/DisplayCoupons";
+import EditCoupon from "./Admin/EditCoupon";
+import AddGST from "./Admin/AddGST";
+import DisplayGST from "./Admin/DisplayGST";
 
 function App() {
   const location = useLocation();
@@ -103,6 +108,12 @@ function App() {
             <Route path="/dishi" element={<DisplayHomeItems />} />
             <Route path="/edit-home-items/:id" element={<EditHomeItems />} />
             <Route path="/mealorders" element={<OrderManagement />} />
+            <Route path="/coupon" element={<AddCoupon />} />
+            <Route path="/displaycoupons" element={<DisplayCoupons />} />
+            <Route path="/coupon/:id" element={<EditCoupon />} />
+            <Route path="/addgst" element={<AddGST />} />
+            <Route path="/gst" element={<DisplayGST />} />
+
 
 
           </Routes>
