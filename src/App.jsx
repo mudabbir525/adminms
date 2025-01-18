@@ -42,6 +42,8 @@ import DisplayCoupons from "./Admin/DisplayCoupons";
 import EditCoupon from "./Admin/EditCoupon";
 import AddGST from "./Admin/AddGST";
 import DisplayGST from "./Admin/DisplayGST";
+import DeliveryLocationForm from "./Admin/DeliveryLocationForm";
+import DisplayDL from "./Admin/DsiplayDL";
 
 function App() {
   const location = useLocation();
@@ -113,6 +115,8 @@ function App() {
             <Route path="/coupon/:id" element={<EditCoupon />} />
             <Route path="/addgst" element={<AddGST />} />
             <Route path="/gst" element={<DisplayGST />} />
+            <Route path="/dloc" element={<DeliveryLocationForm />} />
+            <Route path="/disloc" element={<DisplayDL />} />
 
 
 

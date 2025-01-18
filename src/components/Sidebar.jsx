@@ -207,6 +207,18 @@ import Admin from '../Admin/Admin';
           key: "gstdisplay",
           path: "/gst",
         },
+        {
+          icon: <Edit className="w-5 h-5" />,
+          label: "Add Location Price",
+          key: "addDeliveryLocations",
+          path: "/dloc",
+        },
+        {
+          icon: <Edit className="w-5 h-5" />,
+          label: "Display Location Price",
+          key: "displayDeliveryLocations",
+          path: "/disloc",
+        },
       ],
     },
   ];
