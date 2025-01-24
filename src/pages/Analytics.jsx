@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   BarChart, Bar, LineChart, Line, 
   XAxis, YAxis, CartesianGrid, 
@@ -6,29 +6,41 @@ import {
 } from 'recharts';
 
 const Analytics = () => {
-  const [activeTab, setActiveTab] = useState('sales');
+  const [activeTab, setActiveTab] = useState('users');
+  const [users, setUsers] = useState([]);
+  const [payments, setPayments] = useState([]);
 
-  const salesData = [
-    { month: 'Jan', sales: 4000, revenue: 2400 },
-    { month: 'Feb', sales: 3000, revenue: 1398 },
-    { month: 'Mar', sales: 2000, revenue: 9800 },
-    { month: 'Apr', sales: 2780, revenue: 3908 },
-    { month: 'May', sales: 1890, revenue: 4800 },
-    { month: 'Jun', sales: 2390, revenue: 3800 },
-  ];
+  useEffect(() => {
+    // Fetch users
+    fetch('https://mahaspice.desoftimp.com/ms3/login/getallusers.php')
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          setUsers(data.users);
+        }
+      })
+      .catch(error => console.error('Error fetching users:', error));
 
-  const userGrowthData = [
-    { month: 'Jan', newUsers: 400, totalUsers: 1000 },
-    { month: 'Feb', newUsers: 300, totalUsers: 1300 },
-    { month: 'Mar', newUsers: 200, totalUsers: 1500 },
-    { month: 'Apr', newUsers: 278, totalUsers: 1778 },
-    { month: 'May', newUsers: 189, totalUsers: 1967 },
-    { month: 'Jun', newUsers: 239, totalUsers: 2206 },
-  ];
+    // Fetch payments
+    fetch('https://mahaspice.desoftimp.com/ms3/login/getallpayments.php')
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          setPayments(data.users);
+        }
+      })
+      .catch(error => console.error('Error fetching payments:', error));
+  }, []);
+
+  // Process users by month
+  const processedUsers = processUsersByMonth(users);
+  
+  // Process payments by month
+  const processedPayments = processPaymentsByMonth(payments);
 
   const tabs = [
-    { id: 'sales', label: 'Sales Analytics' },
-    { id: 'users', label: 'User Growth' }
+    { id: 'users', label: 'User Analytics' },
+    { id: 'payments', label: 'Payment Analytics' }
   ];
 
   return (
@@ -51,45 +63,12 @@ const Analytics = () => {
           ))}
         </div>
 
-        {activeTab === 'sales' && (
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Monthly Sales</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={salesData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="sales" fill="#3182ce" name="Sales Volume" />
-                  <Bar dataKey="revenue" fill="#48bb78" name="Revenue" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="bg-gray-100 p-4 rounded">
-              <h4 className="font-semibold mb-2">Sales Insights</h4>
-              <ul className="space-y-2">
-                <li>
-                  <span className="font-medium">Best Month:</span> March
-                </li>
-                <li>
-                  <span className="font-medium">Total Sales:</span> 15,670
-                </li>
-                <li>
-                  <span className="font-medium">Average Monthly Revenue:</span> $2,611
-                </li>
-              </ul>
-            </div>
-          </div>
-        )}
-
         {activeTab === 'users' && (
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <h3 className="text-lg font-semibold mb-4">User Growth</h3>
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={userGrowthData}>
+                <LineChart data={processedUsers}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis />
@@ -111,16 +90,42 @@ const Analytics = () => {
               </ResponsiveContainer>
             </div>
             <div className="bg-gray-100 p-4 rounded">
-              <h4 className="font-semibold mb-2">User Growth Insights</h4>
+              <h4 className="font-semibold mb-2">User Insights</h4>
               <ul className="space-y-2">
                 <li>
-                  <span className="font-medium">Total Users:</span> 2,206
+                  <span className="font-medium">Total Users:</span> {processedUsers.reduce((max, user) => Math.max(max, user.totalUsers), 0)}
                 </li>
                 <li>
-                  <span className="font-medium">Monthly Growth Rate:</span> 12.3%
+                  <span className="font-medium">Monthly Growth:</span> {processedUsers.filter(u => u.newUsers > 0).length}
+                </li>
+              </ul>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'payments' && (
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Payment Analytics</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={processedPayments}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="totalPayments" fill="#3182ce" name="Total Payments" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="bg-gray-100 p-4 rounded">
+              <h4 className="font-semibold mb-2">Payment Insights</h4>
+              <ul className="space-y-2">
+                <li>
+                  <span className="font-medium">Total Payments:</span> ₹{processedPayments.reduce((sum, payment) => sum + parseFloat(payment.totalPayments), 0).toFixed(2)}
                 </li>
                 <li>
-                  <span className="font-medium">Best Growth Month:</span> April
+                  <span className="font-medium">Active Months:</span> {processedPayments.filter(p => p.totalPayments > 0).length}
                 </li>
               </ul>
             </div>
@@ -130,5 +135,67 @@ const Analytics = () => {
     </div>
   );
 };
+
+// Helper function to process users by month
+function processUsersByMonth(users) {
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  
+  // Group users by month created
+  const usersByMonth = users.reduce((acc, user) => {
+    const month = new Date(user.created_at).getMonth();
+    const monthName = monthNames[month];
+    
+    if (!acc[monthName]) {
+      acc[monthName] = { month: monthName, newUsers: 0, totalUsers: 0 };
+    }
+    
+    acc[monthName].newUsers++;
+    acc[monthName].totalUsers++;
+    
+    return acc;
+  }, {});
+
+  // Ensure all months are represented
+  return monthNames.map(month => usersByMonth[month] || { month, newUsers: 0, totalUsers: 0 });
+}
+
+// Helper function to process payments by month
+function processPaymentsByMonth(payments) {
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  
+  // Group payments by month created
+  const paymentsByMonth = payments.reduce((acc, payment) => {
+    const month = new Date(payment.created_at).getMonth();
+    const monthName = monthNames[month];
+    
+    if (!acc[monthName]) {
+      acc[monthName] = { 
+        month: monthName, 
+        totalPayments: 0, 
+        completedPayments: 0, 
+        pendingPayments: 0 
+      };
+    }
+    
+    const amount = parseFloat(payment.amount);
+    acc[monthName].totalPayments += amount;
+    
+    if (payment.status === 'completed') {
+      acc[monthName].completedPayments += amount;
+    } else {
+      acc[monthName].pendingPayments += amount;
+    }
+    
+    return acc;
+  }, {});
+
+  // Ensure all months are represented
+  return monthNames.map(month => paymentsByMonth[month] || { 
+    month, 
+    totalPayments: 0, 
+    completedPayments: 0, 
+    pendingPayments: 0 
+  });
+}
 
 export default Analytics;
