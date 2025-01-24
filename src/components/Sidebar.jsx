@@ -221,6 +221,24 @@ import Admin from '../Admin/Admin';
         },
       ],
     },
+    {
+      category: "CRPB",
+      items: [
+        {
+          icon: <CopyPlus className="w-5 h-5" />,
+          label: "Add CRPB",
+          key: "crpb",
+          path: "/crpb",
+        },
+        {
+          icon: <Edit className="w-5 h-5" />,
+          label: "Display CRPB",
+          key: "DisplayCRPB",
+          path: "/display-crpb",
+        },
+
+      ],
+    },
   ];
 
 const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
