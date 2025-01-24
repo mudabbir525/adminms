@@ -17,7 +17,12 @@ import {
   MapPin,
   Ticket,
   Percent,
+  Truck,
+  PersonStanding,
+  FolderOpenDot,
+  PartyPopper,
 } from "lucide-react";
+import { GiFruitBowl } from "react-icons/gi";
 
 const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
   const [openDropdowns, setOpenDropdowns] = useState({});
@@ -36,43 +41,8 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
       path: "/dashboard",
     },
     {
-      icon: <BoxIcon className="w-5 h-5" />,
-      label: "Menu",
-      hasDropdown: true,
-      dropdownItems: [
-        {
-          label: "Menu Add",
-          path: "/addmenu",
-          icon: <CopyPlus className="w-4 h-4" />,
-        },
-        {
-          label: "Menu Edit",
-          path: "/adminmenu",
-          icon: <Edit className="w-4 h-4" />,
-        },
-      ],
-    },
-    
-    {
-      icon: <ShoppingBag className="w-5 h-5" />,
-      label: "Event",
-      hasDropdown: true,
-      dropdownItems: [
-        {
-          label: "Add Event",
-          path: "/addevent",
-          icon: <CopyPlus className="w-4 h-4" />,
-        },
-        {
-          label: "Event Display",
-          path: "/admineventdisplay",
-          icon: <Edit className="w-4 h-4" />,
-        },
-      ],
-    },
-    {
       icon: <Layout className="w-5 h-5" />,
-      label: "CPs",
+      label: "MealBox",
       hasDropdown: true,
       dropdownItems: [
         {
@@ -97,6 +67,99 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
         },
       ],
     },
+    
+    {
+      icon: <PartyPopper className="w-5 h-5" />,
+      label: "Event",
+      hasDropdown: true,
+      dropdownItems: [
+        {
+          label: "Add Event",
+          path: "/addevent",
+          icon: <CopyPlus className="w-4 h-4" />,
+        },
+        {
+          label: "Event Display",
+          path: "/admineventdisplay",
+          icon: <Edit className="w-4 h-4" />,
+        },
+      ],
+    },
+    {
+      icon: <GiFruitBowl className="w-5 h-5" />,
+      label: "Catering",
+      hasDropdown: true,
+      dropdownItems: [
+        {
+          label: "Menu Add",
+          path: "/addmenu",
+          icon: <CopyPlus className="w-4 h-4" />,
+        },
+        {
+          label: "Menu Edit",
+          path: "/adminmenu",
+          icon: <Edit className="w-4 h-4" />,
+        },
+        {
+          label: "Add Category",
+          path: "/addcategory",
+          icon: <CopyPlus className="w-4 h-4" />,
+        },
+        {
+          label: "Admin Category",
+          path: "/admincategory",
+          icon: <Edit className="w-4 h-4" />,
+        },
+        {
+          label: "Add Catering Menu",
+          path: "/menuitem",
+          icon: <CopyPlus className="w-4 h-4" />,
+        },
+        {
+          label: "Menu Display",
+          path: "/menudisplay",
+          icon: <Edit className="w-4 h-4" />,
+        },
+        {
+          label: "Menu Pricing",
+          path: "/menupricingform",
+          icon: <CopyPlus className="w-4 h-4" />,
+        },
+        {
+          label: "Menu Pricing Display",
+          path: "/menupricingdisplay",
+          icon: <Edit className="w-4 h-4" />,
+        },
+      ],
+    },
+    {
+      icon: <Truck className="w-5 h-5" />,
+      label: "Home Delivery",
+      hasDropdown: true,
+      dropdownItems: [
+        {
+          label: "Add Home Category",
+          path: "/addhc",
+          icon: <CopyPlus className="w-4 h-4" />,
+        },
+        {
+          label: "Edit Home Category",
+          path: "/edithc",
+          icon: <Edit className="w-4 h-4" />,
+        },
+        {
+          label: "Add Home Item",
+          path: "/addhi",
+          icon: <CopyPlus className="w-4 h-4" />,
+        },
+        {
+          label: "Display Home Item",
+          path: "/dishi",
+          icon: <Edit className="w-4 h-4" />,
+        },
+      ],
+    },
+    
     {
       icon: <Layout className="w-5 h-5" />,
       label: "Carousel",
@@ -131,70 +194,8 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
         },
       ],
     },
-    {
-      icon: <Home className="w-5 h-5" />,
-      label: "Home Delivery",
-      hasDropdown: true,
-      dropdownItems: [
-        {
-          label: "Add Home Category",
-          path: "/addhc",
-          icon: <CopyPlus className="w-4 h-4" />,
-        },
-        {
-          label: "Edit Home Category",
-          path: "/edithc",
-          icon: <Edit className="w-4 h-4" />,
-        },
-        {
-          label: "Add Home Item",
-          path: "/addhi",
-          icon: <CopyPlus className="w-4 h-4" />,
-        },
-        {
-          label: "Display Home Item",
-          path: "/dishi",
-          icon: <Edit className="w-4 h-4" />,
-        },
-      ],
-    },
-    {
-      icon: <ShoppingBag className="w-5 h-5" />,
-      label: "Catering",
-      hasDropdown: true,
-      dropdownItems: [
-        {
-          label: "Add Category",
-          path: "/addcategory",
-          icon: <CopyPlus className="w-4 h-4" />,
-        },
-        {
-          label: "Admin Category",
-          path: "/admincategory",
-          icon: <Edit className="w-4 h-4" />,
-        },
-        {
-          label: "Add Catering Menu",
-          path: "/menuitem",
-          icon: <CopyPlus className="w-4 h-4" />,
-        },
-        {
-          label: "Menu Display",
-          path: "/menudisplay",
-          icon: <Edit className="w-4 h-4" />,
-        },
-        {
-          label: "Menu Pricing",
-          path: "/menupricingform",
-          icon: <CopyPlus className="w-4 h-4" />,
-        },
-        {
-          label: "Menu Pricing Display",
-          path: "/menupricingdisplay",
-          icon: <Edit className="w-4 h-4" />,
-        },
-      ],
-    },
+    
+    
     {
       icon: <Ticket className="w-5 h-5" />,
       label: "Coupons",
