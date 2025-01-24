@@ -44,6 +44,9 @@ import AddGST from "./Admin/AddGST";
 import DisplayGST from "./Admin/DisplayGST";
 import DeliveryLocationForm from "./Admin/DeliveryLocationForm";
 import DisplayDL from "./Admin/DsiplayDL";
+import CRPB from "./Admin/CRPB";
+import DisplayCRPB from "./Admin/DisplayCRPB";
+import CRPBEdit from "./Admin/CRPBEdit";
 
 function App() {
   const location = useLocation();
@@ -117,6 +120,9 @@ function App() {
             <Route path="/gst" element={<DisplayGST />} />
             <Route path="/dloc" element={<DeliveryLocationForm />} />
             <Route path="/disloc" element={<DisplayDL />} />
+            <Route path="/crpb" element={<CRPB />} />
+            <Route path="/display-crpb" element={<DisplayCRPB />} />
+            <Route path="/edit-crpb/:id" element={<CRPBEdit />} />
 
 
 
