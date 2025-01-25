@@ -49,6 +49,7 @@ import DisplayCRPB from "./Admin/DisplayCRPB";
 import CRPBEdit from "./Admin/CRPBEdit";
 import SuperfastCategories from "./Admin/SuperfastCategories";
 import AddSupItems from "./Admin/AddSupItems";
+import Offers from "./Admin/Offers";
 
 function App() {
   const location = useLocation();
@@ -127,6 +128,7 @@ function App() {
             <Route path="/edit-crpb/:id" element={<CRPBEdit />} />
             <Route path="/sf-category" element={<SuperfastCategories />} />
             <Route path="/sf-items" element={<AddSupItems />} />
+            <Route path="/offers" element={<Offers />} />
             
 
 
