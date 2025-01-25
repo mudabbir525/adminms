@@ -21,6 +21,7 @@ import {
   PersonStanding,
   FolderOpenDot,
   PartyPopper,
+  Zap,
 } from "lucide-react";
 import { GiFruitBowl } from "react-icons/gi";
 
@@ -41,7 +42,7 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
       path: "/dashboard",
     },
     {
-      icon: <Layout className="w-5 h-5" />,
+      icon: <Zap className="w-5 h-5" />,
       label: "Superfast",
       hasDropdown: true,
       dropdownItems: [
