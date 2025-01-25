@@ -42,6 +42,24 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
     },
     {
       icon: <Layout className="w-5 h-5" />,
+      label: "Superfast",
+      hasDropdown: true,
+      dropdownItems: [
+        {
+          label: "Categories",
+          path: "/sf-category",
+          icon: <CopyPlus className="w-4 h-4" />,
+        },
+        {
+          label: "Items",
+          path: "/sf-items",
+          icon: <Edit className="w-4 h-4" />,
+        },
+      
+      ],
+    },
+    {
+      icon: <Layout className="w-5 h-5" />,
       label: "MealBox",
       hasDropdown: true,
       dropdownItems: [
