@@ -13,7 +13,9 @@ const CRPBEditPage = () => {
   const [formData, setFormData] = useState({
     id: id,
     name: entry?.name || '',
-    position: entry?.position || ''
+    position: entry?.position || '',
+    veg_price: entry?.veg_price || '',
+    nonveg_price: entry?.nonveg_price || ''
   });
   
   const [imageFile, setImageFile] = useState(null);
@@ -31,7 +33,9 @@ const CRPBEditPage = () => {
           setFormData({
             id: data.id,
             name: data.name,
-            position: data.position
+            position: data.position,
+            veg_price: data.veg_price,
+            nonveg_price: data.nonveg_price
           });
           setImagePreview(`https://mahaspice.desoftimp.com/ms3/${data.img_address}`);
         } catch (error) {
@@ -79,6 +83,8 @@ const CRPBEditPage = () => {
     formDataToSubmit.append('id', formData.id);
     formDataToSubmit.append('name', formData.name);
     formDataToSubmit.append('position', formData.position);
+    formDataToSubmit.append('veg_price', formData.veg_price);
+    formDataToSubmit.append('nonveg_price', formData.nonveg_price);
     
     if (imageFile) {
       formDataToSubmit.append('image', imageFile);
@@ -182,6 +188,38 @@ const CRPBEditPage = () => {
               id="position"
               name="position"
               value={formData.position}
+              onChange={handleChange}
+              required
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+
+          {/* Veg Price Input */}
+          <div>
+            <label htmlFor="veg_price" className="block text-sm font-medium text-gray-700">
+              Veg Price
+            </label>
+            <input
+              type="number"
+              id="veg_price"
+              name="veg_price"
+              value={formData.veg_price}
+              onChange={handleChange}
+              required
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+
+          {/* Non-Veg Price Input */}
+          <div>
+            <label htmlFor="nonveg_price" className="block text-sm font-medium text-gray-700">
+              Non-Veg Price
+            </label>
+            <input
+              type="number"
+              id="nonveg_price"
+              name="nonveg_price"
+              value={formData.nonveg_price}
               onChange={handleChange}
               required
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
