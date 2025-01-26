@@ -2,17 +2,19 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Plus, Trash2, Edit2, CheckCircle, XCircle, Calendar, Tag } from 'lucide-react';
 
+const STORAGE_KEY = 'mahaspice_offers';
+
 const Offers = () => {
     const [offers, setOffers] = useState([]);
     const [formData, setFormData] = useState({
-    title: '',
-    shortDescription: '',
-    termsAndConditions: '',
-    startDate: '',
-    endDate: '',
-    image: null,
-    isActive: false
-});
+        title: '',
+        shortDescription: '',
+        termsAndConditions: '',
+        startDate: '',
+        endDate: '',
+        image: null,
+        isActive: false
+    });
     const [editingOffer, setEditingOffer] = useState(null);
     const [alert, setAlert] = useState({ type: '', message: '' });
 
@@ -22,11 +24,11 @@ const Offers = () => {
         setTimeout(() => setAlert({ type: '', message: '' }), 3000);
     };
 
-    // Fetch offers
-    const fetchOffers = async () => {
+    // Fetch offers from localStorage
+    const fetchOffers = () => {
         try {
-            const response = await axios.get('https://mahaspice.desoftimp.com/ms3/get_offers.php');
-            setOffers(response.data.offers || []); 
+            const storedOffers = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            setOffers(storedOffers);
         } catch (error) {
             console.error('Error fetching offers', error);
             showAlert('error', 'Failed to fetch offers');
@@ -49,68 +51,58 @@ const Offers = () => {
                     : (value || null)
         }));
     };
-    const handleSubmitOffer = async (e) => {
+
+    // Generate unique ID
+    const generateId = () => Date.now().toString();
+
+    // Submit offer
+    const handleSubmitOffer = (e) => {
         e.preventDefault();
         
-        const formDataToSubmit = new FormData();
-        
-        
-        const fullDescription = `Offer Description: ${formData.title || ''}
-Short Description:
+        const fullDescription = `**Offer Description: ${formData.title || ''}**
+
+**Short Description:**
 ${formData.shortDescription || ''}
 
-Terms and Conditions:
+**Terms and Conditions:**
 ${formData.termsAndConditions || ''}`;
 
-        // Append form data
-        Object.entries(formData).forEach(([key, value]) => {
-            if (key === 'image' && value) {
-                formDataToSubmit.append('image', value);
-            } else if (key !== 'image') {
-                formDataToSubmit.append(key, 
-                    value === null || value === '' ? '' : value
-                );
-            }
+        const newOffer = {
+            id: editingOffer || generateId(),
+            ...formData,
+            description: fullDescription,
+            is_active: formData.isActive ? '1' : '0',
+            img_address: formData.image ? URL.createObjectURL(formData.image) : null
+        };
+
+        const updatedOffers = editingOffer 
+            ? offers.map(offer => offer.id === editingOffer ? newOffer : offer)
+            : [...offers, newOffer];
+
+        // Save to localStorage
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedOffers));
+        
+        // Reset form
+        setFormData({
+            title: '',
+            shortDescription: '',
+            termsAndConditions: '',
+            startDate: '',
+            endDate: '',
+            image: null,
+            isActive: false
         });
-
-        formDataToSubmit.append('description', fullDescription);
-        formDataToSubmit.append('is_active', formData.isActive ? 1 : 0);
-
-        try {
-            const url = editingOffer 
-                ? `https://mahaspice.desoftimp.com/ms3/update_offers.php?id=${editingOffer}`
-                : 'https://mahaspice.desoftimp.com/ms3/add_offers.php';
-
-            await axios.post(url, formDataToSubmit, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
-            
-            // Reset form
-            setFormData({
-                title: '',
-                shortDescription: '',
-                termsAndConditions: '',
-                startDate: '',
-                endDate: '',
-                image: null,
-                isActive: true
-            });
-            setEditingOffer(null);
-            fetchOffers();
-            
-            showAlert('success', editingOffer ? 'Offer updated successfully' : 'Offer added successfully');
-        } catch (error) {
-            console.error('Error submitting offer', error);
-            showAlert('error', 'Failed to submit offer');
-        }
+        setEditingOffer(null);
+        setOffers(updatedOffers);
+        
+        showAlert('success', editingOffer ? 'Offer updated successfully' : 'Offer added successfully');
     };
 
     // Edit offer
-    const handleEditOffer = async (id) => {
-        try {
-            const response = await axios.get(`https://mahaspice.desoftimp.com/ms3/get_offer_by_id.php?id=${id}`);
-            const offer = response.data.offer;
-            
+    const handleEditOffer = (id) => {
+        const offer = offers.find(o => o.id === id);
+        
+        if (offer) {
             // Parse description
             const descriptionParts = offer.description.split('**Terms and Conditions:**');
             const titleMatch = offer.description.match(/\*\*Offer Description: (.*?)\*\*/);
@@ -123,41 +115,23 @@ ${formData.termsAndConditions || ''}`;
                 title: titleMatch ? titleMatch[1] : '',
                 shortDescription: shortDescriptionMatch ? shortDescriptionMatch[1].trim() : '',
                 termsAndConditions: descriptionParts[1] ? descriptionParts[1].trim() : '',
-                startDate: offer.start_date || '',
-                endDate: offer.end_date || '',
+                startDate: offer.startDate || '',
+                endDate: offer.endDate || '',
                 image: null,
                 isActive: offer.is_active === '1'
             });
             setEditingOffer(id);
-        } catch (error) {
-            console.error('Error fetching offer details', error);
-            showAlert('error', 'Failed to fetch offer details');
         }
     };
 
     // Delete offer
-    const handleDeleteOffer = async (id) => {
-    try {
-        const response = await axios.post('https://mahaspice.desoftimp.com/ms3/delete_offers.php', 
-            { id }, 
-            {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            }
-        );
+    const handleDeleteOffer = (id) => {
+        const updatedOffers = offers.filter(offer => offer.id !== id);
         
-        if (response.data.success) {
-            fetchOffers();
-            showAlert('success', 'Offer deleted successfully');
-        } else {
-            throw new Error(response.data.message);
-        }
-    } catch (error) {
-        console.error('Error deleting offer', error);
-        showAlert('error', error.response?.data?.message || 'Failed to delete offer');
-    }
-};
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedOffers));
+        setOffers(updatedOffers);
+        showAlert('success', 'Offer deleted successfully');
+    };
 
     return (
         <div className="p-6 bg-gray-100 min-h-screen relative">
@@ -180,7 +154,10 @@ ${formData.termsAndConditions || ''}`;
                 {/* Offer Form */}
                 <form onSubmit={handleSubmitOffer} className="p-6 border-b border-gray-200">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* Title */}
+                        {/* Form Inputs (Same as previous implementation) */}
+                        {/* [Previous input fields remain unchanged] */}
+                        
+                        {/* Inputs remain the same as in your original code */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
                                 Offer Title
@@ -194,9 +171,7 @@ ${formData.termsAndConditions || ''}`;
                                 required
                             />
                         </div>
-
-                        {/* Short Description */}
-                        <div>
+                         <div>
                             <label className="block text-sm font-medium text-gray-700">
                                 Short Description
                             </label>
@@ -288,9 +263,12 @@ ${formData.termsAndConditions || ''}`;
                                 Active Offer
                             </label>
                         </div>
+                    
+
+                        
                     </div>
                     
-                    {/* Submit Buttons */}
+                    {/* Submit Buttons (Same as previous implementation) */}
                     <div className="mt-6 flex space-x-4">
                         <button
                             type="submit"
@@ -339,7 +317,7 @@ ${formData.termsAndConditions || ''}`;
                                 >
                                     {offer.img_address && (
                                         <img 
-                                            src={`https://mahaspice.desoftimp.com/ms3/${offer.img_address}`} 
+                                            src={offer.img_address} 
                                             alt="Offer" 
                                             className="w-full h-48 object-cover"
                                         />
@@ -375,10 +353,10 @@ ${formData.termsAndConditions || ''}`;
                                         <p className="text-sm text-gray-600 whitespace-pre-wrap">
                                             {offer.description}
                                         </p>
-                                        {offer.start_date && offer.end_date && (
+                                        {offer.startDate && offer.endDate && (
                                             <div className="mt-2 text-xs text-gray-500 flex items-center">
                                                 <Calendar className="mr-1 h-4 w-4" />
-                                                {offer.start_date} to {offer.end_date}
+                                                {offer.startDate} to {offer.endDate}
                                             </div>
                                         )}
                                     </div>
