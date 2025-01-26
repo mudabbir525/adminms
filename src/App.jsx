@@ -50,6 +50,7 @@ import CRPBEdit from "./Admin/CRPBEdit";
 import SuperfastCategories from "./Admin/SuperfastCategories";
 import AddSupItems from "./Admin/AddSupItems";
 import Offers from "./Admin/Offers";
+import Footer from "./Admin/Footer";
 
 function App() {
   const location = useLocation();
@@ -60,6 +61,7 @@ function App() {
   };
 
   return (
+    <div>
     <div className="flex h-screen">
       <Sidebar
         isOpen={isSidebarOpen}
@@ -134,8 +136,13 @@ function App() {
 
 
           </Routes>
+          
         </main>
+        
       </div>
+      
+    </div>
+    <Footer/>
     </div>
   );
 }
