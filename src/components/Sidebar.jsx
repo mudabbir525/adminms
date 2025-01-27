@@ -240,6 +240,11 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
           path: "/displaycoupons",
           icon: <Edit className="w-4 h-4" />,
         },
+        {
+          label: "Offers",
+          path: "/offers",
+          icon: <Edit className="w-4 h-4" />,
+        },
       ],
     },
     {

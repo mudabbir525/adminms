@@ -197,11 +197,11 @@ const DisplayCoupons = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 p-6">
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-5xl mx-auto">
                 <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <h1 className="text-2xl font-bold text-gray-900">Manage Coupons</h1>
+                    <h1 className="text-xl font-bold text-gray-900">Manage Coupons</h1>
 
-                    <div className="relative w-full sm:w-64">
+                    <div className="relative w-full ">
                         <input
                             type="text"
                             placeholder="Search coupons..."
@@ -220,7 +220,7 @@ const DisplayCoupons = () => {
                     </div>
                 )}
 
-                <div className="bg-white rounded-lg shadow overflow-x-auto">
+                <div className="bg-white max-w-fill rounded-lg shadow overflow-x-auto">
                     <table className="w-full whitespace-nowrap">
                         <thead>
                             <tr className="border-b border-gray-200">

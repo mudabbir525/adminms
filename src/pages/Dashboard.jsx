@@ -82,7 +82,7 @@ const Dashboard = () => {
               <th className="p-2 text-left">Name</th>
               <th className="p-2 text-left">Phone</th>
               <th className="p-2 text-left">Address</th>
-              <th className="p-2 text-left">Created At</th>
+              {/* <th className="p-2 text-left">Created At</th> */}
             </tr>
           </thead>
           <tbody>
@@ -92,7 +92,7 @@ const Dashboard = () => {
                 <td className="p-2">{user.name}</td>
                 <td className="p-2">{user.phone}</td>
                 <td className="p-2">{user.address}</td>
-                <td className="p-2">{user.created_at}</td>
+                {/* <td className="p-2">{user.created_at}</td> */}
               </tr>
             ))}
           </tbody>
