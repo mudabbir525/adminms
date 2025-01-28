@@ -180,6 +180,7 @@ const EventEditPage = () => {
             <input
               type="text"
               name="event_name"
+              readOnly
               value={event.event_name}
               onChange={handleInputChange}
               className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
