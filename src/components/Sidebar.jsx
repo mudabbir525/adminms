@@ -56,14 +56,19 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
           path: "/sf-items",
           icon: <Edit className="w-4 h-4" />,
         },
-        {
-          label: "superfast sect ",
-          path: "/crpb",
-          icon: <CopyPlus className="w-4 h-4" />,
-        },
+        // {
+        //   label: "superfast sect ",
+        //   path: "/crpb",
+        //   icon: <CopyPlus className="w-4 h-4" />,
+        // },
+        // {
+        //   label: "superfast section",
+        //   path: "/display-crpb",
+        //   icon: <Edit className="w-4 h-4" />,
+        // },
         {
           label: "superfast section",
-          path: "/display-crpb",
+          path: "/superfast",
           icon: <Edit className="w-4 h-4" />,
         },
       
