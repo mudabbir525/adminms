@@ -50,7 +50,8 @@ import CRPBEdit from "./Admin/CRPBEdit";
 import SuperfastCategories from "./Admin/SuperfastCategories";
 import AddSupItems from "./Admin/AddSupItems";
 import Offers from "./Admin/Offers";
-import Footer from "./Admin/Footer";
+import SectionSuperfast from "./Admin/Superfast";
+
 
 function App() {
   const location = useLocation();
@@ -131,6 +132,7 @@ function App() {
             <Route path="/sf-category" element={<SuperfastCategories />} />
             <Route path="/sf-items" element={<AddSupItems />} />
             <Route path="/offers" element={<Offers />} />
+            <Route path="/superfast" element={<SectionSuperfast />} />
             
 
 
@@ -142,7 +144,7 @@ function App() {
       </div>
       
     </div>
-    <Footer/>
+
     </div>
   );
 }
