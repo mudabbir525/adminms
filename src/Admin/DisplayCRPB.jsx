@@ -77,8 +77,7 @@ const DisplayCRPB = () => {
               <div className="flex-grow">
                 <h3 className="text-xl font-semibold mb-2">{entry.name}</h3>
                 <p className="text-gray-600">Position: {entry.position}</p>
-                <p className="text-gray-600">Veg Price: {entry.veg_price}</p>
-                <p className="text-gray-600">NonVeg Price: {entry.nonveg_price}</p>
+                
               </div>
               <div className="flex justify-between mt-4">
                 <button 

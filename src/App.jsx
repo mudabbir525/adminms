@@ -51,6 +51,8 @@ import SuperfastCategories from "./Admin/SuperfastCategories";
 import AddSupItems from "./Admin/AddSupItems";
 import Offers from "./Admin/Offers";
 import SectionSuperfast from "./Admin/Superfast";
+import SuperfastEvents from "./Admin/SuperfastEvents";
+import SupEventPricing from "./Admin/SupEventPricing";
 
 
 function App() {
@@ -133,6 +135,8 @@ function App() {
             <Route path="/sf-items" element={<AddSupItems />} />
             <Route path="/offers" element={<Offers />} />
             <Route path="/superfast" element={<SectionSuperfast />} />
+            <Route path="/superfast-events" element={<SuperfastEvents />} />
+            <Route path="/superfast-events-pricing" element={<SupEventPricing />} />
             
 
 
