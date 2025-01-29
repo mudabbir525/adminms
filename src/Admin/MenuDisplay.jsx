@@ -1,27 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { Edit3, Trash2, ChevronDown, Filter, FilterX, Utensils, Calendar, Tag, DollarSign, CircleDot } from "lucide-react";
 import { Menu } from '@headlessui/react';
-import axios from "axios";
 
 const MenuItems = () => {
-    const [menuItems, setMenuItems] = useState([]);
-    const [filteredItems, setFilteredItems] = useState([]);
-    const [filters, setFilters] = useState({
-      vegType: 'all',
-      menuType: 'all',
-      category: 'all',
-      eventName: 'all',
-      eventCategory: 'all',
-      priceRange: 'all'
-    });
-    const [formData, setFormData] = useState({
-      id: "",
-      item_name: "",
-      is_veg: "0",
-      price: "",
-    });
-    const [isEditing, setIsEditing] = useState(false);
-    const [loading, setLoading] = useState(true);
+  const [menuItems, setMenuItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
+  const [filters, setFilters] = useState({
+    vegType: 'all',
+    menuType: 'all',
+    category: 'all',
+    eventName: 'all',
+    eventCategory: 'all',
+    priceRange: 'all'
+  });
+  const [formData, setFormData] = useState({
+    id: "",
+    item_name: "",
+    is_veg: "0",
+    price: "",
+  });
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchMenuItems();
@@ -33,10 +32,11 @@ const MenuItems = () => {
 
   const fetchMenuItems = async () => {
     try {
-      const response = await axios.get("https://mahaspice.desoftimp.com/ms3/menu_display.php");
-      if (response.data.success) {
-        setMenuItems(response.data.data);
-        setFilteredItems(response.data.data);
+      const response = await fetch("https://mahaspice.desoftimp.com/ms3/menu_display.php");
+      const data = await response.json();
+      if (data.success) {
+        setMenuItems(data.data);
+        setFilteredItems(data.data);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -45,15 +45,26 @@ const MenuItems = () => {
     }
   };
 
-  // Get unique values for dropdowns
+  // Safe split function that handles null/undefined values
+  const safeSplit = (value, delimiter = ',') => {
+    if (!value) return [];
+    return value.split(delimiter).map(item => item.trim()).filter(Boolean);
+  };
+
+  // Get unique values for dropdowns with null check
   const getUniqueValues = (key) => {
-    const values = new Set(menuItems.map(item => 
-      key === 'priceRange' 
-        ? getPriceRange(item.price)
-        : key.includes('event') 
-          ? item[key].split(',').map(v => v.trim())
-          : item[key]
-    ).flat());
+    const values = new Set(menuItems.map(item => {
+      if (key === 'priceRange') {
+        return getPriceRange(item.price);
+      }
+      
+      if (key.includes('event')) {
+        return safeSplit(item[key]);
+      }
+      
+      return item[key];
+    }).flat().filter(Boolean));
+    
     return ['all', ...Array.from(values)];
   };
 
@@ -84,13 +95,13 @@ const MenuItems = () => {
 
     if (filters.eventName !== 'all') {
       result = result.filter(item => 
-        item.event_names.split(',').map(e => e.trim()).includes(filters.eventName)
+        safeSplit(item.event_names).includes(filters.eventName)
       );
     }
 
     if (filters.eventCategory !== 'all') {
       result = result.filter(item => 
-        item.event_categories.split(',').map(e => e.trim()).includes(filters.eventCategory)
+        safeSplit(item.event_categories).includes(filters.eventCategory)
       );
     }
 
@@ -219,7 +230,7 @@ const MenuItems = () => {
         </button>
       </div>
 
-      {/* Filters with icons */}
+      {/* Filters */}
       <div className="grid grid-cols-3 lg:grid-cols-3 gap-4 mb-6">
         <FilterDropdown
           label="Type"
@@ -295,15 +306,15 @@ const MenuItems = () => {
                 <td className="py-2 px-4">₹{parseFloat(item.price).toFixed(2)}</td>
                 <td className="py-2 px-4">
                   <ul className="list-disc pl-4">
-                    {item.event_names.split(",").map((event, index) => (
-                      <li key={index} className="text-sm">{event.trim()}</li>
+                    {safeSplit(item.event_names).map((event, index) => (
+                      <li key={index} className="text-sm">{event}</li>
                     ))}
                   </ul>
                 </td>
                 <td className="py-2 px-4">
                   <ul className="list-disc pl-4">
-                    {item.event_categories.split(",").map((category, index) => (
-                      <li key={index} className="text-sm">{category.trim()}</li>
+                    {safeSplit(item.event_categories).map((category, index) => (
+                      <li key={index} className="text-sm">{category}</li>
                     ))}
                   </ul>
                 </td>
