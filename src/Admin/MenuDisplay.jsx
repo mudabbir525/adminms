@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Edit3, Trash2, ChevronDown, Filter, FilterX, Utensils, Calendar, Tag, DollarSign, CircleDot } from "lucide-react";
 import { Menu } from '@headlessui/react';
+import axios from "axios";
 
 const MenuItems = () => {
   const [menuItems, setMenuItems] = useState([]);
