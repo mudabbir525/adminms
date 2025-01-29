@@ -46,18 +46,9 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
       label: "Superfast",
       hasDropdown: true,
       dropdownItems: [
+
         {
-          label: "Categories",
-          path: "/sf-category",
-          icon: <CopyPlus className="w-4 h-4" />,
-        },
-        {
-          label: "Items",
-          path: "/sf-items",
-          icon: <Edit className="w-4 h-4" />,
-        },
-        {
-          label: "Add sup super ",
+          label: "Add section super ",
           path: "/crpb",
           icon: <CopyPlus className="w-4 h-4" />,
         },
@@ -67,12 +58,38 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
           icon: <Edit className="w-4 h-4" />,
         },
         {
-          label: "sub section",
+          label: "Menu add",
+          path: "/crpb",
+          icon: <Edit className="w-4 h-4" />,
+        },
+        {
+          label: "Menus",
           path: "/display-crpb",
           icon: <Edit className="w-4 h-4" />,
         },
-        
-      
+        {
+          label: "Superfast Events",
+          path: "/superfast-events",
+          icon: <CopyPlus className="w-4 h-4" />,
+        },
+        {
+          label: "Superfast Event Pricing",
+          path: "/superfast-events-pricing",
+          icon: <Edit className="w-4 h-4" />,
+        },
+
+        {
+          label: "Superfast Categories",
+          path: "/sf-category",
+          icon: <CopyPlus className="w-4 h-4" />,
+        },
+        {
+          label: "Superfast Items",
+          path: "/sf-items",
+          icon: <Edit className="w-4 h-4" />,
+        },
+
+
       ],
     },
     {
@@ -102,7 +119,7 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
         },
       ],
     },
-    
+
     {
       icon: <PartyPopper className="w-5 h-5" />,
       label: "Event",
@@ -194,7 +211,7 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
         },
       ],
     },
-    
+
     {
       icon: <Layout className="w-5 h-5" />,
       label: "Carousel",
@@ -229,8 +246,8 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
         },
       ],
     },
-    
-    
+
+
     {
       icon: <Ticket className="w-5 h-5" />,
       label: "Coupons",
@@ -324,16 +341,15 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
             onClick={() => toggleDropdown(item.label)}
             className={`
               flex items-center justify-between w-full p-2
-              hover:bg-gray-100 rounded
+              hover:bg-gray-100 rounded overflow-scroll
               transition-colors duration-200
-              ${
-                currentPath.startsWith(`/${item.label.toLowerCase()}`)
-                  ? "bg-blue-50 text-blue-600"
-                  : ""
+              ${currentPath.startsWith(`/${item.label.toLowerCase()}`)
+                ? "bg-blue-50 text-blue-600"
+                : ""
               }
               `}
           >
-            <div className="flex items-center">
+            <div className="flex items-center overflow-scroll">
               {item.icon}
               <span className="ml-3">{item.label}</span>
             </div>
@@ -389,25 +405,25 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
       {!isOpen && (
         <div
           onClick={toggleSidebar}
-          className="fixed inset-0 bg-black opacity-50 z-40 lg:hidden"
+          className="fixed overflow-scroll inset-0 bg-black opacity-50 z-40 lg:hidden"
         />
       )}
       <aside
         className={`
-          fixed top-0 left-0  min-h-screen overflow-auto bg-white shadow-lg z-50
+          fixed top-0 left-0  overflow-scroll min-h-screen overflow-auto bg-white shadow-lg z-50
           transition-all duration-300 w-64
           scrollbar-hide
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
           lg:translate-x-0
         `}
       >
-        <div className="flex items-center justify-between p-4 border-b">
+        <div className="flex items-center  overflow-scroll justify-between p-4 border-b">
           <h2 className="text-xl font-bold">Admin Panel</h2>
           <button onClick={toggleSidebar} className="lg:hidden">
             <Menu />
           </button>
         </div>
-        <nav className="p-4">{menuItems.map(renderMenuItem)}</nav>
+        <nav className="p-4 overflow-scroll">{menuItems.map(renderMenuItem)}</nav>
       </aside>
     </>
   );
