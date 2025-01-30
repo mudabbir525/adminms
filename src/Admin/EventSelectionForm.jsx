@@ -72,53 +72,54 @@ const EventSelectionForm = ({ onEventSelect, initialValues }) => {
     };
 
     return (
-        <div className="space-y-4">
-            {error && (
-                <div className="text-red-600 bg-red-50 p-2 rounded">
-                    {error}
-                </div>
-            )}
+        // <div className="space-y-4">
+        //     {error && (
+        //         <div className="text-red-600 bg-red-50 p-2 rounded">
+        //             {error}
+        //         </div>
+        //     )}
             
-            <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Event
-                </label>
-                <select
-                    value={selectedEvent}
-                    onChange={handleEventChange}
-                    className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
-                    required
-                >
-                    <option value="">Select Event</option>
-                    {uniqueEventNames.map((eventName, index) => (
-                        <option key={index} value={eventName}>
-                            {eventName}
-                        </option>
-                    ))}
-                </select>
-            </div>
+        //     <div>
+        //         <label className="block text-sm font-medium text-gray-700 mb-1">
+        //             Event
+        //         </label>
+        //         <select
+        //             value={selectedEvent}
+        //             onChange={handleEventChange}
+        //             className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
+        //             required
+        //         >
+        //             <option value="">Select Event</option>
+        //             {uniqueEventNames.map((eventName, index) => (
+        //                 <option key={index} value={eventName}>
+        //                     {eventName}
+        //                 </option>
+        //             ))}
+        //         </select>
+        //     </div>
 
-            {selectedEvent && (
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Event Category
-                    </label>
-                    <select
-                        value={selectedCategory}
-                        onChange={handleCategoryChange}
-                        className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
-                        required
-                    >
-                        <option value="">Select Category</option>
-                        {categories.map((category, index) => (
-                            <option key={index} value={category}>
-                                {category}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-            )}
-        </div>
+        //     {selectedEvent && (
+        //         <div>
+        //             <label className="block text-sm font-medium text-gray-700 mb-1">
+        //                 Event Category
+        //             </label>
+        //             <select
+        //                 value={selectedCategory}
+        //                 onChange={handleCategoryChange}
+        //                 className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
+        //                 required
+        //             >
+        //                 <option value="">Select Category</option>
+        //                 {categories.map((category, index) => (
+        //                     <option key={index} value={category}>
+        //                         {category}
+        //                     </option>
+        //                 ))}
+        //             </select>
+        //         </div>
+        //     )}
+        // </div>
+        <div></div>
     );
 };
 

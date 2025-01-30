@@ -15,7 +15,7 @@ const SupItems = () => {
         item_name: '',
         price: '',
         is_veg: 'veg',
-        menu_type: '' // Added menu_type field
+        menu_type: ''
     });
 
     const baseUrl = 'https://mahaspice.desoftimp.com/ms3/';
@@ -49,10 +49,9 @@ const SupItems = () => {
             if (data && data.categories && Array.isArray(data.categories)) {
                 const categoriesData = data.categories.map(cat => ({
                     ...cat,
-                    category_name: cat.category // Map category field to category_name for consistency
+                    category_name: cat.category
                 }));
 
-                // Extract unique events and menu types
                 const uniqueEvents = [...new Set(categoriesData.map(item => item.event_name))];
                 const uniqueTypes = [...new Set(categoriesData.map(item => item.type))];
 
@@ -129,6 +128,28 @@ const SupItems = () => {
         }
     };
 
+    const handleEdit = (item) => {
+        // Find the category for this item to get the menu type
+        const category = categories.find(cat => 
+            cat.category_name === item.category_name && 
+            cat.event_name === item.event_name
+        );
+
+        // Set the form data with all the item details
+        setFormData({
+            id: item.id,
+            category_name: item.category_name,
+            event_name: item.event_name,
+            item_name: item.item_name,
+            price: item.price,
+            is_veg: item.is_veg ? 'veg' : 'non-veg',
+            menu_type: category?.type || ''
+        });
+
+        // Show the modal
+        setShowModal(true);
+    };
+
     const resetForm = () => {
         setFormData({
             id: null,
@@ -149,7 +170,6 @@ const SupItems = () => {
         }));
     };
 
-    // Modified grouping function to include menu type
     const groupedItems = items.reduce((acc, item) => {
         const category = categories.find(cat =>
             cat.category_name === item.category_name &&
@@ -211,22 +231,13 @@ const SupItems = () => {
                                                             <div>
                                                                 <h4 className="font-semibold text-gray-800">{item.item_name}</h4>
                                                                 <p className="text-lg font-medium text-gray-900 mt-1">₹{item.price}</p>
-                                                                <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium mt-2 ${item.is_veg ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                                                    }`}>
+                                                                <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium mt-2 ${item.is_veg ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                                                                     {item.is_veg ? 'Veg' : 'Non-veg'}
                                                                 </span>
                                                             </div>
                                                             <div className="flex gap-2">
                                                                 <button
-                                                                    onClick={() => {
-                                                                        const category = categories.find(cat => cat.category_name === item.category_name);
-                                                                        setFormData({
-                                                                            ...item,
-                                                                            is_veg: item.is_veg ? 'veg' : 'non-veg',
-                                                                            menu_type: category?.type || ''
-                                                                        });
-                                                                        setShowModal(true);
-                                                                    }}
+                                                                    onClick={() => handleEdit(item)}
                                                                     className="p-2 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
                                                                 >
                                                                     <Edit2 size={16} />
