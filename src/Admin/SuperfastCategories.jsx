@@ -38,7 +38,6 @@ const SuperfastCategories = () => {
   const fetchEvents = async () => {
     try {
       const response = await axios.get('https://mahaspice.desoftimp.com/ms3/get_sf_events.php');
-      console.log('Events response:', response.data); // Debug log
       if (response.data.success) {
         setEvents(response.data.events || []);
       }
@@ -51,7 +50,6 @@ const SuperfastCategories = () => {
   const fetchTypes = async () => {
     try {
       const response = await axios.get('https://mahaspice.desoftimp.com/ms3/get_sf_crpb.php');
-      console.log('Types response:', response.data); // Debug log
       if (response.data.success) {
         setTypes(response.data.types || []);
       }
@@ -63,7 +61,6 @@ const SuperfastCategories = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log('Input change:', name, value); // Debug log
     setCurrentCategory(prev => ({
       ...prev,
       [name]: ['position', 'limit'].includes(name) ? parseInt(value) || 0 : value
@@ -73,7 +70,6 @@ const SuperfastCategories = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    console.log('Submitting category:', currentCategory); // Debug log
 
     try {
       const response = await axios.post(
@@ -115,8 +111,9 @@ const SuperfastCategories = () => {
     }
   };
 
+  // Filter categories based on selected type
   const filteredCategories = selectedType 
-    ? categories.filter(category => category.type === selectedType)
+    ? categories.filter(cat => cat.type.toLowerCase() === selectedType.toLowerCase())
     : categories;
 
   const typeFilters = [
@@ -131,13 +128,12 @@ const SuperfastCategories = () => {
         <h2 className="text-2xl font-bold">Superfast Categories</h2>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="bg-blue-500 text-white p-2 rounded flex items-center"
+          className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded flex items-center"
         >
           <Plus className="mr-2" /> Add Category
         </button>
       </div>
 
-      {/* Type Filter Section */}
       <div className="flex justify-center space-x-4 mb-6">
         <button
           onClick={() => setSelectedType(null)}
@@ -155,17 +151,18 @@ const SuperfastCategories = () => {
             onClick={() => setSelectedType(type)}
             className={`flex items-center px-4 py-2 rounded transition-colors ${
               selectedType === type 
-                ? `${color} bg-opacity-20 bg-gray-200` 
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                ? 'bg-gray-200 font-medium' 
+                : 'bg-gray-100 hover:bg-gray-200'
             }`}
           >
-            <Icon className={`mr-2 ${color}`} /> {type.charAt(0).toUpperCase() + type.slice(1)}
+            <Icon className={`mr-2 ${color}`} /> 
+            {type.charAt(0).toUpperCase() + type.slice(1)}
           </button>
         ))}
       </div>
 
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
           {error}
         </div>
       )}
@@ -178,27 +175,25 @@ const SuperfastCategories = () => {
           >
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-lg font-semibold">{category.category}</h3>
-              <div className="flex space-x-2">
-                <button 
-                  onClick={() => handleDelete(category.id)}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  <Trash2 size={20} />
-                </button>
-              </div>
+              <button 
+                onClick={() => handleDelete(category.id)}
+                className="text-red-500 hover:text-red-700"
+              >
+                <Trash2 size={20} />
+              </button>
             </div>
-            <div className="space-y-1">
-              <p><span className="font-medium">Event:</span> {category.event_name}</p>
-              <p><span className="font-medium">Type:</span> {category.type}</p>
-              <p><span className="font-medium">Position:</span> {category.position}</p>
-              <p><span className="font-medium">Limit:</span> {category.limit}</p>
+            <div className="space-y-1 text-gray-600">
+              <p><span className="font-medium text-gray-700">Event:</span> {category.event_name}</p>
+              <p><span className="font-medium text-gray-700">Type:</span> {category.type}</p>
+              <p><span className="font-medium text-gray-700">Position:</span> {category.position}</p>
+              <p><span className="font-medium text-gray-700">Limit:</span> {category.limit}</p>
             </div>
           </div>
         ))}
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-96">
             <h2 className="text-xl font-bold mb-4">Add New Category</h2>
             <form onSubmit={handleSubmit}>
@@ -280,13 +275,13 @@ const SuperfastCategories = () => {
                 <button 
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="bg-gray-200 text-gray-700 px-4 py-2 rounded"
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded"
                 >
                   Cancel
                 </button>
                 <button 
                   type="submit" 
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
                 >
                   Add Category
                 </button>

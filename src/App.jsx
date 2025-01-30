@@ -53,6 +53,7 @@ import Offers from "./Admin/Offers";
 import SectionSuperfast from "./Admin/Superfast";
 import SuperfastEvents from "./Admin/SuperfastEvents";
 import SupEventPricing from "./Admin/SupEventPricing";
+import SupItems from "./Admin/SupItems";
 
 
 function App() {
@@ -133,6 +134,7 @@ function App() {
             <Route path="/edit-crpb/:id" element={<CRPBEdit />} />
             <Route path="/sf-category" element={<SuperfastCategories />} />
             <Route path="/sf-items" element={<AddSupItems />} />
+            <Route path="/superfast-items" element={<SupItems />} />
             <Route path="/offers" element={<Offers />} />
             <Route path="/superfast" element={<SectionSuperfast />} />
             <Route path="/superfast-events" element={<SuperfastEvents />} />

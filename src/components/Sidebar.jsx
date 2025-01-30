@@ -85,7 +85,7 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
         },
         {
           label: "Superfast Items",
-          path: "/sf-items",
+          path: "/superfast-items",
           icon: <Edit className="w-4 h-4" />,
         },
 
