@@ -359,88 +359,88 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
     },
   ];
 
-  const renderMenuItem = (item) => {
-    if (item.hasDropdown) {
-      return (
-        <div key={item.label} className="mb-2">
-          <button
-            onClick={() => toggleDropdown(item.label)}
-            className={`
-              flex items-center justify-between w-full p-2
-              hover:bg-gray-100 rounded 
-              transition-colors duration-200
-              ${currentPath.startsWith(`/${item.label.toLowerCase()}`)
-                ? "bg-blue-50 text-blue-600"
-                : ""
-              }
-            `}
-          >
-            <div className="flex items-center">
-              {item.icon}
-              <span className="ml-3">{item.label}</span>
-            </div>
-            <div className={`transform transition-transform duration-200 ${openDropdown === item.label ? 'rotate-180' : ''
-              }`}>
-              <ChevronDown className="w-4 h-4" />
-            </div>
-          </button>
+const renderMenuItem = (item) => {
+  if (item.hasDropdown) {
+    return (
+      <div key={item.label} className="mb-2">
+        <button
+          onClick={() => toggleDropdown(item.label)}
+          className={`
+            flex items-center justify-between w-full p-2
+            hover:bg-gray-100 rounded 
+            transition-colors duration-200
+            ${currentPath.startsWith(`/${item.label.toLowerCase()}`)
+              ? "bg-blue-50 text-blue-600"
+              : ""
+            }
+          `}
+        >
+          <div className="flex items-center">
+            {item.icon}
+            <span className="ml-3 text-xs">{item.label}</span> {/* Reduced font size */}
+          </div>
+          <div className={`transform transition-transform duration-200 ${openDropdown === item.label ? 'rotate-180' : ''}`}>
+            <ChevronDown className="w-4 h-4" />
+          </div>
+        </button>
 
+        <div
+          className="overflow-hidden transition-all duration-300 ease-in-out"
+          style={{
+            maxHeight: openDropdown === item.label ? `${dropdownHeights[item.label] || 1000}px` : '0',
+            opacity: openDropdown === item.label ? 1 : 0
+          }}
+        >
           <div
-            className="overflow-hidden transition-all duration-300 ease-in-out"
-            style={{
-              maxHeight: openDropdown === item.label ? `${dropdownHeights[item.label] || 1000}px` : '0',
-              opacity: openDropdown === item.label ? 1 : 0
+            ref={el => {
+              if (el && !dropdownHeights[item.label]) {
+                dropdownRefs.current[item.label] = el;
+                setDropdownHeights(prev => ({
+                  ...prev,
+                  [item.label]: el.scrollHeight
+                }));
+              }
             }}
+            className="pl-8 mt-1"
           >
-            <div
-              ref={el => {
-                if (el && !dropdownHeights[item.label]) {
-                  dropdownRefs.current[item.label] = el;
-                  setDropdownHeights(prev => ({
-                    ...prev,
-                    [item.label]: el.scrollHeight
-                  }));
-                }
-              }}
-              className="pl-8 mt-1"
-            >
-              {item.dropdownItems.map((subItem) => (
-                <Link
-                  key={`${subItem.label}-${subItem.path}`}
-                  to={subItem.path}
-                  className={`
-                    flex items-center w-full p-2 text-sm
-                    hover:bg-gray-100 rounded
-                    transition-colors duration-200
-                    ${currentPath === subItem.path ? "bg-blue-50 text-blue-600" : ""}
-                  `}
-                >
-                  {subItem.icon && <span className="mr-2">{subItem.icon}</span>}
-                  {subItem.label}
-                </Link>
-              ))}
-            </div>
+            {item.dropdownItems.map((subItem) => (
+              <Link
+                key={`${subItem.label}-${subItem.path}`}
+                to={subItem.path}
+                className={`
+                  flex items-center w-full p-2 text-xs
+                  hover:bg-gray-100 rounded
+                  transition-colors duration-200
+                  ${currentPath === subItem.path ? "bg-blue-50 text-blue-600" : ""}
+                `}
+              >
+                {subItem.icon && <span className="mr-2 text-xs">{subItem.icon}</span>} {/* Reduced font size */}
+                {subItem.label}
+              </Link>
+            ))}
           </div>
         </div>
-      );
-    }
-
-    return (
-      <Link
-        key={item.path}
-        to={item.path}
-        className={`
-          flex items-center w-full p-2 mb-2
-          hover:bg-gray-100 rounded
-          transition-colors duration-200
-          ${currentPath === item.path ? "bg-blue-50 text-blue-600" : ""}
-        `}
-      >
-        {item.icon}
-        <span className="ml-3">{item.label}</span>
-      </Link>
+      </div>
     );
-  };
+  }
+
+  return (
+    <Link
+      key={item.label}
+      to={item.path}
+      className={`
+        flex items-center w-full p-2 text-xs
+        hover:bg-gray-100 rounded
+        transition-colors duration-200
+        ${currentPath === item.path ? "bg-blue-50 text-blue-600" : ""}
+      `}
+    >
+      {item.icon && <span className="mr-2 text-xs">{item.icon}</span>} {/* Reduced font size */}
+      {item.label}
+    </Link>
+  );
+};
+
 
   return (
     <>
