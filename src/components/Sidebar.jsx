@@ -341,7 +341,7 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
             onClick={() => toggleDropdown(item.label)}
             className={`
               flex items-center justify-between w-full p-2
-              hover:bg-gray-100 rounded overflow-scroll
+              hover:bg-gray-100 rounded 
               transition-colors duration-200
               ${currentPath.startsWith(`/${item.label.toLowerCase()}`)
                 ? "bg-blue-50 text-blue-600"
@@ -349,7 +349,7 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
               }
               `}
           >
-            <div className="flex items-center overflow-scroll">
+            <div className="flex items-center ">
               {item.icon}
               <span className="ml-3">{item.label}</span>
             </div>
@@ -410,7 +410,7 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
       )}
       <aside
         className={`
-          fixed top-0 left-0  overflow-scroll min-h-screen bg-white shadow-lg z-50
+          fixed top-0 left-0   min-h-screen bg-white shadow-lg z-50
           transition-all duration-300 w-64
           scrollbar-hide
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
