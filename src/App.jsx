@@ -54,6 +54,7 @@ import SectionSuperfast from "./Admin/Superfast";
 import SuperfastEvents from "./Admin/SuperfastEvents";
 import SupEventPricing from "./Admin/SupEventPricing";
 import SupItems from "./Admin/SupItems";
+import DateBlocking from "./Admin/DateBlocking";
 
 
 function App() {
@@ -139,6 +140,7 @@ function App() {
             <Route path="/superfast" element={<SectionSuperfast />} />
             <Route path="/superfast-events" element={<SuperfastEvents />} />
             <Route path="/superfast-events-pricing" element={<SupEventPricing />} />
+            <Route path="/dateblock" element={<DateBlocking />} />
             
 
 

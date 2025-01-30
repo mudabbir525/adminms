@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
   Home,
@@ -22,18 +22,19 @@ import {
   FolderOpenDot,
   PartyPopper,
   Zap,
+  Calendar,
 } from "lucide-react";
 import { GiFruitBowl } from "react-icons/gi";
 
 const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
-  const [openDropdowns, setOpenDropdowns] = useState({});
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const [dropdownHeights, setDropdownHeights] = useState({});
+  const dropdownRefs = useRef({});
 
   const toggleDropdown = (label) => {
-    setOpenDropdowns((prev) => ({
-      ...prev,
-      [label]: !prev[label],
-    }));
+    setOpenDropdown(currentOpen => currentOpen === label ? null : label);
   };
+
 
   const menuItems = [
     {
@@ -46,7 +47,6 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
       label: "Superfast",
       hasDropdown: true,
       dropdownItems: [
-
         {
           label: "Add section super ",
           path: "/crpb",
@@ -77,7 +77,6 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
           path: "/superfast-events-pricing",
           icon: <Edit className="w-4 h-4" />,
         },
-
         {
           label: "Superfast Categories",
           path: "/sf-category",
@@ -88,8 +87,6 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
           path: "/superfast-items",
           icon: <Edit className="w-4 h-4" />,
         },
-
-
       ],
     },
     {
@@ -119,7 +116,6 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
         },
       ],
     },
-
     {
       icon: <PartyPopper className="w-5 h-5" />,
       label: "Event",
@@ -211,7 +207,6 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
         },
       ],
     },
-
     {
       icon: <Layout className="w-5 h-5" />,
       label: "Carousel",
@@ -246,8 +241,6 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
         },
       ],
     },
-
-
     {
       icon: <Ticket className="w-5 h-5" />,
       label: "Coupons",
@@ -305,6 +298,18 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
       ],
     },
     {
+      icon: <Calendar className="w-5 h-5" />,
+      label: "Date blocking",
+      hasDropdown: true,
+      dropdownItems: [
+        {
+          label: "Date Block",
+          path: "/dateblock",
+          icon: <CopyPlus className="w-4 h-4" />,
+        },
+      ],
+    },
+    {
       icon: <SettingsIcon className="w-5 h-5" />,
       label: "Settings",
       hasDropdown: true,
@@ -347,21 +352,38 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
                 ? "bg-blue-50 text-blue-600"
                 : ""
               }
-              `}
+            `}
           >
-            <div className="flex items-center ">
+            <div className="flex items-center">
               {item.icon}
               <span className="ml-3">{item.label}</span>
             </div>
-            {openDropdowns[item.label] ? (
+            <div className={`transform transition-transform duration-200 ${
+              openDropdown === item.label ? 'rotate-180' : ''
+            }`}>
               <ChevronDown className="w-4 h-4" />
-            ) : (
-              <ChevronRight className="w-4 h-4" />
-            )}
+            </div>
           </button>
 
-          {openDropdowns[item.label] && (
-            <div className="pl-8 mt-1">
+          <div 
+            className="overflow-hidden transition-all duration-300 ease-in-out"
+            style={{
+              maxHeight: openDropdown === item.label ? `${dropdownHeights[item.label] || 1000}px` : '0',
+              opacity: openDropdown === item.label ? 1 : 0
+            }}
+          >
+            <div
+              ref={el => {
+                if (el && !dropdownHeights[item.label]) {
+                  dropdownRefs.current[item.label] = el;
+                  setDropdownHeights(prev => ({
+                    ...prev,
+                    [item.label]: el.scrollHeight
+                  }));
+                }
+              }}
+              className="pl-8 mt-1"
+            >
               {item.dropdownItems.map((subItem) => (
                 <Link
                   key={`${subItem.label}-${subItem.path}`}
@@ -378,7 +400,7 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
                 </Link>
               ))}
             </div>
-          )}
+          </div>
         </div>
       );
     }
@@ -410,7 +432,7 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
       )}
       <aside
         className={`
-          fixed top-0 left-0   min-h-screen bg-white shadow-lg z-50
+          fixed top-0 left-0 min-h-screen bg-white shadow-lg z-50
           transition-all duration-300 w-64
           scrollbar-hide
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
