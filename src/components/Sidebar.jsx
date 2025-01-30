@@ -405,7 +405,7 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
       {!isOpen && (
         <div
           onClick={toggleSidebar}
-          className="fixed overflow-scroll inset-0 bg-black opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black opacity-50 z-40 lg:hidden"
         />
       )}
       <aside
@@ -417,7 +417,7 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
           lg:translate-x-0
         `}
       >
-        <div className="flex items-center  overflow-scroll justify-between p-4 border-b">
+        <div className="flex items-center justify-between p-4 border-b">
           <h2 className="text-xl font-bold">Admin Panel</h2>
           <button onClick={toggleSidebar} className="lg:hidden">
             <Menu />
