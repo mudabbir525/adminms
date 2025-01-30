@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Plus, Trash2, Filter, Crown, Star, Medal } from 'lucide-react';
+import axios from 'axios';
 
 const SuperfastCategories = () => {
   const [categories, setCategories] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [types, setTypes] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentCategory, setCurrentCategory] = useState({
     category: '',
+    event_name: '',
     type: '',
     position: 0,
     limit: 0
@@ -16,50 +19,83 @@ const SuperfastCategories = () => {
 
   useEffect(() => {
     fetchCategories();
+    fetchEvents();
+    fetchTypes();
   }, []);
 
   const fetchCategories = async () => {
     try {
       const response = await axios.get('https://mahaspice.desoftimp.com/ms3/getsf_categories.php');
       if (response.data.success) {
-        setCategories(response.data.categories);
+        setCategories(response.data.categories || []);
       }
     } catch (err) {
+      console.error('Error fetching categories:', err);
       setError('Failed to fetch categories');
+    }
+  };
+
+  const fetchEvents = async () => {
+    try {
+      const response = await axios.get('https://mahaspice.desoftimp.com/ms3/get_sf_events.php');
+      console.log('Events response:', response.data); // Debug log
+      if (response.data.success) {
+        setEvents(response.data.events || []);
+      }
+    } catch (err) {
+      console.error('Error fetching events:', err);
+      setError('Failed to fetch events');
+    }
+  };
+
+  const fetchTypes = async () => {
+    try {
+      const response = await axios.get('https://mahaspice.desoftimp.com/ms3/get_sf_crpb.php');
+      console.log('Types response:', response.data); // Debug log
+      if (response.data.success) {
+        setTypes(response.data.types || []);
+      }
+    } catch (err) {
+      console.error('Error fetching types:', err);
+      setError('Failed to fetch types');
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    console.log('Input change:', name, value); // Debug log
     setCurrentCategory(prev => ({
       ...prev,
-      [name]: name === 'type' ? value : 
-              ['position', 'limit'].includes(name) ? parseInt(value) : value
+      [name]: ['position', 'limit'].includes(name) ? parseInt(value) || 0 : value
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    console.log('Submitting category:', currentCategory); // Debug log
 
     try {
       const response = await axios.post(
-        'https://mahaspice.desoftimp.com/ms3/addsf_category.php', 
+        'https://mahaspice.desoftimp.com/ms3/addsf_category.php',
         currentCategory
       );
 
       if (response.data.success) {
         fetchCategories();
         setIsModalOpen(false);
-        // Reset form
         setCurrentCategory({
           category: '',
+          event_name: '',
           type: '',
           position: 0,
           limit: 0
         });
+      } else {
+        setError(response.data.message || 'Failed to add category');
       }
     } catch (err) {
+      console.error('Error adding category:', err);
       setError(err.response?.data?.message || 'Failed to add category');
     }
   };
@@ -67,7 +103,7 @@ const SuperfastCategories = () => {
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(
-        'https://mahaspice.desoftimp.com/ms3/deletesf_category.php', 
+        'https://mahaspice.desoftimp.com/ms3/deletesf_category.php',
         { data: { id } }
       );
 
@@ -79,12 +115,10 @@ const SuperfastCategories = () => {
     }
   };
 
-  // Filter categories based on selected type
   const filteredCategories = selectedType 
     ? categories.filter(category => category.type === selectedType)
     : categories;
 
-  // Type filter configuration
   const typeFilters = [
     { type: 'classic', icon: Star, color: 'text-gray-500' },
     { type: 'royal', icon: Crown, color: 'text-yellow-500' },
@@ -154,6 +188,7 @@ const SuperfastCategories = () => {
               </div>
             </div>
             <div className="space-y-1">
+              <p><span className="font-medium">Event:</span> {category.event_name}</p>
               <p><span className="font-medium">Type:</span> {category.type}</p>
               <p><span className="font-medium">Position:</span> {category.position}</p>
               <p><span className="font-medium">Limit:</span> {category.limit}</p>
@@ -162,7 +197,6 @@ const SuperfastCategories = () => {
         ))}
       </div>
 
-      {/* Rest of the modal code remains the same as in the previous version */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg w-96">
@@ -181,23 +215,39 @@ const SuperfastCategories = () => {
               </div>
 
               <div className="mb-4">
-                <label className="block mb-2">Type</label>
-                <div className="flex space-x-4">
-                  {['classic', 'royal', 'platinum'].map(type => (
-                    <label key={type} className="flex items-center">
-                      <input
-                        type="radio"
-                        name="type"
-                        value={type}
-                        checked={currentCategory.type === type}
-                        onChange={handleInputChange}
-                        className="mr-2"
-                        required
-                      />
-                      {type}
-                    </label>
+                <label className="block mb-2">Event</label>
+                <select
+                  name="event_name"
+                  value={currentCategory.event_name}
+                  onChange={handleInputChange}
+                  className="w-full border rounded p-2"
+                  required
+                >
+                  <option value="">Select Event</option>
+                  {events.map(event => (
+                    <option key={event.id} value={event.event_name}>
+                      {event.event_name}
+                    </option>
                   ))}
-                </div>
+                </select>
+              </div>
+
+              <div className="mb-4">
+                <label className="block mb-2">Type</label>
+                <select
+                  name="type"
+                  value={currentCategory.type}
+                  onChange={handleInputChange}
+                  className="w-full border rounded p-2"
+                  required
+                >
+                  <option value="">Select Type</option>
+                  {types.map(type => (
+                    <option key={type.id} value={type.name}>
+                      {type.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="mb-4">
@@ -208,6 +258,7 @@ const SuperfastCategories = () => {
                   value={currentCategory.position}
                   onChange={handleInputChange}
                   className="w-full border rounded p-2"
+                  min="0"
                   required
                 />
               </div>
@@ -220,6 +271,7 @@ const SuperfastCategories = () => {
                   value={currentCategory.limit}
                   onChange={handleInputChange}
                   className="w-full border rounded p-2"
+                  min="0"
                   required
                 />
               </div>
