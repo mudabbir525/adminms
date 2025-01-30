@@ -1,8 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  font-family: 'Roboto', 'Helvetica' !important;
+}
+
+* {
+  @apply font-roboto;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif !important;
 }
 
 .logo {
@@ -10,10 +22,13 @@
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
+  font-family: 'Roboto', 'Helvetica' !important;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -35,8 +50,10 @@
 
 .card {
   padding: 2em;
+  font-family: 'Roboto', 'Helvetica' !important;
 }
 
 .read-the-docs {
   color: #888;
+  font-family: 'Roboto', 'Helvetica' !important;
 }

@@ -55,6 +55,12 @@ import SuperfastEvents from "./Admin/SuperfastEvents";
 import SupEventPricing from "./Admin/SupEventPricing";
 import SupItems from "./Admin/SupItems";
 import DateBlocking from "./Admin/DateBlocking";
+import AddSupHomeCategory from "./Admin/AddSupHomeCategory";
+import AddSupHomeItems from "./Admin/AddSupHomeItems";
+import EditSupHomeItems from "./Admin/EditSupHomeItems";
+import EditSupHomeCategories from "./Admin/EditSupHomecategories";
+import DisplaySupHomeItems from "./Admin/DisplaySupHomeItems";
+
 
 
 function App() {
@@ -67,91 +73,97 @@ function App() {
 
   return (
     <div>
-    <div className="flex h-screen">
-      <Sidebar
-        isOpen={isSidebarOpen}
-        toggleSidebar={toggleSidebar}
-        currentPath={location.pathname}
-      />
-      <div
-        className={`
+      <div className="flex h-screen">
+        <Sidebar
+          isOpen={isSidebarOpen}
+          toggleSidebar={toggleSidebar}
+          currentPath={location.pathname}
+        />
+        <div
+          className={`
         flex flex-col flex-1 transition-all duration-300 
         ${isSidebarOpen ? "lg:ml-64" : "ml-0"}
       `}
-      >
-        <Topbar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
-        <main className="flex-1 p-4 bg-gray-100 overflow-y-auto">
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/users" element={<User />} />
-            <Route path="/edit" element={<Admin />} />
-            {/* <Route path="/users/roles" element={<UserRoles />} /> */}
-            {/* <Route path="/users/permissions" element={<UserPermissions />} /> */}
-            <Route path="/settings" element={<Settings />} />
-            {/* <Route path="/settings/general" element={<GeneralSettings />} /> */}
-            {/* <Route path="/settings/account" element={<AccountSettings />} /> */}
-            {/* <Route path="/settings/integrations" element={<Integrations />} /> */}
-            <Route path="/analytics" element={<Analytics />} />
-            {/* <Route path="/carousel" element={<Carousel />} /> */}
-            <Route path="/addmenu" element={<AddMenu />} />
-            <Route path="/editmenu/:id" element={<EditMenuPage />} />
-            <Route path="/adminmenu" element={<AdminMenuPage />} />
-            <Route path="/addcategory" element={<AddCategory />} />
-            <Route path="/admincategory" element={<AdminEditCategory />} />
-            <Route path="/editcategory/:id" element={<EditCategoryById />} />
-            <Route path="/addevent" element={<EventCategoryForm />} />
-            <Route path="/admineventdisplay" element={<EventDisplayPage />} />
-            <Route path="/admineventedit/:id" element={<EventEditPage />} />
-            <Route path="/addcarousel" element={<AddCarousel />} />
-            <Route path="/addmealbox" element={<AddMealBox />} />
-            <Route path="/displaycp" element={<CPDisplay />} />
-            <Route path="/displaycps" element={<CPTypesDisplay />} />
-            <Route path="/addcp" element={<AddCP />} />
-            <Route path="/addcps" element={<AddCPS />} />
-            <Route path="/carousel" element={<CarouselDisplay />} />
-            <Route path="/editcarousel/:id" element={<EditCarousel />} />
-            <Route path="/menuitem" element={<MenuItemForm />} />
-            <Route path="/menudisplay" element={<MenuItems />} />
-            <Route path="/menupricingform" element={<MenuPricingForm />} />
-            <Route path="/menupricingdisplay" element={<MenuPricingDisplay />} />
-            <Route path="/editsection" element={<EditSection />} />
-            <Route path="/editsectionthree" element={<EditSectionThree />} />
-            <Route path="/addhc" element={<AddHomeCategory />} />
-            <Route path="/edithc" element={<EditHomeCategories />} />
-            <Route path="/addhi" element={<AddHomeItems />} />
-            <Route path="/dishi" element={<DisplayHomeItems />} />
-            <Route path="/edit-home-items/:id" element={<EditHomeItems />} />
-            <Route path="/mealorders" element={<OrderManagement />} />
-            <Route path="/coupon" element={<AddCoupon />} />
-            <Route path="/displaycoupons" element={<DisplayCoupons />} />
-            <Route path="/coupon/:id" element={<EditCoupon />} />
-            <Route path="/addgst" element={<AddGST />} />
-            <Route path="/gst" element={<DisplayGST />} />
-            <Route path="/dloc" element={<DeliveryLocationForm />} />
-            <Route path="/disloc" element={<DisplayDL />} />
-            <Route path="/crpb" element={<CRPB />} />
-            <Route path="/display-crpb" element={<DisplayCRPB />} />
-            <Route path="/edit-crpb/:id" element={<CRPBEdit />} />
-            <Route path="/sf-category" element={<SuperfastCategories />} />
-            <Route path="/sf-items" element={<AddSupItems />} />
-            <Route path="/superfast-items" element={<SupItems />} />
-            <Route path="/offers" element={<Offers />} />
-            <Route path="/superfast" element={<SectionSuperfast />} />
-            <Route path="/superfast-events" element={<SuperfastEvents />} />
-            <Route path="/superfast-events-pricing" element={<SupEventPricing />} />
-            <Route path="/dateblock" element={<DateBlocking />} />
-            
+        >
+          <Topbar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
+          <main className="flex-1 p-4 bg-gray-100 overflow-y-auto">
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/users" element={<User />} />
+              <Route path="/edit" element={<Admin />} />
+              {/* <Route path="/users/roles" element={<UserRoles />} /> */}
+              {/* <Route path="/users/permissions" element={<UserPermissions />} /> */}
+              <Route path="/settings" element={<Settings />} />
+              {/* <Route path="/settings/general" element={<GeneralSettings />} /> */}
+              {/* <Route path="/settings/account" element={<AccountSettings />} /> */}
+              {/* <Route path="/settings/integrations" element={<Integrations />} /> */}
+              <Route path="/analytics" element={<Analytics />} />
+              {/* <Route path="/carousel" element={<Carousel />} /> */}
+              <Route path="/addmenu" element={<AddMenu />} />
+              <Route path="/editmenu/:id" element={<EditMenuPage />} />
+              <Route path="/adminmenu" element={<AdminMenuPage />} />
+              <Route path="/addcategory" element={<AddCategory />} />
+              <Route path="/admincategory" element={<AdminEditCategory />} />
+              <Route path="/editcategory/:id" element={<EditCategoryById />} />
+              <Route path="/addevent" element={<EventCategoryForm />} />
+              <Route path="/admineventdisplay" element={<EventDisplayPage />} />
+              <Route path="/admineventedit/:id" element={<EventEditPage />} />
+              <Route path="/addcarousel" element={<AddCarousel />} />
+              <Route path="/addmealbox" element={<AddMealBox />} />
+              <Route path="/displaycp" element={<CPDisplay />} />
+              <Route path="/displaycps" element={<CPTypesDisplay />} />
+              <Route path="/addcp" element={<AddCP />} />
+              <Route path="/addcps" element={<AddCPS />} />
+              <Route path="/carousel" element={<CarouselDisplay />} />
+              <Route path="/editcarousel/:id" element={<EditCarousel />} />
+              <Route path="/menuitem" element={<MenuItemForm />} />
+              <Route path="/menudisplay" element={<MenuItems />} />
+              <Route path="/menupricingform" element={<MenuPricingForm />} />
+              <Route path="/menupricingdisplay" element={<MenuPricingDisplay />} />
+              <Route path="/editsection" element={<EditSection />} />
+              <Route path="/editsectionthree" element={<EditSectionThree />} />
+              <Route path="/addhc" element={<AddHomeCategory />} />
+              <Route path="/edithc" element={<EditHomeCategories />} />
+              <Route path="/addhi" element={<AddHomeItems />} />
+              <Route path="/dishi" element={<DisplayHomeItems />} />
+              <Route path="/edit-home-items/:id" element={<EditHomeItems />} />
+              <Route path="/mealorders" element={<OrderManagement />} />
+              <Route path="/coupon" element={<AddCoupon />} />
+              <Route path="/displaycoupons" element={<DisplayCoupons />} />
+              <Route path="/coupon/:id" element={<EditCoupon />} />
+              <Route path="/addgst" element={<AddGST />} />
+              <Route path="/gst" element={<DisplayGST />} />
+              <Route path="/dloc" element={<DeliveryLocationForm />} />
+              <Route path="/disloc" element={<DisplayDL />} />
+              <Route path="/crpb" element={<CRPB />} />
+              <Route path="/display-crpb" element={<DisplayCRPB />} />
+              <Route path="/edit-crpb/:id" element={<CRPBEdit />} />
+              <Route path="/sf-category" element={<SuperfastCategories />} />
+              <Route path="/sf-items" element={<AddSupItems />} />
+              <Route path="/superfast-items" element={<SupItems />} />
+              <Route path="/offers" element={<Offers />} />
+              <Route path="/superfast" element={<SectionSuperfast />} />
+              <Route path="/superfast-events" element={<SuperfastEvents />} />
+              <Route path="/superfast-events-pricing" element={<SupEventPricing />} />
+              <Route path="/dateblock" element={<DateBlocking />} />
+              <Route path="/superfast-add-home-category" element={<AddSupHomeCategory />} />
+              <Route path="/superfast-add-home-items" element={<AddSupHomeItems />} />
+              <Route path="/superfast-edit-home-items/:id" element={<EditSupHomeItems />} />
+              <Route path="/superfast-home-categories" element={<EditSupHomeCategories />} />
+              <Route path="/superfast-home-Items" element={<DisplaySupHomeItems />} />
 
 
 
-          </Routes>
-          
-        </main>
-        
+
+
+            </Routes>
+
+          </main>
+
+        </div>
+
       </div>
-      
-    </div>
 
     </div>
   );

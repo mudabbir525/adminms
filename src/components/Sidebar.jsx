@@ -87,6 +87,27 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
           path: "/superfast-items",
           icon: <Edit className="w-4 h-4" />,
         },
+        {
+          label: "Superfast Add Home Category",
+          path: "/superfast-add-home-category",
+          icon: <CopyPlus className="w-4 h-4" />,
+        },
+        {
+          label: "Superfast Home Category",
+          path: "/superfast-home-categories",
+          icon: <Edit className="w-4 h-4" />,
+        },
+        {
+          label: "Superfast Add Home Items",
+          path: "/superfast-add-home-items",
+          icon: <CopyPlus className="w-4 h-4" />,
+        },
+        {
+          label: "Superfast Home Items",
+          path: "/superfast-home-items",
+          icon: <Edit className="w-4 h-4" />,
+        },
+
       ],
     },
     {
@@ -358,14 +379,13 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
               {item.icon}
               <span className="ml-3">{item.label}</span>
             </div>
-            <div className={`transform transition-transform duration-200 ${
-              openDropdown === item.label ? 'rotate-180' : ''
-            }`}>
+            <div className={`transform transition-transform duration-200 ${openDropdown === item.label ? 'rotate-180' : ''
+              }`}>
               <ChevronDown className="w-4 h-4" />
             </div>
           </button>
 
-          <div 
+          <div
             className="overflow-hidden transition-all duration-300 ease-in-out"
             style={{
               maxHeight: openDropdown === item.label ? `${dropdownHeights[item.label] || 1000}px` : '0',
