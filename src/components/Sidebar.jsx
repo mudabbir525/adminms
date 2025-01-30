@@ -410,7 +410,7 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
       )}
       <aside
         className={`
-          fixed top-0 left-0  overflow-scroll min-h-screen overflow-auto bg-white shadow-lg z-50
+          fixed top-0 left-0  overflow-scroll min-h-screen bg-white shadow-lg z-50
           transition-all duration-300 w-64
           scrollbar-hide
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
@@ -423,7 +423,7 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
             <Menu />
           </button>
         </div>
-        <nav className="p-4 overflow-scroll">{menuItems.map(renderMenuItem)}</nav>
+        <nav className="p-4">{menuItems.map(renderMenuItem)}</nav>
       </aside>
     </>
   );
