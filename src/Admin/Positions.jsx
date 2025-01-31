@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Save, ChevronRight } from 'lucide-react';
+import { Save, ChevronRight, Loader2, AlertCircle, RotateCcw, Filter } from 'lucide-react';
 
 const FoodPackagesDisplay = () => {
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState({
-    is_superfast: null,
     cp_type: null,
     meal_time: null,
     veg_non_veg: null,
   });
   const [isSaveEnabled, setIsSaveEnabled] = useState(false);
-  const [filterStep, setFilterStep] = useState(1); // Track the current filter step
-  const [breadcrumbs, setBreadcrumbs] = useState([]); // Track breadcrumbs
+  const [filterStep, setFilterStep] = useState(1);
+  const [breadcrumbs, setBreadcrumbs] = useState([]);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     fetchPackages();
@@ -33,13 +33,12 @@ const FoodPackagesDisplay = () => {
 
   const handleFilterChange = (filterType, value) => {
     setSelectedFilters(prev => ({ ...prev, [filterType]: value }));
-    setFilterStep(prev => prev + 1); // Move to the next filter step
-    setBreadcrumbs(prev => [...prev, { step: filterStep, filterType, value }]); // Add to breadcrumbs
+    setFilterStep(prev => prev + 1);
+    setBreadcrumbs(prev => [...prev, { step: filterStep, filterType, value }]);
   };
 
   const handleBreadcrumbClick = (step) => {
-    setFilterStep(step); // Go back to the selected step
-    // Reset filters for steps after the clicked breadcrumb
+    setFilterStep(step);
     const updatedFilters = { ...selectedFilters };
     const updatedBreadcrumbs = breadcrumbs.slice(0, step - 1);
     Object.keys(updatedFilters).forEach((key, index) => {
@@ -54,19 +53,18 @@ const FoodPackagesDisplay = () => {
 
   const resetFilters = () => {
     setSelectedFilters({
-      is_superfast: null,
       cp_type: null,
       meal_time: null,
       veg_non_veg: null,
     });
-    setFilterStep(1); // Reset to the first step
-    setBreadcrumbs([]); // Clear breadcrumbs
+    setFilterStep(1);
+    setBreadcrumbs([]);
     setIsSaveEnabled(false);
   };
 
   const filteredPackages = packages.filter(pkg => {
     return (
-      (!selectedFilters.is_superfast || pkg.is_superfast === selectedFilters.is_superfast) &&
+      pkg.is_superfast === 'No' &&
       (!selectedFilters.cp_type || pkg.cp_type === selectedFilters.cp_type) &&
       (!selectedFilters.meal_time || pkg.meal_time === selectedFilters.meal_time) &&
       (!selectedFilters.veg_non_veg || pkg.veg_non_veg === selectedFilters.veg_non_veg)
@@ -74,57 +72,39 @@ const FoodPackagesDisplay = () => {
   });
 
   const handlePositionChange = (id, newPosition) => {
-    // Ensure newPosition is a valid number
     newPosition = parseInt(newPosition);
-
-    // Find the package being updated
     const updatedPackage = packages.find(pkg => pkg.id === id);
-
     if (!updatedPackage) return;
 
-    // Create a copy of the packages array
     const newPackages = [...packages];
-
-    // Filter packages based on the same group (is_superfast, cp_type, meal_time, veg_non_veg)
-    const groupPackages = newPackages.filter(pkg => 
+    const groupPackages = newPackages.filter(pkg =>
       pkg.is_superfast === updatedPackage.is_superfast &&
       pkg.cp_type === updatedPackage.cp_type &&
       pkg.meal_time === updatedPackage.meal_time &&
       pkg.veg_non_veg === updatedPackage.veg_non_veg
     );
 
-    // Sort the group packages by their current position
     groupPackages.sort((a, b) => a.position - b.position);
-
-    // Find the index of the package being updated in the group
     const updatedIndex = groupPackages.findIndex(pkg => pkg.id === id);
-
     if (updatedIndex === -1) return;
 
-    // Remove the updated package from the group
     const [removedPackage] = groupPackages.splice(updatedIndex, 1);
-
-    // Insert the updated package at the new position
     groupPackages.splice(newPosition - 1, 0, removedPackage);
 
-    // Update the positions of all packages in the group
     groupPackages.forEach((pkg, index) => {
       pkg.position = index + 1;
     });
 
-    // Update the main packages array with the new positions
     const updatedPackages = newPackages.map(pkg => {
       const updatedPkg = groupPackages.find(gp => gp.id === pkg.id);
       return updatedPkg ? updatedPkg : pkg;
     });
 
-    // Update the state
     setPackages(updatedPackages);
     setIsSaveEnabled(true);
   };
 
   const handleSave = async () => {
-    // Check for duplicate positions
     const positions = filteredPackages.map(pkg => pkg.position);
     const hasDuplicates = new Set(positions).size !== positions.length;
 
@@ -133,6 +113,7 @@ const FoodPackagesDisplay = () => {
       return;
     }
 
+    setSaving(true);
     try {
       const response = await fetch('https://mahaspice.desoftimp.com/ms3/update_positions.php', {
         method: 'POST',
@@ -151,193 +132,219 @@ const FoodPackagesDisplay = () => {
     } catch (err) {
       alert('Failed to update positions.');
     }
+    setSaving(false);
   };
 
-  if (loading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
-  if (error) return <div className="text-red-500 text-center">{error}</div>;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-50">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+          <p className="text-gray-600 font-medium">Loading packages...</p>
+        </div>
+      </div>
+    );
+  }
 
-  // Get unique values for each filter step
-  const uniqueSuperfast = [...new Set(packages.map(pkg => pkg.is_superfast))];
-  const uniqueCpTypes = [...new Set(packages.map(pkg => pkg.cp_type))];
-  const uniqueMealTimes = [...new Set(packages.map(pkg => pkg.meal_time))];
-  const uniqueVegNonVeg = [...new Set(packages.map(pkg => pkg.veg_non_veg))];
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-50">
+        <div className="flex flex-col items-center gap-3 text-red-500">
+          <AlertCircle className="w-8 h-8" />
+          <p className="font-medium">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
-  // Breadcrumb labels
-  const breadcrumbLabels = {
-    1: `Superfast/Regular: ${selectedFilters.is_superfast === 'Yes' ? 'Superfast' : 'Regular'}`,
-    2: `CP Type: ${selectedFilters.cp_type}`,
-    3: `Meal Time: ${selectedFilters.meal_time}`,
-    4: `Veg/Non-Veg: ${selectedFilters.veg_non_veg}`,
-  };
+  const uniqueCpTypes = [...new Set(packages.filter(pkg => pkg.is_superfast === 'No').map(pkg => pkg.cp_type))];
+  const uniqueMealTimes = [...new Set(packages.filter(pkg => pkg.is_superfast === 'No').map(pkg => pkg.meal_time))];
+  const uniqueVegNonVeg = [...new Set(packages.filter(pkg => pkg.is_superfast === 'No').map(pkg => pkg.veg_non_veg))];
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-6">Food Packages</h1>
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-2xl font-bold text-gray-800">Regular Food Packages</h1>
+            <div className="flex items-center gap-2">
+              <Filter className="w-5 h-5 text-blue-500" />
+              <span className="text-gray-600">Step {filterStep} of 3</span>
+            </div>
+          </div>
 
-      {/* Breadcrumbs */}
-      {breadcrumbs.length > 0 && (
-        <div className="flex items-center gap-2 mb-6">
-          {breadcrumbs.map((crumb, index) => (
-            <React.Fragment key={index}>
-              <button
-                onClick={() => handleBreadcrumbClick(crumb.step)}
-                className="text-blue-500 hover:underline"
-              >
-                {breadcrumbLabels[crumb.step]}
-              </button>
-              {index < breadcrumbs.length - 1 && <ChevronRight className="w-4 h-4 text-gray-500" />}
-            </React.Fragment>
-          ))}
+          {breadcrumbs.length > 0 && (
+            <div className="flex items-center gap-2 mb-6 bg-gray-50 p-3 rounded-lg">
+              {breadcrumbs.map((crumb, index) => (
+                <React.Fragment key={index}>
+                  <button
+                    onClick={() => handleBreadcrumbClick(crumb.step)}
+                    className="text-blue-600 hover:text-blue-800 font-medium text-sm"
+                  >
+                    {crumb.value}
+                  </button>
+                  {index < breadcrumbs.length - 1 && (
+                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          )}
+
+          {filterStep === 1 && (
+            <div className="mb-8">
+              <h2 className="text-lg font-semibold mb-4 text-gray-700">Select CP Type</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {uniqueCpTypes.map((value, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleFilterChange('cp_type', value)}
+                    className={`p-4 rounded-lg transition-all ${selectedFilters.cp_type === value
+                        ? 'bg-blue-500 text-white shadow-md'
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                      }`}
+                  >
+                    {value}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {filterStep === 2 && (
+            <div className="mb-8">
+              <h2 className="text-lg font-semibold mb-4 text-gray-700">Select Meal Time</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {uniqueMealTimes.map((value, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleFilterChange('meal_time', value)}
+                    className={`p-4 rounded-lg transition-all ${selectedFilters.meal_time === value
+                        ? 'bg-blue-500 text-white shadow-md'
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                      }`}
+                  >
+                    {value}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {filterStep === 3 && (
+            <div className="mb-8">
+              <h2 className="text-lg font-semibold mb-4 text-gray-700">Select Veg or Non-Veg</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {uniqueVegNonVeg.map((value, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleFilterChange('veg_non_veg', value)}
+                    className={`p-4 rounded-lg transition-all ${selectedFilters.veg_non_veg === value
+                        ? 'bg-blue-500 text-white shadow-md'
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                      }`}
+                  >
+                    {value}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {filterStep > 3 && (
+            <>
+              <div className="overflow-x-auto rounded-lg border border-gray-200 mb-6">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Meal Time</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {filteredPackages
+                      .sort((a, b) => a.position - b.position)
+                      .map((item) => {
+                        const groupPackages = filteredPackages.filter(pkg =>
+                          pkg.is_superfast === item.is_superfast &&
+                          pkg.cp_type === item.cp_type &&
+                          pkg.meal_time === item.meal_time &&
+                          pkg.veg_non_veg === item.veg_non_veg
+                        );
+                        const positionOptions = Array.from(
+                          { length: groupPackages.length },
+                          (_, i) => i + 1
+                        );
+
+                        return (
+                          <tr key={item.id} className="hover:bg-gray-50">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                              {item.cp_name}
+                            </td>
+                            <td className="px-6 py-4 text-sm text-gray-500">
+                              {item.description}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              {item.meal_time}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              Regular
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                              ₹{parseFloat(item.price).toFixed(2)}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <select
+                                value={item.position}
+                                onChange={(e) => handlePositionChange(item.id, e.target.value)}
+                                className="block w-20 text-sm border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                              >
+                                {positionOptions.map((pos) => (
+                                  <option key={pos} value={pos}>
+                                    {pos}
+                                  </option>
+                                ))}
+                              </select>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="flex gap-4">
+                <button
+                  onClick={handleSave}
+                  disabled={!isSaveEnabled || saving}
+                  className={`inline-flex items-center px-4 py-2 rounded-lg transition-all ${isSaveEnabled && !saving
+                      ? 'bg-blue-500 hover:bg-blue-600 text-white'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
+                >
+                  {saving ? (
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  ) : (
+                    <Save className="w-5 h-5 mr-2" />
+                  )}
+                  {saving ? 'Saving...' : 'Save Positions'}
+                </button>
+                <button
+                  onClick={resetFilters}
+                  className="inline-flex items-center px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all"
+                >
+                  <RotateCcw className="w-5 h-5 mr-2" />
+                  Reset Filters
+                </button>
+              </div>
+            </>
+          )}
         </div>
-      )}
-
-      {/* Step 1: Superfast/Regular */}
-      {filterStep === 1 && (
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-4">Select Superfast or Regular</h2>
-          <div className="flex gap-4">
-            {uniqueSuperfast.map((value, index) => (
-              <button
-                key={index}
-                onClick={() => handleFilterChange('is_superfast', value)}
-                className={`px-4 py-2 rounded ${selectedFilters.is_superfast === value ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-              >
-                {value === 'Yes' ? 'Superfast' : 'Regular'}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Step 2: CP Types */}
-      {filterStep === 2 && (
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-4">Select CP Type</h2>
-          <div className="flex gap-4">
-            {uniqueCpTypes.map((value, index) => (
-              <button
-                key={index}
-                onClick={() => handleFilterChange('cp_type', value)}
-                className={`px-4 py-2 rounded ${selectedFilters.cp_type === value ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-              >
-                {value}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Step 3: Meal Times */}
-      {filterStep === 3 && (
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-4">Select Meal Time</h2>
-          <div className="flex gap-4">
-            {uniqueMealTimes.map((value, index) => (
-              <button
-                key={index}
-                onClick={() => handleFilterChange('meal_time', value)}
-                className={`px-4 py-2 rounded ${selectedFilters.meal_time === value ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-              >
-                {value}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Step 4: Veg/Non-Veg */}
-      {filterStep === 4 && (
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-4">Select Veg or Non-Veg</h2>
-          <div className="flex gap-4">
-            {uniqueVegNonVeg.map((value, index) => (
-              <button
-                key={index}
-                onClick={() => handleFilterChange('veg_non_veg', value)}
-                className={`px-4 py-2 rounded ${selectedFilters.veg_non_veg === value ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-              >
-                {value}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Display Packages After All Filters Are Selected */}
-      {filterStep > 4 && (
-        <>
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-200">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="px-4 py-2 border">Name</th>
-                  <th className="px-4 py-2 border">Description</th>
-                  <th className="px-4 py-2 border">Meal Time</th>
-                  <th className="px-4 py-2 border">Type</th>
-                  <th className="px-4 py-2 border">Price</th>
-                  <th className="px-4 py-2 border">Position</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredPackages
-                  .sort((a, b) => a.position - b.position)
-                  .map((item) => {
-                    // Generate dropdown options for positions
-                    const groupPackages = filteredPackages.filter(pkg => 
-                      pkg.is_superfast === item.is_superfast &&
-                      pkg.cp_type === item.cp_type &&
-                      pkg.meal_time === item.meal_time &&
-                      pkg.veg_non_veg === item.veg_non_veg
-                    );
-                    const positionOptions = Array.from({ length: groupPackages.length }, (_, i) => i + 1);
-
-                    return (
-                      <tr key={item.id} className="hover:bg-gray-50">
-                        <td className="px-4 py-2 border">{item.cp_name}</td>
-                        <td className="px-4 py-2 border">{item.description}</td>
-                        <td className="px-4 py-2 border">{item.meal_time}</td>
-                        <td className="px-4 py-2 border">
-                          {item.is_superfast === 'Yes' ? 'Superfast' : 'Regular'}
-                        </td>
-                        <td className="px-4 py-2 border">₹{parseFloat(item.price).toFixed(2)}</td>
-                        <td className="px-4 py-2 border">
-                          <select
-                            value={item.position}
-                            onChange={(e) => handlePositionChange(item.id, parseInt(e.target.value))}
-                            className="w-20 px-2 py-1 border rounded"
-                          >
-                            {positionOptions.map((pos) => (
-                              <option key={pos} value={pos}>
-                                {pos}
-                              </option>
-                            ))}
-                          </select>
-                        </td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="mt-6 flex gap-4">
-            <button
-              onClick={handleSave}
-              disabled={!isSaveEnabled}
-              className={`px-4 py-2 rounded flex items-center ${isSaveEnabled ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
-            >
-              <Save className="w-5 h-5 mr-2" />
-              Save Positions
-            </button>
-            <button
-              onClick={resetFilters}
-              className="px-4 py-2 bg-red-500 text-white rounded"
-            >
-              Reset Filters
-            </button>
-          </div>
-        </>
-      )}
+      </div>
     </div>
   );
 };
