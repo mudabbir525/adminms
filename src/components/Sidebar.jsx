@@ -24,7 +24,7 @@ import {
   Zap,
   Calendar,
 } from "lucide-react";
-import { GiFruitBowl } from "react-icons/gi";
+import { GiFruitBowl, GiPositionMarker } from "react-icons/gi";
 
 const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -58,12 +58,12 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
           icon: <Edit className="w-4 h-4" />,
         },
         {
-          label: "Menu add",
+          label: "Package add",
           path: "/crpb",
           icon: <Edit className="w-4 h-4" />,
         },
         {
-          label: "Menus",
+          label: "Packages Display",
           path: "/display-crpb",
           icon: <Edit className="w-4 h-4" />,
         },
@@ -134,6 +134,11 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
           label: "Display CP Package",
           path: "/displaycps",
           icon: <Edit className="w-4 h-4" />,
+        },
+        {
+          label: "Positions",
+          path: "/positions",
+          icon: <GiPositionMarker className="w-4 h-4" />,
         },
       ],
     },

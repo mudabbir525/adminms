@@ -60,6 +60,7 @@ import AddSupHomeItems from "./Admin/AddSupHomeItems";
 import EditSupHomeItems from "./Admin/EditSupHomeItems";
 import EditSupHomeCategories from "./Admin/EditSupHomecategories";
 import DisplaySupHomeItems from "./Admin/DisplaySupHomeItems";
+import FoodPackagesDisplay from "./Admin/Positions";
 
 
 
@@ -152,6 +153,7 @@ function App() {
               <Route path="/superfast-edit-home-items/:id" element={<EditSupHomeItems />} />
               <Route path="/superfast-home-categories" element={<EditSupHomeCategories />} />
               <Route path="/superfast-home-Items" element={<DisplaySupHomeItems />} />
+              <Route path="/positions" element={<FoodPackagesDisplay />} />
 
 
 
