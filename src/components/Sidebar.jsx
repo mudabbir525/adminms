@@ -107,6 +107,17 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
           path: "/superfast-home-items",
           icon: <Edit className="w-4 h-4" />,
         },
+        {
+          label: "Add Superfast CPs",
+          path: "/Superfast-cp-add",
+          icon: <Edit className="w-4 h-4" />,
+        },
+        {
+          label: "Display Superfast CPs",
+          path: "/superfast-cp-display",
+          icon: <Edit className="w-4 h-4" />,
+        },
+        
 
       ],
     },

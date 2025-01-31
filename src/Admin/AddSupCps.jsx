@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const AddCPS = () => {
+const AddSupCps = () => {
     const [cpTypes, setCpTypes] = useState([]);
     const [formData, setFormData] = useState({
         cp_name: '',
         veg_non_veg: 'Veg',
         cp_type: '',
         meal_time: 'Breakfast',
-        is_superfast: 'No',
+        is_superfast: 'Yes',
         description: '',
         price: '',
         image: null
@@ -89,7 +89,7 @@ const AddCPS = () => {
                 veg_non_veg: 'Veg',
                 cp_type: '',
                 meal_time: 'Breakfast',
-                is_superfast: 'No',
+                is_superfast: 'Yes',
                 description: '',
                 price: '',
                 image: null
@@ -130,7 +130,7 @@ const AddCPS = () => {
                         value={formData.cp_name}
                         onChange={handleInputChange}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 
-                            leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+              leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Enter CP Name"
                         required
                     />
@@ -179,7 +179,7 @@ const AddCPS = () => {
                         value={formData.cp_type}
                         onChange={handleInputChange}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 
-                        leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+              leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                     >
                         <option value="">Select CP Type</option>
@@ -205,7 +205,7 @@ const AddCPS = () => {
                         value={formData.meal_time}
                         onChange={handleInputChange}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 
-                        leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+              leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                     >
                         <option value="Breakfast">Breakfast</option>
@@ -215,7 +215,8 @@ const AddCPS = () => {
                 </div>
 
                 {/* Is Superfast */}
-                
+
+
                 {/* Description */}
                 <div className="mb-4">
                     <label
@@ -230,7 +231,7 @@ const AddCPS = () => {
                         value={formData.description}
                         onChange={handleInputChange}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 
-              leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Enter Description"
                         required
                     ></textarea>
@@ -292,9 +293,8 @@ const AddCPS = () => {
                 {/* Message Display */}
                 {message && (
                     <p
-                        className={`mt-4 text-center text-sm font-bold ${
-                            isError ? 'text-red-500' : 'text-green-500'
-                        }`}
+                        className={`mt-4 text-center text-sm font-bold ${isError ? 'text-red-500' : 'text-green-500'
+                            }`}
                     >
                         {message}
                     </p>
@@ -304,4 +304,4 @@ const AddCPS = () => {
     );
 };
 
-export default AddCPS;
+export default AddSupCps;

@@ -61,6 +61,8 @@ import EditSupHomeItems from "./Admin/EditSupHomeItems";
 import EditSupHomeCategories from "./Admin/EditSupHomecategories";
 import DisplaySupHomeItems from "./Admin/DisplaySupHomeItems";
 import FoodPackagesDisplay from "./Admin/Positions";
+import SupCPTypesDisplay from "./Admin/SuperfastCPTypesDisplay";
+import AddSupCps from "./Admin/AddSupCps";
 
 
 
@@ -154,6 +156,8 @@ function App() {
               <Route path="/superfast-home-categories" element={<EditSupHomeCategories />} />
               <Route path="/superfast-home-Items" element={<DisplaySupHomeItems />} />
               <Route path="/positions" element={<FoodPackagesDisplay />} />
+              <Route path="/Superfast-cp-display" element={<SupCPTypesDisplay />} />
+              <Route path="/Superfast-cp-add" element={<AddSupCps />} />
 
 
 

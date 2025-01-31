@@ -26,7 +26,7 @@ const CPTypesDisplay = () => {
   const [selectedVegFilter, setSelectedVegFilter] = useState({ label: "All Items", value: "all" });
   const [selectedCPFilter, setSelectedCPFilter] = useState({ label: "All CPs", value: "all" });
   const [selectedMealFilter, setSelectedMealFilter] = useState({ label: "All Meals", value: "all" });
-  const [selectedSpeedFilter, setSelectedSpeedFilter] = useState({ label: "All Speed", value: "all" });
+  const [selectedSpeedFilter, setSelectedSpeedFilter] = useState({ label: "All Speed", value: "No" });
 
   useEffect(() => {
     fetchCPTypes();
@@ -279,7 +279,7 @@ const CPTypesDisplay = () => {
             </Menu>
 
             {/* Superfast Filter */}
-            <Menu as="div" className="relative inline-block text-left">
+            {/* <Menu as="div" className="relative inline-block text-left">
               <Menu.Button className="inline-flex w-48 justify-between items-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                 <div className="flex items-center gap-2">
                   <Zap className="h-4 w-4 text-gray-500" />
@@ -331,7 +331,7 @@ const CPTypesDisplay = () => {
                   </Menu.Item>
                 </div>
               </Menu.Items>
-            </Menu>
+            </Menu> */}
           </div>
         </div>
 
