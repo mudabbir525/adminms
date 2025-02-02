@@ -329,7 +329,7 @@ const SupCPTypesDisplay = () => {
                 </div>
 
                 <div className="p-6 overflow-x-auto">
-                    <table className="w-full text-left border-collapse min-w-max">
+                    <table className="w-full text-left border-collapse text-sm">
                         <thead>
                             <tr className="bg-gray-200">
                                 <th className="p-4 border-b">Thumbnail</th>

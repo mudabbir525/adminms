@@ -126,12 +126,12 @@ const CPTypesDisplay = () => {
   }
 
   return (
-    <div className="max-w-fill mx-auto mt-8">
-      <div className="bg-white shadow-md rounded-lg overflow-hidden">
+    <div className="min-w-5xl mx-auto mt-8">
+      <div className="bg-white shadow-md rounded-lg whitespace">
         <div className="p-6 bg-gray-100 border-b">
           <div className="flex items-center gap-2 mb-4">
             <Filter className="h-6 w-6 text-gray-700" />
-            <h1 className="text-2xl font-bold text-gray-900">CP Types Management</h1>
+            <h1 className="text-xl font-bold text-gray-900">CP Types Management</h1>
           </div>
           
           <div className="flex gap-4 flex-wrap">
@@ -166,7 +166,7 @@ const CPTypesDisplay = () => {
                         onClick={() => setSelectedVegFilter({ label: "Vegetarian", value: "Veg" })}
                         className={`${
                           active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                        } flex w-full items-center px-4 py-2 text-sm`}
+                        } flex w-full items-center  px-4 py-2 text-sm`}
                       >
                         <Salad className="mr-2 h-4 w-4 text-green-600" />
                         Vegetarian
@@ -335,8 +335,8 @@ const CPTypesDisplay = () => {
           </div>
         </div>
 
-        <div className="p-6 overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-max">
+        <div className="p-6 ">
+          <table className="w-full text-sm text-left border-collapse ">
             <thead>
               <tr className="bg-gray-200">
                 <th className="p-4 border-b">Thumbnail</th>
@@ -360,7 +360,7 @@ const CPTypesDisplay = () => {
                       className="w-16 h-16 object-cover rounded-md"
                     />
                   </td>
-                  <td className="p-4 font-medium">{cpType.cp_name}</td>
+                  <td className="p-4 font-medium ">{cpType.cp_name}</td>
                   <td className="p-4">{cpType.cp_type}</td>
                   <td className="p-4">
                     <span className="flex items-center gap-2">
