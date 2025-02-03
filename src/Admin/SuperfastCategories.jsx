@@ -116,11 +116,12 @@ const SuperfastCategories = () => {
     ? categories.filter(cat => cat.type.toLowerCase() === selectedType.toLowerCase())
     : categories;
 
-  const typeFilters = [
-    { type: 'classic', icon: Star, color: 'text-gray-500' },
-    { type: 'royal', icon: Crown, color: 'text-yellow-500' },
-    { type: 'platinum', icon: Medal, color: 'text-blue-500' }
-  ];
+  // Dynamically generate typeFilters based on the types fetched from the API
+  const typeFilters = types.map(type => ({
+    type: type.name.toLowerCase(),
+    icon: Star, // You can customize this based on the type if needed
+    color: 'text-gray-500' // You can customize this based on the type if needed
+  }));
 
   return (
     <div className="container mx-auto p-4">
