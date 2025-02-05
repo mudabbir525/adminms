@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Filter, Crown, Star, Medal } from 'lucide-react';
+import { Plus, Trash2, Filter, Star, Pencil } from 'lucide-react';
 import axios from 'axios';
 
 const SuperfastCategories = () => {
@@ -8,14 +8,17 @@ const SuperfastCategories = () => {
   const [types, setTypes] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentCategory, setCurrentCategory] = useState({
+    id: null,
     category: '',
     event_name: '',
     type: '',
     position: 0,
     limit: 0
   });
+  const [editingCategory, setEditingCategory] = useState(null);
   const [error, setError] = useState('');
   const [selectedType, setSelectedType] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     fetchCategories();
@@ -61,10 +64,17 @@ const SuperfastCategories = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setCurrentCategory(prev => ({
-      ...prev,
-      [name]: ['position', 'limit'].includes(name) ? parseInt(value) || 0 : value
-    }));
+    if (editingCategory) {
+      setEditingCategory(prev => ({
+        ...prev,
+        [name]: parseInt(value) || 0
+      }));
+    } else {
+      setCurrentCategory(prev => ({
+        ...prev,
+        [name]: ['position', 'limit'].includes(name) ? parseInt(value) || 0 : value
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -96,6 +106,42 @@ const SuperfastCategories = () => {
     }
   };
 
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    try {
+      const response = await axios.put(
+        'https://mahaspice.desoftimp.com/ms3/update_sf_category.php',
+        {
+          id: editingCategory.id,
+          position: editingCategory.position,
+          limit: editingCategory.limit
+        }
+      );
+
+      if (response.data.success) {
+        fetchCategories();
+        setIsEditModalOpen(false);
+        setEditingCategory(null);
+      } else {
+        setError(response.data.message || 'Failed to update category');
+      }
+    } catch (err) {
+      console.error('Error updating category:', err);
+      setError(err.response?.data?.message || 'Failed to update category');
+    }
+  };
+
+  const handleEdit = (category) => {
+    setEditingCategory({
+      id: category.id,
+      position: parseInt(category.position),
+      limit: parseInt(category.limit)
+    });
+    setIsEditModalOpen(true);
+  };
+
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(
@@ -111,16 +157,14 @@ const SuperfastCategories = () => {
     }
   };
 
-  // Filter categories based on selected type
   const filteredCategories = selectedType 
     ? categories.filter(cat => cat.type.toLowerCase() === selectedType.toLowerCase())
     : categories;
 
-  // Dynamically generate typeFilters based on the types fetched from the API
   const typeFilters = types.map(type => ({
     type: type.name.toLowerCase(),
-    icon: Star, // You can customize this based on the type if needed
-    color: 'text-gray-500' // You can customize this based on the type if needed
+    icon: Star,
+    color: 'text-gray-500'
   }));
 
   return (
@@ -128,7 +172,10 @@ const SuperfastCategories = () => {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">Superfast Categories</h2>
         <button 
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            resetForm();
+            setIsModalOpen(true);
+          }}
           className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded flex items-center"
         >
           <Plus className="mr-2" /> Add Category
@@ -168,7 +215,7 @@ const SuperfastCategories = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredCategories.map(category => (
           <div 
             key={category.id} 
@@ -176,12 +223,20 @@ const SuperfastCategories = () => {
           >
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-lg font-semibold">{category.category}</h3>
-              <button 
-                onClick={() => handleDelete(category.id)}
-                className="text-red-500 hover:text-red-700"
-              >
-                <Trash2 size={20} />
-              </button>
+              <div className="flex space-x-2">
+                <button 
+                  onClick={() => handleEdit(category)}
+                  className="text-blue-500 hover:text-blue-700"
+                >
+                  <Pencil size={20} />
+                </button>
+                <button 
+                  onClick={() => handleDelete(category.id)}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  <Trash2 size={20} />
+                </button>
+              </div>
             </div>
             <div className="space-y-1 text-gray-600">
               <p><span className="font-medium text-gray-700">Event:</span> {category.event_name}</p>
@@ -193,10 +248,67 @@ const SuperfastCategories = () => {
         ))}
       </div>
 
+      {/* Edit Modal */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-96">
+            <h2 className="text-xl font-bold mb-4">Edit Position and Limit</h2>
+            <form onSubmit={handleEditSubmit}>
+              <div className="mb-4">
+                <label className="block mb-2">Position</label>
+                <input
+                  type="number"
+                  name="position"
+                  value={editingCategory.position}
+                  onChange={handleInputChange}
+                  className="w-full border rounded p-2"
+                  min="0"
+                  required
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block mb-2">Limit</label>
+                <input
+                  type="number"
+                  name="limit"
+                  value={editingCategory.limit}
+                  onChange={handleInputChange}
+                  className="w-full border rounded p-2"
+                  min="0"
+                  required
+                />
+              </div>
+
+              <div className="flex justify-end space-x-2">
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setIsEditModalOpen(false);
+                    setEditingCategory(null);
+                  }}
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+                >
+                  Update
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Add New Category</h2>
+            <h2 className="text-xl font-bold mb-4">
+              {isEditing ? 'Edit Category' : 'Add New Category'}
+            </h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label className="block mb-2">Category Name</label>
@@ -275,7 +387,10 @@ const SuperfastCategories = () => {
               <div className="flex justify-end space-x-2">
                 <button 
                   type="button"
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    resetForm();
+                  }}
                   className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded"
                 >
                   Cancel
@@ -284,7 +399,7 @@ const SuperfastCategories = () => {
                   type="submit" 
                   className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
                 >
-                  Add Category
+                  {isEditing ? 'Update Category' : 'Add Category'}
                 </button>
               </div>
             </form>
