@@ -283,6 +283,24 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
         },
       ],
     },
+     {
+      icon: <Edit className="w-5 h-5" />,
+      label: "Personilized Section",
+      hasDropdown: true,
+      dropdownItems: [
+        {
+          label: "Categories",
+          
+          path: "/design-categories",
+          icon: <Edit className="w-4 h-4" />,
+        },
+        {
+          label: "Items",
+          path: "/design-items",
+          icon: <Edit className="w-4 h-4" />,
+        },
+      ],
+    },
     {
       icon: <Ticket className="w-5 h-5" />,
       label: "Coupons",

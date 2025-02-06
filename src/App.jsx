@@ -64,6 +64,8 @@ import FoodPackagesDisplay from "./Admin/Positions";
 import SupCPTypesDisplay from "./Admin/SuperfastCPTypesDisplay";
 import AddSupCps from "./Admin/AddSupCps";
 import FoodSupPackagesDisplay from "./Admin/SupPositions";
+import CategoryManagement from "./Admin/CategoryManagement";
+import ItemManagement from "./Admin/ItemManagement";
 
 
 
@@ -160,6 +162,8 @@ function App() {
               <Route path="/Superfast-cp-display" element={<SupCPTypesDisplay />} />
               <Route path="/Superfast-cp-add" element={<AddSupCps />} />
               <Route path="/superfast-box-positions" element={<FoodSupPackagesDisplay />} />
+              <Route path="/design-categories" element={<CategoryManagement />} />
+              <Route path="/design-Items" element={<ItemManagement />} />
 
 
 
