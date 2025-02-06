@@ -23,7 +23,10 @@ import {
   PartyPopper,
   Zap,
   Calendar,
+  Monitor,
 } from "lucide-react";
+import { UserPlus } from 'lucide-react';
+
 import { GiFruitBowl, GiPositionMarker } from "react-icons/gi";
 
 const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
@@ -284,7 +287,7 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
       ],
     },
      {
-      icon: <Edit className="w-5 h-5" />,
+      icon: <UserPlus className="w-5 h-5" />,
       label: "Personilized Section",
       hasDropdown: true,
       dropdownItems: [
@@ -298,6 +301,11 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
           label: "Items",
           path: "/design-items",
           icon: <Edit className="w-4 h-4" />,
+        },
+        {
+          label: "Inquiries",
+          path: "/design-enquries",
+          icon: <Monitor className="w-4 h-4" />,
         },
       ],
     },

@@ -66,6 +66,7 @@ import AddSupCps from "./Admin/AddSupCps";
 import FoodSupPackagesDisplay from "./Admin/SupPositions";
 import CategoryManagement from "./Admin/CategoryManagement";
 import ItemManagement from "./Admin/ItemManagement";
+import DisplayEnq from "./Admin/DisplayEnq";
 
 
 
@@ -164,6 +165,7 @@ function App() {
               <Route path="/superfast-box-positions" element={<FoodSupPackagesDisplay />} />
               <Route path="/design-categories" element={<CategoryManagement />} />
               <Route path="/design-Items" element={<ItemManagement />} />
+              <Route path="/design-enquries" element={<DisplayEnq />} />
 
 
 
