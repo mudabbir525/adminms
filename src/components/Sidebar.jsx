@@ -9,6 +9,8 @@ import {
   ChevronDown,
   ChevronRight,
   CopyPlus,
+  ListOrdered,
+  Package,
   Edit,
   BoxIcon,
   Layout,
@@ -348,6 +350,23 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
         },
       ],
     },
+    {
+  icon: <ListOrdered size={20} />,
+  label: "Orders",
+  hasDropdown: true,
+  dropdownItems: [
+    {
+      label: "Box Orders",
+      path: "/box-orders",
+      icon: <Package size={18} />,
+    },
+    {
+      label: "Home Orders",
+      path: "/home-orders",
+      icon: <Home size={18} />,
+    },
+  ],
+},
     {
       icon: <MapPin className="w-5 h-5" />,
       label: "Locations",

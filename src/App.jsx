@@ -68,6 +68,7 @@ import CategoryManagement from "./Admin/CategoryManagement";
 import ItemManagement from "./Admin/ItemManagement";
 import DisplayEnq from "./Admin/DisplayEnq";
 import BoxOrderDisplay from "./Admin/BoxOrderDisplay";
+import HomeOrderDisplay from "./Admin/HomeOrderDisplay";
 
 
 
@@ -168,6 +169,7 @@ function App() {
               <Route path="/design-Items" element={<ItemManagement />} />
               <Route path="/design-enquries" element={<DisplayEnq />} />
               <Route path="/box-orders" element={<BoxOrderDisplay />} />
+              <Route path="/home-orders" element={<HomeOrderDisplay />} />
 
 
 
