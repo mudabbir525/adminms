@@ -67,6 +67,7 @@ import FoodSupPackagesDisplay from "./Admin/SupPositions";
 import CategoryManagement from "./Admin/CategoryManagement";
 import ItemManagement from "./Admin/ItemManagement";
 import DisplayEnq from "./Admin/DisplayEnq";
+import BoxOrderDisplay from "./Admin/BoxOrderDisplay";
 
 
 
@@ -166,6 +167,7 @@ function App() {
               <Route path="/design-categories" element={<CategoryManagement />} />
               <Route path="/design-Items" element={<ItemManagement />} />
               <Route path="/design-enquries" element={<DisplayEnq />} />
+              <Route path="/box-orders" element={<BoxOrderDisplay />} />
 
 
 
