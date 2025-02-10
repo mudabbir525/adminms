@@ -137,7 +137,7 @@ function App() {
               <Route path="/addhi" element={<AddHomeItems />} />
               <Route path="/dishi" element={<DisplayHomeItems />} />
               <Route path="/edit-home-items/:id" element={<EditHomeItems />} />
-              <Route path="/mealorders" element={<OrderManagement />} />
+              <Route path="/orders" element={<OrderManagement />} />
               <Route path="/coupon" element={<AddCoupon />} />
               <Route path="/displaycoupons" element={<DisplayCoupons />} />
               <Route path="/coupon/:id" element={<EditCoupon />} />

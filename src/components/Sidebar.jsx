@@ -20,6 +20,7 @@ import {
   Ticket,
   Percent,
   Truck,
+  Logs,
   PersonStanding,
   FolderOpenDot,
   PartyPopper,
@@ -363,7 +364,12 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
     {
       label: "Home Orders",
       path: "/home-orders",
-      icon: <Home size={18} />,
+      icon: <Truck size={18} />,
+    },
+    {
+      label: "Order Management",
+      path: "/orders",
+      icon: <Logs size={18} />,
     },
   ],
 },
