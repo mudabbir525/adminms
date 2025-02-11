@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Package, Phone, MapPin, Calendar, IndianRupee, Loader2, Search, SortDesc, SortAsc } from 'lucide-react';
+import { Package, Phone, MapPin, Calendar, IndianRupee, Loader2, Search, SortDesc, SortAsc, ChevronDown } from 'lucide-react';
 
 const BoxOrderDisplay = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortOrder, setSortOrder] = useState('newest'); // 'newest' or 'oldest'
+  const [sortOrder, setSortOrder] = useState('newest');
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showStatusModal, setShowStatusModal] = useState(false);
 
   useEffect(() => {
     fetchOrders();
@@ -18,7 +20,6 @@ const BoxOrderDisplay = () => {
       const data = await response.json();
       
       if (data.status === 'success') {
-        // Convert amount to number if it's a string
         const processedOrders = data.data.map(order => ({
           ...order,
           amount: parseFloat(order.amount) || 0
@@ -34,6 +35,48 @@ const BoxOrderDisplay = () => {
     }
   };
 
+  const updateOrderStatus = async () => {
+    try {
+      const response = await fetch('https://mahaspice.desoftimp.com/ms3/update_box_order_status.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderId: selectedOrder.orderId,
+          status: selectedOrder.newStatus.toLowerCase()
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText);
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        setOrders(orders.map(order =>
+          order.orderId === selectedOrder.orderId
+            ? { ...order, orderStatus: selectedOrder.newStatus }
+            : order
+        ));
+        setShowStatusModal(false);
+        setSelectedOrder(null);
+      } else {
+        throw new Error(result.message || 'Failed to update status');
+      }
+    } catch (err) {
+      console.error('Error updating status:', err);
+      alert(`Error: ${err.message}`);
+    }
+  };
+
+  const openStatusChangeModal = (order, newStatus) => {
+    setSelectedOrder({ ...order, newStatus });
+    setShowStatusModal(true);
+  };
+
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
       case 'completed':
@@ -42,10 +85,38 @@ const BoxOrderDisplay = () => {
         return 'bg-yellow-100 text-yellow-800';
       case 'processing':
         return 'bg-blue-100 text-blue-800';
+      case 'cancelled':
+        return 'bg-red-100 text-red-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
   };
+
+  const StatusChangeModal = () => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-lg max-w-md w-full">
+        <h2 className="text-xl font-bold mb-4">Change Order Status</h2>
+        <p className="mb-4">
+          You are changing the status of Order #{selectedOrder.orderId}
+          from {selectedOrder.orderStatus} to {selectedOrder.newStatus}.
+        </p>
+        <div className="flex justify-between">
+          <button
+            onClick={updateOrderStatus}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Confirm Status Change
+          </button>
+          <button
+            onClick={() => setShowStatusModal(false)}
+            className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 
   const filteredOrders = orders.filter(order => 
     order.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -121,10 +192,20 @@ const BoxOrderDisplay = () => {
             <div className="bg-gray-50 p-4 border-b border-gray-200">
               <div className="flex justify-between items-center">
                 <span className="font-bold">Order #{order.orderId}</span>
-                <div className="flex gap-2">
-                  <span className={`text-sm px-2 py-1 rounded ${getStatusColor(order.orderStatus)}`}>
-                    {order.orderStatus}
-                  </span>
+                <div className="flex gap-2 items-center">
+                  <div className="relative">
+                    <select
+                      value={order.orderStatus}
+                      onChange={(e) => openStatusChangeModal(order, e.target.value)}
+                      className={`text-sm px-2 py-1 rounded ${getStatusColor(order.orderStatus)} appearance-none pr-6`}
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Processing">Processing</option>
+                      <option value="Completed">Completed</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                    <ChevronDown className="absolute right-1 top-1/2 transform -translate-y-1/2 w-4 h-4" />
+                  </div>
                 </div>
               </div>
               <div className="text-sm text-gray-500 mt-1">
@@ -179,6 +260,8 @@ const BoxOrderDisplay = () => {
           No orders found matching your search.
         </div>
       )}
+
+      {showStatusModal && selectedOrder && <StatusChangeModal />}
     </div>
   );
 };
