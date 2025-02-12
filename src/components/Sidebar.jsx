@@ -27,6 +27,7 @@ import {
   Zap,
   Calendar,
   Monitor,
+  Table,
 } from "lucide-react";
 import { UserPlus } from 'lucide-react';
 
@@ -225,6 +226,11 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
           label: "Menu Pricing Display",
           path: "/menupricingdisplay",
           icon: <Edit className="w-4 h-4" />,
+        },
+        {
+          label: "Resources",
+          path: "/resources",
+          icon: <Table className="w-4 h-4" />,
         },
       ],
     },
