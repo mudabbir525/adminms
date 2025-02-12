@@ -367,10 +367,20 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
       icon: <Truck size={18} />,
     },
     {
-      label: "Order Management",
-      path: "/orders",
-      icon: <Logs size={18} />,
+      label: "Superfast Box Orders",
+      path: "/sup-box-orders",
+      icon: <Package size={18} />,
     },
+    {
+      label: "Superfast Home Orders",
+      path: "/sup-home-orders",
+      icon: <Truck size={18} />,
+    },
+    // {
+    //   label: "Order Management",
+    //   path: "/orders",
+    //   icon: <Logs size={18} />,
+    // },
   ],
 },
     {
