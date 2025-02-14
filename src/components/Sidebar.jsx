@@ -293,6 +293,11 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
           path: "/editsectionthree",
           icon: <Edit className="w-4 h-4" />,
         },
+        {
+          label: "FAQ Section ",
+          path: "/faq",
+          icon: <Edit className="w-4 h-4" />,
+        },
       ],
     },
      {
@@ -363,22 +368,22 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
   hasDropdown: true,
   dropdownItems: [
     {
-      label: "Box Orders",
+      label: "Box Genie",
       path: "/box-orders",
       icon: <Package size={18} />,
     },
     {
-      label: "Home Orders",
+      label: "Home Delivery",
       path: "/home-orders",
       icon: <Truck size={18} />,
     },
     {
-      label: "Superfast Box Orders",
+      label: "Superfast Box Genie",
       path: "/sup-box-orders",
       icon: <Package size={18} />,
     },
     {
-      label: "Superfast Home Orders",
+      label: "Superfast Home Delivery",
       path: "/sup-home-orders",
       icon: <Truck size={18} />,
     },

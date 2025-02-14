@@ -72,6 +72,7 @@ import SupBoxOrderDisplay from "./Admin/SupBoxOrderDisplay";
 import HomeOrderDisplay from "./Admin/HomeOrderDisplay";
 import SupHomeOrderDisplay from "./Admin/SupHomeOrderDisplay";
 import ResourceManagement from "./Admin/ResourceManagement";
+import FAQ from "./Admin/FAQ";
 
 
 
@@ -176,6 +177,7 @@ function App() {
               <Route path="/sup-box-orders" element={<SupBoxOrderDisplay />} />
               <Route path="/sup-home-orders" element={<SupHomeOrderDisplay />} />
               <Route path="/resources" element={<ResourceManagement />} />
+              <Route path="/faq" element={<FAQ />} />
 
 
 
