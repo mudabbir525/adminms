@@ -73,6 +73,7 @@ import HomeOrderDisplay from "./Admin/HomeOrderDisplay";
 import SupHomeOrderDisplay from "./Admin/SupHomeOrderDisplay";
 import ResourceManagement from "./Admin/ResourceManagement";
 import FAQ from "./Admin/FAQ";
+import CateringOrderDisplay from "./Admin/CateringOrdersDisplay";
 
 
 
@@ -174,6 +175,7 @@ function App() {
               <Route path="/design-enquries" element={<DisplayEnq />} />
               <Route path="/box-orders" element={<BoxOrderDisplay />} />
               <Route path="/home-orders" element={<HomeOrderDisplay />} />
+              <Route path="/catering" element={<CateringOrderDisplay />} />
               <Route path="/sup-box-orders" element={<SupBoxOrderDisplay />} />
               <Route path="/sup-home-orders" element={<SupHomeOrderDisplay />} />
               <Route path="/resources" element={<ResourceManagement />} />

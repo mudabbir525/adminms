@@ -378,6 +378,11 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
       icon: <Truck size={18} />,
     },
     {
+      label: "Catering",
+      path: "/catering",
+      icon: <PartyPopper size={18} />,
+    },
+    {
       label: "Superfast Box Genie",
       path: "/sup-box-orders",
       icon: <Package size={18} />,
