@@ -74,6 +74,7 @@ import SupHomeOrderDisplay from "./Admin/SupHomeOrderDisplay";
 import ResourceManagement from "./Admin/ResourceManagement";
 import FAQ from "./Admin/FAQ";
 import CateringOrderDisplay from "./Admin/CateringOrdersDisplay";
+import CateringLocations from "./Admin/CateringLocations";
 
 
 
@@ -180,6 +181,7 @@ function App() {
               <Route path="/sup-home-orders" element={<SupHomeOrderDisplay />} />
               <Route path="/resources" element={<ResourceManagement />} />
               <Route path="/faq" element={<FAQ />} />
+              <Route path="/catlocations" element={<CateringLocations />} />
 
 
 

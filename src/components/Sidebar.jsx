@@ -414,6 +414,11 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
           path: "/disloc",
           icon: <Edit className="w-4 h-4" />,
         },
+        {
+          label: "Catering Locations",
+          path: "/catlocations",
+          icon: <Edit className="w-4 h-4" />,
+        },
       ],
     },
     {
