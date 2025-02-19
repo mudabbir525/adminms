@@ -9,6 +9,7 @@ const CateringLocations = () => {
     name: "",
     district_id: "",
     price: "",
+    superfast_delivery_charges: "",
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -38,11 +39,14 @@ const CateringLocations = () => {
     }
     try {
       setIsLoading(true);
-      await fetch("https://mahaspice.desoftimp.com/ms3/catering_locations.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `add_state=true&name=${encodeURIComponent(newState)}`,
-      });
+      await fetch(
+        "https://mahaspice.desoftimp.com/ms3/catering_locations.php",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: `add_state=true&name=${encodeURIComponent(newState)}`,
+        }
+      );
       setNewState("");
       fetchData();
     } catch (error) {
@@ -56,12 +60,14 @@ const CateringLocations = () => {
       return;
     }
 
-    // Fixed district existence check
     const districtExists = locations.some((location) => {
-      return location.district_name && 
-             location.state_id && 
-             location.district_name.toLowerCase() === newDistrict.name.toLowerCase() &&
-             location.state_id === newDistrict.state_id;
+      return (
+        location.district_name &&
+        location.state_id &&
+        location.district_name.toLowerCase() ===
+          newDistrict.name.toLowerCase() &&
+        location.state_id === newDistrict.state_id
+      );
     });
 
     if (districtExists) {
@@ -71,11 +77,16 @@ const CateringLocations = () => {
 
     try {
       setIsLoading(true);
-      await fetch("https://mahaspice.desoftimp.com/ms3/catering_locations.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `add_district=true&name=${encodeURIComponent(newDistrict.name)}&state_id=${newDistrict.state_id}`,
-      });
+      await fetch(
+        "https://mahaspice.desoftimp.com/ms3/catering_locations.php",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: `add_district=true&name=${encodeURIComponent(
+            newDistrict.name
+          )}&state_id=${newDistrict.state_id}`,
+        }
+      );
       setNewDistrict({ name: "", state_id: "" });
       fetchData();
     } catch (error) {
@@ -86,17 +97,23 @@ const CateringLocations = () => {
   };
 
   const addCity = async () => {
-    if (!newCity.name.trim() || !newCity.district_id || !newCity.price) {
+    if (
+      !newCity.name.trim() ||
+      !newCity.district_id ||
+      !newCity.price ||
+      !newCity.superfast_delivery_charges
+    ) {
       alert("Please fill all city details");
       return;
     }
 
-    // Fixed city existence check
     const cityExists = locations.some((location) => {
-      return location.city_name && 
-             location.district_id && 
-             location.city_name.toLowerCase() === newCity.name.toLowerCase() &&
-             location.district_id === newCity.district_id;
+      return (
+        location.city_name &&
+        location.district_id &&
+        location.city_name.toLowerCase() === newCity.name.toLowerCase() &&
+        location.district_id === newCity.district_id
+      );
     });
 
     if (cityExists) {
@@ -106,14 +123,24 @@ const CateringLocations = () => {
 
     try {
       setIsLoading(true);
-      await fetch("https://mahaspice.desoftimp.com/ms3/catering_locations.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `add_city=true&name=${encodeURIComponent(newCity.name)}&district_id=${
-          newCity.district_id
-        }&price=${newCity.price}`,
+      await fetch(
+        "https://mahaspice.desoftimp.com/ms3/catering_locations.php",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: `add_city=true&name=${encodeURIComponent(
+            newCity.name
+          )}&district_id=${newCity.district_id}&price=${
+            newCity.price
+          }&superfast_delivery_charges=${newCity.superfast_delivery_charges}`,
+        }
+      );
+      setNewCity({
+        name: "",
+        district_id: "",
+        price: "",
+        superfast_delivery_charges: "",
       });
-      setNewCity({ name: "", district_id: "", price: "" });
       fetchData();
     } catch (error) {
       console.error("Error adding city:", error);
@@ -122,23 +149,34 @@ const CateringLocations = () => {
     }
   };
 
-
-  const updatePrice = async (city_id, newPrice) => {
-    if (!newPrice || isNaN(newPrice) || newPrice <= 0) {
-      alert("Please enter a valid price");
+  const updatePrice = async (city_id, newPrice, newSuperfastPrice) => {
+    if (
+      !newPrice ||
+      isNaN(newPrice) ||
+      newPrice <= 0 ||
+      !newSuperfastPrice ||
+      isNaN(newSuperfastPrice) ||
+      newSuperfastPrice <= 0
+    ) {
+      alert("Please enter valid prices for both normal and superfast delivery");
       return;
     }
 
     try {
       setIsLoading(true);
-      await fetch("https://mahaspice.desoftimp.com/ms3/catering_locations.php", {
-        method: "PUT",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `city_id=${city_id}&price=${newPrice}`,
-      });
+      await fetch(
+        "https://mahaspice.desoftimp.com/ms3/catering_locations.php",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: `city_id=${city_id}&price=${newPrice}&superfast_delivery_charges=${newSuperfastPrice}`,
+        }
+      );
       fetchData();
     } catch (error) {
-      console.error("Error updating price:", error);
+      console.error("Error updating prices:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -146,7 +184,7 @@ const CateringLocations = () => {
     if (!window.confirm(`Are you sure you want to delete this ${type}?`)) {
       return;
     }
-    
+
     try {
       setIsLoading(true);
       const response = await fetch(
@@ -186,6 +224,7 @@ const CateringLocations = () => {
         city_id: curr.city_id,
         city_name: curr.city_name,
         delivery_price: curr.delivery_price,
+        superfast_delivery_charges: curr.superfast_delivery_charges,
       });
     }
     return acc;
@@ -198,62 +237,74 @@ const CateringLocations = () => {
       </h1>
 
       {/* Add State */}
-      <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 className="text-lg font-semibold mb-4 text-gray-700">Add New State</h2>
-        <div className="flex items-center gap-4">
-          <input
-            type="text"
-            placeholder="State Name"
-            value={newState}
-            onChange={(e) => setNewState(e.target.value)}
-            className="border p-2 rounded-lg flex-1"
-          />
-          <button
-            onClick={addState}
-            disabled={isLoading}
-            className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
-          >
-            <Plus size={16} /> Add State
-          </button>
+      <div className="flex justify-around">
+        <div className="bg-white p-6 w-full rounded-lg shadow-md m-6">
+          <h2 className="text-lg font-semibold mb-4 text-gray-700">
+            Add New State
+          </h2>
+          <div className="flex items-center gap-4">
+            <input
+              type="text"
+              placeholder="State Name"
+              value={newState}
+              onChange={(e) => setNewState(e.target.value)}
+              className="border p-2 rounded-lg flex-1"
+            />
+            <button
+              onClick={addState}
+              disabled={isLoading}
+              className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
+            >
+              Add State
+            </button>
+          </div>
         </div>
-      </div>
 
-      {/* Add District */}
-      <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 className="text-lg font-semibold mb-4 text-gray-700">Add New District</h2>
-        <div className="flex items-center gap-4">
-          <input
-            type="text"
-            placeholder="District Name"
-            value={newDistrict.name}
-            onChange={(e) => setNewDistrict({ ...newDistrict, name: e.target.value })}
-            className="border p-2 rounded-lg flex-1"
-          />
-          <select
-            value={newDistrict.state_id}
-            onChange={(e) => setNewDistrict({ ...newDistrict, state_id: e.target.value })}
-            className="border p-2 rounded-lg"
-          >
-            <option value="">Select State</option>
-            {Object.entries(groupedData).map(([state_id, state]) => (
-              <option key={state_id} value={state_id}>
-                {state.state_name}
-              </option>
-            ))}
-          </select>
-          <button
-            onClick={addDistrict}
-            disabled={isLoading}
-            className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50"
-          >
-            <Plus size={16} /> Add District
-          </button>
+        {/* Add District */}
+        <div className="bg-white p-6 w-full rounded-lg shadow-md m-6">
+          <h2 className="text-lg font-semibold mb-4 text-gray-700">
+            Add New District
+          </h2>
+          <div className="flex items-center gap-4">
+            <input
+              type="text"
+              placeholder="District Name"
+              value={newDistrict.name}
+              onChange={(e) =>
+                setNewDistrict({ ...newDistrict, name: e.target.value })
+              }
+              className="border p-2 rounded-lg flex-1"
+            />
+            <select
+              value={newDistrict.state_id}
+              onChange={(e) =>
+                setNewDistrict({ ...newDistrict, state_id: e.target.value })
+              }
+              className="border p-2 rounded-lg"
+            >
+              <option value="">Select State</option>
+              {Object.entries(groupedData).map(([state_id, state]) => (
+                <option key={state_id} value={state_id}>
+                  {state.state_name}
+                </option>
+              ))}
+            </select>
+            <button
+              onClick={addDistrict}
+              disabled={isLoading}
+              className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50"
+            >
+              Add District
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Add City */}
-      <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 className="text-lg font-semibold mb-4 text-gray-700">Add New City</h2>
+      <div className="bg-white p-6 rounded-lg shadow-md mx-6 mb-6">
+        <h2 className="text-lg font-semibold mb-4 text-gray-700">
+          Add New City
+        </h2>
         <div className="flex items-center gap-4">
           <input
             type="text"
@@ -264,7 +315,9 @@ const CateringLocations = () => {
           />
           <select
             value={newCity.district_id}
-            onChange={(e) => setNewCity({ ...newCity, district_id: e.target.value })}
+            onChange={(e) =>
+              setNewCity({ ...newCity, district_id: e.target.value })
+            }
             className="border p-2 rounded-lg"
           >
             <option value="">Select District</option>
@@ -285,19 +338,35 @@ const CateringLocations = () => {
             min="0"
             step="0.01"
           />
+          <input
+            type="number"
+            placeholder="Superfast Delivery Charges"
+            value={newCity.superfast_delivery_charges}
+            onChange={(e) =>
+              setNewCity({
+                ...newCity,
+                superfast_delivery_charges: e.target.value,
+              })
+            }
+            className="border p-2 rounded-lg w-32"
+            min="0"
+            step="0.01"
+          />
           <button
             onClick={addCity}
             disabled={isLoading}
             className="bg-purple-500 text-white p-2 rounded-lg hover:bg-purple-600 transition-colors disabled:opacity-50"
           >
-            <Plus size={16} /> Add City
+            <b>Add City</b>
           </button>
         </div>
       </div>
 
       {/* Display Data */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-lg font-semibold mb-4 text-gray-700">Delivery Locations</h2>
+      <div className="bg-white p-6 mx-6 rounded-lg shadow-md">
+        <h2 className="text-lg font-semibold mb-4 text-gray-700">
+          Delivery Locations
+        </h2>
         {isLoading ? (
           <div className="text-center py-4">Loading...</div>
         ) : (
@@ -308,81 +377,119 @@ const CateringLocations = () => {
                   <th className="border p-2 text-left">State</th>
                   <th className="border p-2 text-left">District</th>
                   <th className="border p-2 text-left">City</th>
-                  <th className="border p-2 text-right">Delivery Price</th>
+                  <th className="border p-2 text-right">Normal Price</th>
+                  <th className="border p-2 text-right">Superfast Price</th>
                   <th className="border p-2 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {Object.entries(groupedData).map(([state_id, state]) => {
                   const stateRowSpan = Object.values(state.districts).reduce(
-                    (total, district) => total + Math.max(district.cities.length, 1),
+                    (total, district) =>
+                      total + Math.max(district.cities.length, 1),
                     0
                   );
 
-                  return Object.entries(state.districts).map(([district_id, district], districtIndex) => {
-                    const districtRowSpan = Math.max(district.cities.length, 1);
+                  return Object.entries(state.districts).map(
+                    ([district_id, district], districtIndex) => {
+                      const districtRowSpan = Math.max(
+                        district.cities.length,
+                        1
+                      );
 
-                    return (district.cities.length > 0 ? district.cities : [null]).map((city, cityIndex) => (
-                      <tr key={`${state_id}-${district_id}-${cityIndex}`}>
-                        {districtIndex === 0 && cityIndex === 0 && (
-                          <td rowSpan={stateRowSpan} className="border p-2">
-                            <div className="flex items-center justify-between">
-                              <span>{state.state_name}</span>
-                              <button
-                                onClick={() => deleteItem("state", state_id)}
-                                className="text-red-500 hover:text-red-700"
-                              >
-                                <Trash size={16} />
-                              </button>
-                            </div>
-                          </td>
-                        )}
-                        {cityIndex === 0 && (
-                          <td rowSpan={districtRowSpan} className="border p-2">
-                            <div className="flex items-center justify-between">
-                              <span>{district.district_name}</span>
-                              <button
-                                onClick={() => deleteItem("district", district_id)}
-                                className="text-red-500 hover:text-red-700"
-                              >
-                                <Trash size={16} />
-                              </button>
-                            </div>
-                          </td>
-                        )}
-                        <td className="border p-2">{city?.city_name || "No cities"}</td>
-                        <td className="border p-2 text-right">
-                          {city?.delivery_price ? `$${parseFloat(city.delivery_price).toFixed(2)}` : "-"}
-                        </td>
-                        <td className="border p-2 text-center">
-                          {city && (
-                            <div className="flex items-center justify-center gap-2">
-                              <button
-                                onClick={() => {
-                                  const newPrice = prompt(
-                                    "Enter new price",
-                                    city.delivery_price
-                                  );
-                                  if (newPrice !== null) {
-                                    updatePrice(city.city_id, newPrice);
-                                  }
-                                }}
-                                className="text-blue-500 hover:text-blue-700"
-                              >
-                                <Edit size={16} />
-                              </button>
-                              <button
-                                onClick={() => deleteItem("city", city.city_id)}
-                                className="text-red-500 hover:text-red-700"
-                              >
-                                <Trash size={16} />
-                              </button>
-                            </div>
+                      return (
+                        district.cities.length > 0 ? district.cities : [null]
+                      ).map((city, cityIndex) => (
+                        <tr key={`${state_id}-${district_id}-${cityIndex}`}>
+                          {districtIndex === 0 && cityIndex === 0 && (
+                            <td rowSpan={stateRowSpan} className="border p-2">
+                              <div className="flex items-center justify-between">
+                                <span>{state.state_name}</span>
+                                <button
+                                  onClick={() => deleteItem("state", state_id)}
+                                  className="text-red-500 hover:text-red-700"
+                                >
+                                  <Trash size={16} />
+                                </button>
+                              </div>
+                            </td>
                           )}
-                        </td>
-                      </tr>
-                    ));
-                  });
+                          {cityIndex === 0 && (
+                            <td
+                              rowSpan={districtRowSpan}
+                              className="border p-2"
+                            >
+                              <div className="flex items-center justify-between">
+                                <span>{district.district_name}</span>
+                                <button
+                                  onClick={() =>
+                                    deleteItem("district", district_id)
+                                  }
+                                  className="text-red-500 hover:text-red-700"
+                                >
+                                  <Trash size={16} />
+                                </button>
+                              </div>
+                            </td>
+                          )}
+                          <td className="border p-2">
+                            {city?.city_name || "No cities"}
+                          </td>
+                          <td className="border p-2 text-right">
+                            {city?.delivery_price
+                              ? `₹${parseFloat(city.delivery_price).toFixed(2)}`
+                              : "-"}
+                          </td>
+                          <td className="border p-2 text-right">
+                            {city?.superfast_delivery_charges
+                              ? `₹${parseFloat(
+                                  city.superfast_delivery_charges
+                                ).toFixed(2)}`
+                              : "-"}
+                          </td>
+                          <td className="border p-2 text-center">
+                            {city && (
+                              <div className="flex items-center justify-center gap-2">
+                                <button
+                                  onClick={() => {
+                                    const newPrice = prompt(
+                                      "Enter new normal delivery price",
+                                      city.delivery_price
+                                    );
+                                    const newSuperfastPrice = prompt(
+                                      "Enter new superfast delivery charges",
+                                      city.superfast_delivery_charges
+                                    );
+                                    if (
+                                      newPrice !== null &&
+                                      newSuperfastPrice !== null
+                                    ) {
+                                      updatePrice(
+                                        city.city_id,
+                                        newPrice,
+                                        newSuperfastPrice
+                                      );
+                                    }
+                                  }}
+                                  className="text-blue-500 hover:text-blue-700"
+                                >
+                                  <Edit size={16} />
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    deleteItem("city", city.city_id)
+                                  }
+                                  className="text-red-500 hover:text-red-700"
+                                >
+                                  <Trash size={16} />
+                                </button>
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      ));
+                    }
+                  );
                 })}
               </tbody>
             </table>

@@ -431,6 +431,11 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
           path: "/dateblock",
           icon: <CopyPlus className="w-4 h-4" />,
         },
+        {
+          label: "Catering Date Block",
+          path: "/catdateblock",
+          icon: <CopyPlus className="w-4 h-4" />,
+        },
       ],
     },
     {

@@ -75,6 +75,7 @@ import ResourceManagement from "./Admin/ResourceManagement";
 import FAQ from "./Admin/FAQ";
 import CateringOrderDisplay from "./Admin/CateringOrdersDisplay";
 import CateringLocations from "./Admin/CateringLocations";
+import CateringDateBlocking from "./Admin/CateringDateBlocking";
 
 
 
@@ -182,6 +183,7 @@ function App() {
               <Route path="/resources" element={<ResourceManagement />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/catlocations" element={<CateringLocations />} />
+              <Route path="/catdateblock" element={<CateringDateBlocking />} />
 
 
 
