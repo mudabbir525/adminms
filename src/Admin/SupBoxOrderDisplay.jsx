@@ -37,7 +37,7 @@ const SupBoxOrderDisplay = () => {
 
   const updateOrderStatus = async () => {
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/update_box_order_status.php', {
+      const response = await fetch('https://mahaspice.desoftimp.com/ms3/update_Home_order_status.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
