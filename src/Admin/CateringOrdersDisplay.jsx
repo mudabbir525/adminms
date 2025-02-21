@@ -35,24 +35,17 @@ const OrderDetailView = ({ order, onBack }) => {
         {/* Order header */}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Order #{order.order_id}</h1>
-          
-            <div className="flex items-center gap-4">
-              <DownloadInvoiceButton order={order} />
-              <div
-                className={`text-sm px-3 py-1 rounded ${getStatusColor(
-                  order.payment_status
-                )}`}
-              >
-                {order.payment_status}
-              </div>
+
+          <div className="flex items-center gap-4">
+            <DownloadInvoiceButton order={order} />
+            <div
+              className={`text-sm px-3 py-1 rounded ${getStatusColor(
+                order.payment_status
+              )}`}
+            >
+              {order.payment_status}
+            </div>
           </div>
-          {/* <div
-            className={`text-sm px-3 py-1 rounded ${getStatusColor(
-              order.payment_status
-            )}`}
-          >
-            {order.payment_status}
-          </div> */}
         </div>
 
         {/* Two-column layout */}
@@ -126,6 +119,14 @@ const OrderDetailView = ({ order, onBack }) => {
                   <p className="font-medium text-lg">{order.helpers}</p>
                 </div>
               </div>
+              <div className="mt-4 border-t pt-4">
+                <p className="text-sm text-gray-600">Event Type</p>
+                <p className="font-medium text-lg">{order.event_type}</p>
+                <p className="text-sm text-gray-600">Service Type</p>
+                <p className="font-medium text-lg">{order.service_type}</p>
+                <p className="text-sm text-gray-600">Menu Type</p>
+                <p className="font-medium text-lg">{order.menu_type}</p>
+              </div>
             </div>
 
             {/* Price Breakdown */}
@@ -194,7 +195,7 @@ const OrderDetailView = ({ order, onBack }) => {
 
           {/* Right Column - Selected Items */}
           <div className="bg-white rounded-lg shadow-md p-6 h-fit lg:sticky lg:top-4">
-            <h2 className="text-xl font-semibold mb-4">Selected Menu Items</h2>
+            <h2 className="text-xl font-semibold mb-4">Selected Menu Items ({order.veg_nonveg})</h2>
             <div className="space-y-6">
               {Object.entries(order.selected_items).map(([category, items]) => (
                 <div key={category} className="border-b pb-4 last:border-b-0">
