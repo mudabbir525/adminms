@@ -2,7 +2,7 @@
   command = "npm run build"
   publish = "dist"
 
-# Custom Headers for .js and .jsx files
+# Custom Headers for file types
 [[headers]]
   for = "/*.js"
   [headers.values]
@@ -15,6 +15,12 @@
     Content-Type = "application/javascript"
     Cache-Control = "public, max-age=31536000"
 
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Content-Type = "text/css"
+    Cache-Control = "public, max-age=31536000"
+
 # Custom Headers for security best practices
 [[headers]]
   for = "/*"
@@ -22,7 +28,7 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;"
 
 # Specific redirects first
 [[redirects]]
@@ -43,19 +49,9 @@
   status = 302
   force = true
 
-# SPA fallback - This must be the last redirect rule
+# SPA fallback - This should be the last redirect rule
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
   force = true
-
-# Handle 404 errors
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 404
-  force = true
-
-
-
