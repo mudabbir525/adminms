@@ -49,7 +49,7 @@ const AddCarousel = () => {
     formDataToSend.append('is_active', formData.is_active);
 
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/addCarousel.php', {
+      const response = await fetch('https://adminmahaspice.in/ms3/addCarousel.php', {
         method: 'POST',
         body: formDataToSend
       });

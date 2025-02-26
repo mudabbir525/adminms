@@ -33,7 +33,7 @@ const MenuItems = () => {
 
   const fetchMenuItems = async () => {
     try {
-      const response = await fetch("https://mahaspice.desoftimp.com/ms3/menu_display.php");
+      const response = await fetch("https://adminmahaspice.in/ms3/menu_display.php");
       const data = await response.json();
       if (data.success) {
         setMenuItems(data.data);
@@ -162,7 +162,7 @@ const MenuItems = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "https://mahaspice.desoftimp.com/ms3/updateMenuItem.php",
+        "https://adminmahaspice.in/ms3/updateMenuItem.php",
         formData
       );
       if (response.data.success) {
@@ -179,7 +179,7 @@ const MenuItems = () => {
     if (window.confirm("Are you sure you want to delete this item?")) {
         try {
             const response = await axios.post(
-                "https://mahaspice.desoftimp.com/ms3/deleteMenuItem.php",
+                "https://adminmahaspice.in/ms3/deleteMenuItem.php",
                 { id: id },
                 {
                     headers: {

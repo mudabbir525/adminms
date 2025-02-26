@@ -11,7 +11,7 @@ const AddCategory = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    axios.get('https://mahaspice.desoftimp.com/ms3/getMenuTypes.php')
+    axios.get('https://adminmahaspice.in/ms3/getMenuTypes.php')
       .then(response => {
         console.log('Menu Types Response:', response.data);
         if (response.data && Array.isArray(response.data)) {
@@ -75,7 +75,7 @@ const AddCategory = () => {
       positions: menuPositions
     };
 
-    axios.post('https://mahaspice.desoftimp.com/ms3/addcategory.php', formData)
+    axios.post('https://adminmahaspice.in/ms3/addcategory.php', formData)
       .then(response => {
         alert(response.data.message);
         // Reset form

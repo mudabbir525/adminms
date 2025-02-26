@@ -11,7 +11,7 @@ const EnquiryDisplay = () => {
     const fetchEnquiries = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await fetch(`https://mahaspice.desoftimp.com/ms3/design/get_enquiry.php?search=${searchTerm}&sort=${sortOrder}`);
+            const response = await fetch(`https://adminmahaspice.in/ms3/design/get_enquiry.php?search=${searchTerm}&sort=${sortOrder}`);
             const data = await response.json();
 
             if (data.status === 'success') {
@@ -44,7 +44,7 @@ const EnquiryDisplay = () => {
     };
 
     const openPDF = (filePath) => {
-        window.open(`https://mahaspice.desoftimp.com/ms3/design/pdfs/${filePath}`, '_blank');
+        window.open(`https://adminmahaspice.in/ms3/design/pdfs/${filePath}`, '_blank');
     };
 
     if (loading && enquiries.length === 0) {

@@ -97,7 +97,7 @@ const User = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.get('https://mahaspice.desoftimp.com/ms3/get_orders.php');
+      const response = await axios.get('https://adminmahaspice.in/ms3/get_orders.php');
       if (response.data.success) {
         const ordersData = response.data.orders;
         setOrders(ordersData);
@@ -207,7 +207,7 @@ const User = () => {
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
       const response = await axios.put(
-        'https://mahaspice.desoftimp.com/ms3/update_order_status.php',
+        'https://adminmahaspice.in/ms3/update_order_status.php',
         {
           orderId,
           status: newStatus,

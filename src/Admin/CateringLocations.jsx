@@ -21,7 +21,7 @@ const CateringLocations = () => {
     try {
       setIsLoading(true);
       const response = await fetch(
-        "https://mahaspice.desoftimp.com/ms3/catering_locations.php"
+        "https://adminmahaspice.in/ms3/catering_locations.php"
       );
       const data = await response.json();
       setLocations(data);
@@ -40,7 +40,7 @@ const CateringLocations = () => {
     try {
       setIsLoading(true);
       await fetch(
-        "https://mahaspice.desoftimp.com/ms3/catering_locations.php",
+        "https://adminmahaspice.in/ms3/catering_locations.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -78,7 +78,7 @@ const CateringLocations = () => {
     try {
       setIsLoading(true);
       await fetch(
-        "https://mahaspice.desoftimp.com/ms3/catering_locations.php",
+        "https://adminmahaspice.in/ms3/catering_locations.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -124,7 +124,7 @@ const CateringLocations = () => {
     try {
       setIsLoading(true);
       await fetch(
-        "https://mahaspice.desoftimp.com/ms3/catering_locations.php",
+        "https://adminmahaspice.in/ms3/catering_locations.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -165,7 +165,7 @@ const CateringLocations = () => {
     try {
       setIsLoading(true);
       await fetch(
-        "https://mahaspice.desoftimp.com/ms3/catering_locations.php",
+        "https://adminmahaspice.in/ms3/catering_locations.php",
         {
           method: "PUT",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -188,7 +188,7 @@ const CateringLocations = () => {
     try {
       setIsLoading(true);
       const response = await fetch(
-        "https://mahaspice.desoftimp.com/ms3/catering_locations.php",
+        "https://adminmahaspice.in/ms3/catering_locations.php",
         {
           method: "DELETE",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },

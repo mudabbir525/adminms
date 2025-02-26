@@ -20,7 +20,7 @@ const AddSupCps = () => {
     useEffect(() => {
         const fetchCPTypes = async () => {
             try {
-                const response = await axios.get('https://mahaspice.desoftimp.com/ms3/cps.php');
+                const response = await axios.get('https://adminmahaspice.in/ms3/cps.php');
                 setCpTypes(response.data);
             } catch (error) {
                 console.error('Error fetching CP Types:', error);
@@ -74,7 +74,7 @@ const AddSupCps = () => {
 
         try {
             const response = await axios.post(
-                'https://mahaspice.desoftimp.com/ms3/cptypes.php',
+                'https://adminmahaspice.in/ms3/cptypes.php',
                 formSubmitData,
                 {
                     headers: {

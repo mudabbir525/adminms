@@ -19,7 +19,7 @@ const AddHomeCategory = () => {
     setStatus('');
 
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/addHomeCategory.php', {
+      const response = await fetch('https://adminmahaspice.in/ms3/addHomeCategory.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

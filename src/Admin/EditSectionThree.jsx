@@ -13,7 +13,7 @@ const EditSectionThree = () => {
 
     const fetchItems = async () => {
         try {
-            const response = await axios.get('https://mahaspice.desoftimp.com/ms3/getSectionThree.php');
+            const response = await axios.get('https://adminmahaspice.in/ms3/getSectionThree.php');
             setItems(response.data);
         } catch (err) {
             console.error('Fetch error:', err);
@@ -31,7 +31,7 @@ const EditSectionThree = () => {
             formData.append('id', id);
             formData.append('image', imageFile);
 
-            const response = await axios.post('https://mahaspice.desoftimp.com/ms3/updateSectionThree.php', formData, {
+            const response = await axios.post('https://adminmahaspice.in/ms3/updateSectionThree.php', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 }
@@ -74,7 +74,7 @@ const EditSectionThree = () => {
                         <div key={item.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
                             <div className="relative group">
                                 <img
-                                    src={`https://mahaspice.desoftimp.com/ms3/${item.image}?${new Date().getTime()}`}
+                                    src={`https://adminmahaspice.in/ms3/${item.image}?${new Date().getTime()}`}
                                     alt={item.title}
                                     className="w-full h-48 object-cover"
                                 />

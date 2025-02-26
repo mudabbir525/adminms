@@ -34,7 +34,7 @@ const AddGST = () => {
     setSuccess('');
 
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/addgst.php', {
+      const response = await fetch('https://adminmahaspice.in/ms3/addgst.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

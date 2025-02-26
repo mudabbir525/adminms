@@ -9,7 +9,7 @@ const EditHomeCategories = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/getHomeCategory.php');
+      const response = await fetch('https://adminmahaspice.in/ms3/getHomeCategory.php');
       const data = await response.json();
       
       if (data.success) {
@@ -44,7 +44,7 @@ const EditHomeCategories = () => {
     }
 
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/updateHomeCategory.php', {
+      const response = await fetch('https://adminmahaspice.in/ms3/updateHomeCategory.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ const EditHomeCategories = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this category?')) {
       try {
-        const response = await fetch('https://mahaspice.desoftimp.com/ms3/deleteHomeCategory.php', {
+        const response = await fetch('https://adminmahaspice.in/ms3/deleteHomeCategory.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

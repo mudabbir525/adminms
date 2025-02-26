@@ -17,7 +17,7 @@ const CRPBEditPage = () => {
   });
 
   const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(entry?.img_address ? `https://mahaspice.desoftimp.com/ms3/${entry.img_address}` : null);
+  const [imagePreview, setImagePreview] = useState(entry?.img_address ? `https://adminmahaspice.in/ms3/${entry.img_address}` : null);
   const fileInputRef = useRef(null);
 
   // Fetch entry details if not passed via navigation
@@ -25,7 +25,7 @@ const CRPBEditPage = () => {
     if (!entry) {
       const fetchEntry = async () => {
         try {
-          const response = await fetch(`https://mahaspice.desoftimp.com/ms3/getcrpbbyid.php?id=${id}`);
+          const response = await fetch(`https://adminmahaspice.in/ms3/getcrpbbyid.php?id=${id}`);
           const data = await response.json();
           setEntry(data);
           setFormData({
@@ -33,7 +33,7 @@ const CRPBEditPage = () => {
             name: data.name,
             position: data.position
           });
-          setImagePreview(`https://mahaspice.desoftimp.com/ms3/${data.img_address}`);
+          setImagePreview(`https://adminmahaspice.in/ms3/${data.img_address}`);
         } catch (error) {
           console.error('Error fetching entry:', error);
           alert('Failed to fetch entry details');
@@ -85,7 +85,7 @@ const CRPBEditPage = () => {
     }
 
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/editcrpb.php', {
+      const response = await fetch('https://adminmahaspice.in/ms3/editcrpb.php', {
         method: 'POST',
         body: formDataToSubmit
       });

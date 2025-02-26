@@ -20,7 +20,7 @@ const EditCarousel = () => {
 
     const fetchCarouselItem = async () => {
         try {
-            const response = await fetch(`https://mahaspice.desoftimp.com/ms3/getcarouselbyid.php?id=${id}`);
+            const response = await fetch(`https://adminmahaspice.in/ms3/getcarouselbyid.php?id=${id}`);
             const data = await response.json();
             setFormData({
                 media_type: data.media_type,
@@ -51,7 +51,7 @@ const EditCarousel = () => {
         }
 
         try {
-            const response = await fetch('https://mahaspice.desoftimp.com/ms3/updatecarousel.php', {
+            const response = await fetch('https://adminmahaspice.in/ms3/updatecarousel.php', {
                 method: 'POST',
                 body: formDataToSend
             });
@@ -78,13 +78,13 @@ const EditCarousel = () => {
                     <label className="block mb-2">Current Media:</label>
                     {formData.media_type === 'image' ? (
                         <img
-                            src={`https://mahaspice.desoftimp.com/ms3/uploads/carousel/${formData.current_media}`}
+                            src={`https://adminmahaspice.in/ms3/uploads/carousel/${formData.current_media}`}
                             alt="Current media"
                             className="max-w-full h-auto mb-2"
                         />
                     ) : (
                         <video
-                            src={`https://mahaspice.desoftimp.com/ms3/uploads/carousel/${formData.current_media}`}
+                            src={`https://adminmahaspice.in/ms3/uploads/carousel/${formData.current_media}`}
                             controls
                             className="max-w-full h-auto mb-2"
                         />

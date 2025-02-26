@@ -36,7 +36,7 @@ const DeliveryLocations = () => {
 
     const fetchLocations = async () => {
         try {
-            const response = await fetch('https://mahaspice.desoftimp.com/ms3/displayDeloc.php');
+            const response = await fetch('https://adminmahaspice.in/ms3/displayDeloc.php');
             if (!response.ok) throw new Error('Failed to fetch locations');
             const data = await response.json();
 
@@ -69,7 +69,7 @@ const DeliveryLocations = () => {
 
     const handleUpdate = async () => {
         try {
-            const response = await fetch('https://mahaspice.desoftimp.com/ms3/updateDeloc.php', {
+            const response = await fetch('https://adminmahaspice.in/ms3/updateDeloc.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ const DeliveryLocations = () => {
 
         if (await confirmDelete()) {
             try {
-                const response = await fetch('https://mahaspice.desoftimp.com/ms3/deletelocation.php', {
+                const response = await fetch('https://adminmahaspice.in/ms3/deletelocation.php', {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
@@ -180,7 +180,7 @@ const DeliveryLocations = () => {
         if (!window.confirm('Are you sure you want to delete this location?')) return;
 
         try {
-            const response = await fetch('https://mahaspice.desoftimp.com/ms3/deleteDeloc.php', {
+            const response = await fetch('https://adminmahaspice.in/ms3/deleteDeloc.php', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

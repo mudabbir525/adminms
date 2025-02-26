@@ -29,7 +29,7 @@ const EditCoupon = () => {
 
   const fetchCouponDetails = async () => {
     try {
-      const response = await fetch(`https://mahaspice.desoftimp.com/ms3/displaycoupons.php`);
+      const response = await fetch(`https://adminmahaspice.in/ms3/displaycoupons.php`);
       const data = await response.json();
       
       if (data.success) {
@@ -67,7 +67,7 @@ const EditCoupon = () => {
     setSuccess('');
 
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/editcoupons.php', {
+      const response = await fetch('https://adminmahaspice.in/ms3/editcoupons.php', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

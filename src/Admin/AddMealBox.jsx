@@ -49,7 +49,7 @@ const AddMealBox = () => {
         e.preventDefault();
         
         try {
-            axios.post('https://mahaspice.desoftimp.com/ms3/addbox.php', data, {
+            axios.post('https://adminmahaspice.in/ms3/addbox.php', data, {
     headers: {
         'Content-Type': 'application/json'
     }

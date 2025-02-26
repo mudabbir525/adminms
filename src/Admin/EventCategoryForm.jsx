@@ -22,7 +22,7 @@ const EventCategoryForm = () => {
   
   const fetchEvents = async () => {
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/get_events.php');
+      const response = await fetch('https://adminmahaspice.in/ms3/get_events.php');
       const data = await response.json();
       setEvents(data);
     } catch (error) {
@@ -106,7 +106,7 @@ const handleSubCategoryCountChange = (count) => {
     });
 
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/submit_event.php', {
+      const response = await fetch('https://adminmahaspice.in/ms3/submit_event.php', {
         method: 'POST',
         body: formData
       });

@@ -40,7 +40,7 @@ function AddMenu() {
     setMessage('');
     
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/AddMenu.php', {
+      const response = await fetch('https://adminmahaspice.in/ms3/AddMenu.php', {
         method: 'POST',
         body: formData
       });

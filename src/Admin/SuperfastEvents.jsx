@@ -15,7 +15,7 @@ const SuperfastEvents = () => {
         image: null
     });
     const [previewUrl, setPreviewUrl] = useState('');
-    const baseUrl = 'https://mahaspice.desoftimp.com/ms3/';
+    const baseUrl = 'https://adminmahaspice.in/ms3/';
 
     useEffect(() => {
         fetchEvents();

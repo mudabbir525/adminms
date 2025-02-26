@@ -10,8 +10,8 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         const [usersResponse, paymentsResponse] = await Promise.all([
-          axios.get('https://mahaspice.desoftimp.com/ms3/login/getallusers.php'),
-          axios.get('https://mahaspice.desoftimp.com/ms3/login/getallpayments.php')
+          axios.get('https://adminmahaspice.in/ms3/login/getallusers.php'),
+          axios.get('https://adminmahaspice.in/ms3/login/getallpayments.php')
         ]);
         setUsers(usersResponse.data.users);
         setPayments(paymentsResponse.data.users);

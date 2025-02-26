@@ -16,7 +16,7 @@ const HomeOrderDisplay = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/get_home_orders.php');
+      const response = await fetch('https://adminmahaspice.in/ms3/get_home_orders.php');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -40,7 +40,7 @@ const HomeOrderDisplay = () => {
 
 //   const updateOrderStatus = async () => {
 //   try {
-//     const response = await fetch('https://mahaspice.desoftimp.com/ms3/update_Home_order_status.php', {
+//     const response = await fetch('https://adminmahaspice.in/ms3/update_Home_order_status.php', {
 //       method: 'POST',
 //       headers: {
 //         'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ const HomeOrderDisplay = () => {
 
   const updateOrderStatus = async () => {
   try {
-    const response = await fetch('https://mahaspice.desoftimp.com/ms3/update_Home_order_status.php', {
+    const response = await fetch('https://adminmahaspice.in/ms3/update_Home_order_status.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

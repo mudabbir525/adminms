@@ -9,7 +9,7 @@ const SectionSuperfast = () => {
     const [previewImage, setPreviewImage] = useState('');
     const [editingId, setEditingId] = useState(null);
     const [toast, setToast] = useState({ show: false, message: '', type: '' });
-    const baseUrl = 'https://mahaspice.desoftimp.com/ms3/';
+    const baseUrl = 'https://adminmahaspice.in/ms3/';
     const [currentSection, setCurrentSection] = useState({
         position: '',
         title: '',

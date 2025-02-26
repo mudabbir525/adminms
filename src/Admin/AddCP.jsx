@@ -44,7 +44,7 @@ const AddCP = () => {
       formData.append('image', selectedImage);
 
       const response = await axios.post(
-        'https://mahaspice.desoftimp.com/ms3/cps.php', 
+        'https://adminmahaspice.in/ms3/cps.php', 
         formData,
         {
           headers: {

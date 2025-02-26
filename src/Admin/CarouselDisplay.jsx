@@ -12,7 +12,7 @@ const DisplayCarousel = () => {
   // Function to fetch carousel items from the backend
   const fetchCarouselItems = async () => {
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/getCarouselAdmin.php');
+      const response = await fetch('https://adminmahaspice.in/ms3/getCarouselAdmin.php');
       const data = await response.json();
       setCarouselItems(data);
     } catch (error) {
@@ -24,7 +24,7 @@ const DisplayCarousel = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this slide?')) {
       try {
-        const response = await fetch('https://mahaspice.desoftimp.com/ms3/deletecarousel.php', {
+        const response = await fetch('https://adminmahaspice.in/ms3/deletecarousel.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -93,13 +93,13 @@ const DisplayCarousel = () => {
               <div className="relative aspect-video">
                 {item.media_type === 'image' ? (
                   <img
-                    src={`https://mahaspice.desoftimp.com/ms3/uploads/carousel/${item.media_path}`}
+                    src={`https://adminmahaspice.in/ms3/uploads/carousel/${item.media_path}`}
                     alt={item.button_text}
                     className="w-full h-full object-cover"
                   />
                 ) : (
                   <video
-                    src={`https://mahaspice.desoftimp.com/ms3/uploads/carousel/${item.media_path}`}
+                    src={`https://adminmahaspice.in/ms3/uploads/carousel/${item.media_path}`}
                     className="w-full h-full object-cover"
                     controls
                   />

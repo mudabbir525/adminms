@@ -12,7 +12,7 @@ const Offers = () => {
         is_active: true
     });
 
-    const baseUrl = 'https://mahaspice.desoftimp.com/ms3/';
+    const baseUrl = 'https://adminmahaspice.in/ms3/';
 
     useEffect(() => {
         fetchOffers();

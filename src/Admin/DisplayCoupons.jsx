@@ -56,7 +56,7 @@ const DisplayCoupons = () => {
 
     const fetchCoupons = async () => {
         try {
-            const response = await fetch('https://mahaspice.desoftimp.com/ms3/displaycoupons.php', {
+            const response = await fetch('https://adminmahaspice.in/ms3/displaycoupons.php', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -85,7 +85,7 @@ const DisplayCoupons = () => {
     const handleToggleStatus = async (couponId, currentStatus) => {
         try {
             const currentCoupon = coupons.find(c => c.id === couponId);
-            const response = await fetch('https://mahaspice.desoftimp.com/ms3/editcoupons.php', {
+            const response = await fetch('https://adminmahaspice.in/ms3/editcoupons.php', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ const DisplayCoupons = () => {
 
         setDeleteLoading(true);
         try {
-            const response = await fetch('https://mahaspice.desoftimp.com/ms3/deletecoupons.php', {
+            const response = await fetch('https://adminmahaspice.in/ms3/deletecoupons.php', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

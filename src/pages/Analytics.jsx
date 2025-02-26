@@ -12,7 +12,7 @@ const Analytics = () => {
 
   useEffect(() => {
     // Fetch users
-    fetch('https://mahaspice.desoftimp.com/ms3/login/getallusers.php')
+    fetch('https://adminmahaspice.in/ms3/login/getallusers.php')
       .then(response => response.json())
       .then(data => {
         if (data.success) {
@@ -22,7 +22,7 @@ const Analytics = () => {
       .catch(error => console.error('Error fetching users:', error));
 
     // Fetch payments
-    fetch('https://mahaspice.desoftimp.com/ms3/login/getallpayments.php')
+    fetch('https://adminmahaspice.in/ms3/login/getallpayments.php')
       .then(response => response.json())
       .then(data => {
         if (data.success) {

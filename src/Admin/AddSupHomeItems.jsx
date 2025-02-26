@@ -28,7 +28,7 @@ const AddSupHomeItems = () => {
     const fetchCategories = async () => {
         try {
             const response = await fetch(
-                "https://mahaspice.desoftimp.com/ms3/getSupHomeCategory.php"
+                "https://adminmahaspice.in/ms3/getSupHomeCategory.php"
             );
             const data = await response.json();
             if (data.success) {
@@ -95,7 +95,7 @@ const AddSupHomeItems = () => {
 
         try {
             const response = await fetch(
-                "https://mahaspice.desoftimp.com/ms3/addSupHomeItem.php",
+                "https://adminmahaspice.in/ms3/addSupHomeItem.php",
                 {
                     method: "POST",
                     body: form,

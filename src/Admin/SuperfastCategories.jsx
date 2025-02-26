@@ -28,7 +28,7 @@ const SuperfastCategories = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('https://mahaspice.desoftimp.com/ms3/getsf_categories.php');
+      const response = await axios.get('https://adminmahaspice.in/ms3/getsf_categories.php');
       if (response.data.success) {
         setCategories(response.data.categories || []);
       }
@@ -40,7 +40,7 @@ const SuperfastCategories = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get('https://mahaspice.desoftimp.com/ms3/get_sf_events.php');
+      const response = await axios.get('https://adminmahaspice.in/ms3/get_sf_events.php');
       if (response.data.success) {
         setEvents(response.data.events || []);
       }
@@ -52,7 +52,7 @@ const SuperfastCategories = () => {
 
   const fetchTypes = async () => {
     try {
-      const response = await axios.get('https://mahaspice.desoftimp.com/ms3/get_sf_crpb.php');
+      const response = await axios.get('https://adminmahaspice.in/ms3/get_sf_crpb.php');
       if (response.data.success) {
         setTypes(response.data.types || []);
       }
@@ -83,7 +83,7 @@ const SuperfastCategories = () => {
 
     try {
       const response = await axios.post(
-        'https://mahaspice.desoftimp.com/ms3/addsf_category.php',
+        'https://adminmahaspice.in/ms3/addsf_category.php',
         currentCategory
       );
 
@@ -112,7 +112,7 @@ const SuperfastCategories = () => {
 
     try {
       const response = await axios.put(
-        'https://mahaspice.desoftimp.com/ms3/update_sf_category.php',
+        'https://adminmahaspice.in/ms3/update_sf_category.php',
         {
           id: editingCategory.id,
           position: editingCategory.position,
@@ -145,7 +145,7 @@ const SuperfastCategories = () => {
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(
-        'https://mahaspice.desoftimp.com/ms3/deletesf_category.php',
+        'https://adminmahaspice.in/ms3/deletesf_category.php',
         { data: { id } }
       );
 

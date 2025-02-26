@@ -52,7 +52,7 @@ const CRPB = () => {
     formDataToSubmit.append('image', imageFile);
 
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/addcrpb.php', {
+      const response = await fetch('https://adminmahaspice.in/ms3/addcrpb.php', {
         method: 'POST',
         body: formDataToSubmit
       });

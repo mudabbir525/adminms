@@ -10,7 +10,7 @@ const SupEventPricing = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const baseUrl = 'https://mahaspice.desoftimp.com/ms3/';
+    const baseUrl = 'https://adminmahaspice.in/ms3/';
 
     const [formData, setFormData] = useState({
         id: '',

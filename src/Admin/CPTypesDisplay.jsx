@@ -40,7 +40,7 @@ const CPTypesDisplay = () => {
     try {
       setIsLoading(true);
       const response = await axios.get(
-        "https://mahaspice.desoftimp.com/ms3/cptypes.php"
+        "https://adminmahaspice.in/ms3/cptypes.php"
       );
       setCpTypes(response.data);
       setFilteredCPTypes(response.data);
@@ -80,7 +80,7 @@ const CPTypesDisplay = () => {
     
     if (isConfirmed) {
       try {
-        await axios.delete("https://mahaspice.desoftimp.com/ms3/cptypes.php", {
+        await axios.delete("https://adminmahaspice.in/ms3/cptypes.php", {
           data: JSON.stringify({ id: id }),
           headers: {
             'Content-Type': 'application/json'
@@ -355,7 +355,7 @@ const CPTypesDisplay = () => {
                 <tr key={cpType.id} className="border-t hover:bg-gray-50">
                   <td className="p-4">
                     <img
-                      src={`https://mahaspice.desoftimp.com/ms3/${cpType.image_address}`}
+                      src={`https://adminmahaspice.in/ms3/${cpType.image_address}`}
                       alt={cpType.cp_name}
                       className="w-16 h-16 object-cover rounded-md"
                     />

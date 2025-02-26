@@ -18,7 +18,7 @@ const EditMenuPage = () => {
   const fetchMenuItemDetails = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`https://mahaspice.desoftimp.com/ms3/getgscdbyid.php?id=${id}`, {
+      const response = await fetch(`https://adminmahaspice.in/ms3/getgscdbyid.php?id=${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ const EditMenuPage = () => {
   }
 
   try {
-    const response = await fetch('https://mahaspice.desoftimp.com/ms3/updategscd.php', {
+    const response = await fetch('https://adminmahaspice.in/ms3/updategscd.php', {
       method: 'POST',
       body: formData,
     });
@@ -129,7 +129,7 @@ const EditMenuPage = () => {
           {imagePreview && (
             <div className="mt-4">
               <img
-                src={`https://mahaspice.desoftimp.com/ms3/${imagePreview}`}
+                src={`https://adminmahaspice.in/ms3/${imagePreview}`}
                 alt="Menu Item"
                 className="w-full object-cover rounded-md"
               />

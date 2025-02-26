@@ -48,7 +48,7 @@ const EditCPTypeModal = ({ cpType, onClose }) => {
             setInitialFormData(initialData);
             
             if (cpType.image_address) {
-                setPreviewImage(`https://mahaspice.desoftimp.com/ms3/${cpType.image_address}`);
+                setPreviewImage(`https://adminmahaspice.in/ms3/${cpType.image_address}`);
             }
         }
     }, [cpType]);
@@ -117,7 +117,7 @@ const EditCPTypeModal = ({ cpType, onClose }) => {
 
             const response = await axios({
                 method: 'post',  // Changed to POST as PHP handles both PUT and POST
-                url: 'https://mahaspice.desoftimp.com/ms3/editcptypes.php',
+                url: 'https://adminmahaspice.in/ms3/editcptypes.php',
                 data: formDataToSubmit,
                 headers: {
                     'Content-Type': 'multipart/form-data'

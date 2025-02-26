@@ -12,7 +12,7 @@ const ResourceManagement = () => {
   useEffect(() => {
     const fetchResources = async () => {
       try {
-        const response = await fetch("https://mahaspice.desoftimp.com/ms3/get-resources.php");
+        const response = await fetch("https://adminmahaspice.in/ms3/get-resources.php");
         if (!response.ok) {
           throw new Error("Failed to fetch resources.");
         }
@@ -47,7 +47,7 @@ const ResourceManagement = () => {
   // Handle save button click
   const handleSave = async (id) => {
     try {
-      const response = await fetch("https://mahaspice.desoftimp.com/ms3/update-resource.php", {
+      const response = await fetch("https://adminmahaspice.in/ms3/update-resource.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -12,7 +12,7 @@ const CategoryManagement = () => {
 
     const fetchCategories = async () => {
         try {
-            const response = await fetch('https://mahaspice.desoftimp.com/ms3/design/get_categories.php');
+            const response = await fetch('https://adminmahaspice.in/ms3/design/get_categories.php');
             const data = await response.json();
             setCategories(data);
         } catch (error) {
@@ -23,7 +23,7 @@ const CategoryManagement = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('https://mahaspice.desoftimp.com/ms3/design/add_category.php', {
+            const response = await fetch('https://adminmahaspice.in/ms3/design/add_category.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newCategory)
@@ -40,7 +40,7 @@ const CategoryManagement = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this category?')) {
             try {
-                const response = await fetch(`https://mahaspice.desoftimp.com/ms3/design/delete_category.php?id=${id}`, {
+                const response = await fetch(`https://adminmahaspice.in/ms3/design/delete_category.php?id=${id}`, {
                     method: 'DELETE'
                 });
                 if (response.ok) {
@@ -55,7 +55,7 @@ const CategoryManagement = () => {
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('https://mahaspice.desoftimp.com/ms3/design/update_category.php', {
+            const response = await fetch('https://adminmahaspice.in/ms3/design/update_category.php', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(editingCategory)

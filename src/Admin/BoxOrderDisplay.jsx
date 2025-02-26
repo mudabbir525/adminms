@@ -16,7 +16,7 @@ const BoxOrderDisplay = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/get_box_orders.php');
+      const response = await fetch('https://adminmahaspice.in/ms3/get_box_orders.php');
       const data = await response.json();
       
       if (data.status === 'success') {
@@ -37,7 +37,7 @@ const BoxOrderDisplay = () => {
 
   const updateOrderStatus = async () => {
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/update_Home_order_status.php', {
+      const response = await fetch('https://adminmahaspice.in/ms3/update_Home_order_status.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

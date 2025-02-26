@@ -18,7 +18,7 @@ const SupItems = () => {
         menu_type: ''
     });
 
-    const baseUrl = 'https://mahaspice.desoftimp.com/ms3/';
+    const baseUrl = 'https://adminmahaspice.in/ms3/';
 
     useEffect(() => {
         fetchItems();

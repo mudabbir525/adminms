@@ -23,10 +23,10 @@ const EditHomeItems = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const itemResponse = await fetch(`https://mahaspice.desoftimp.com/ms3/getHomeItemsById.php?id=${id}`);
+                const itemResponse = await fetch(`https://adminmahaspice.in/ms3/getHomeItemsById.php?id=${id}`);
                 const itemData = await itemResponse.json();
 
-                const categoryResponse = await fetch('https://mahaspice.desoftimp.com/ms3/getHomeCategory.php');
+                const categoryResponse = await fetch('https://adminmahaspice.in/ms3/getHomeCategory.php');
                 const categoryData = await categoryResponse.json();
 
                 if (itemData.success && categoryData.success) {
@@ -42,7 +42,7 @@ const EditHomeItems = () => {
                     setCategories(categoryData.categories || []);
 
                     if (item.image_path) {
-                        setCurrentImage(`https://mahaspice.desoftimp.com/ms3/uploads/homeCategory/${item.image_path}`);
+                        setCurrentImage(`https://adminmahaspice.in/ms3/uploads/homeCategory/${item.image_path}`);
                     }
                 }
             } catch (error) {
@@ -87,7 +87,7 @@ const EditHomeItems = () => {
                 formDataToSend.append('image', newImage);
             }
 
-            const response = await fetch('https://mahaspice.desoftimp.com/ms3/updateHomeItem.php', {
+            const response = await fetch('https://adminmahaspice.in/ms3/updateHomeItem.php', {
                 method: 'POST',
                 body: formDataToSend,
             });

@@ -8,7 +8,7 @@ const DisplayCRPB = () => {
 
   const fetchEntries = async () => {
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/getcrpb.php');
+      const response = await fetch('https://adminmahaspice.in/ms3/getcrpb.php');
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       setCrpbEntries(data);
@@ -21,7 +21,7 @@ const DisplayCRPB = () => {
     if (!window.confirm('Are you sure you want to delete this entry?')) return;
 
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/deletecrpb.php', {
+      const response = await fetch('https://adminmahaspice.in/ms3/deletecrpb.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ const DisplayCRPB = () => {
               className="border rounded-lg shadow-md p-4 flex flex-col hover:shadow-lg transition-shadow duration-300"
             >
               <img 
-                src={`https://mahaspice.desoftimp.com/ms3/${entry.img_address}`} 
+                src={`https://adminmahaspice.in/ms3/${entry.img_address}`} 
                 alt={entry.name} 
                 className="w-full h-48 object-contain rounded-t-lg mb-4"
               />

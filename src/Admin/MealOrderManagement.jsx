@@ -30,7 +30,7 @@ const OrderManagement = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/get_mealorders.php');
+      const response = await fetch('https://adminmahaspice.in/ms3/get_mealorders.php');
       const data = await response.json();
       if (data.success) {
         setOrders(data.orders);
@@ -89,7 +89,7 @@ const OrderManagement = () => {
     setShowConfirmDialog(false);
     
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/update_mealorder_status.php', {
+      const response = await fetch('https://adminmahaspice.in/ms3/update_mealorder_status.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

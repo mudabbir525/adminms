@@ -12,7 +12,7 @@ const AdminEditCategory = () => {
     }, []);
 
     const fetchCategories = () => {
-        axios.get('https://mahaspice.desoftimp.com/ms3/getcategory.php')
+        axios.get('https://adminmahaspice.in/ms3/getcategory.php')
             .then(response => {
                 const groupedCategories = {};
                 response.data.forEach(category => {
@@ -34,7 +34,7 @@ const AdminEditCategory = () => {
 
     const handleDeleteCategory = (categoryName) => {
         if (window.confirm(`Are you sure you want to delete the entire category "${categoryName}"?`)) {
-            axios.delete(`https://mahaspice.desoftimp.com/ms3/deletecategory.php`, {
+            axios.delete(`https://adminmahaspice.in/ms3/deletecategory.php`, {
                 data: { category_name: categoryName }
             })
             .then(response => {

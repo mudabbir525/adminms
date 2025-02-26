@@ -23,9 +23,9 @@ const MenuPricingDisplay = () => {
   const fetchData = async () => {
     try {
       const [pricingsRes, eventsRes, gscdRes] = await Promise.all([
-        fetch('https://mahaspice.desoftimp.com/ms3/get_pricing.php'),
-        fetch('https://mahaspice.desoftimp.com/ms3/get_events.php'),
-        fetch('https://mahaspice.desoftimp.com/ms3/getgscd.php')
+        fetch('https://adminmahaspice.in/ms3/get_pricing.php'),
+        fetch('https://adminmahaspice.in/ms3/get_events.php'),
+        fetch('https://adminmahaspice.in/ms3/getgscd.php')
       ]);
 
       const [pricingsData, eventsData, gscdData] = await Promise.all([
@@ -58,7 +58,7 @@ const MenuPricingDisplay = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/update_pricing.php', {
+      const response = await fetch('https://adminmahaspice.in/ms3/update_pricing.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editFormData)
@@ -82,7 +82,7 @@ const MenuPricingDisplay = () => {
     if (!window.confirm('Are you sure you want to delete this pricing?')) return;
 
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/delete_pricing.php', {
+      const response = await fetch('https://adminmahaspice.in/ms3/delete_pricing.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id })

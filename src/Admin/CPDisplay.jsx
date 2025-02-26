@@ -8,7 +8,7 @@ const CPDisplay = () => {
   const [isError, setIsError] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
 
-  const BASE_URL = "https://mahaspice.desoftimp.com/ms3";
+  const BASE_URL = "https://adminmahaspice.in/ms3";
 
   // Fetch CP Types
   const fetchCPTypes = async () => {

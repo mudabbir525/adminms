@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Pencil, Trash2, Plus, Filter } from 'lucide-react';
 
-const API_BASE_URL = 'https://mahaspice.desoftimp.com/ms3/design';
+const API_BASE_URL = 'https://adminmahaspice.in/ms3/design';
 
 const ItemManagement = () => {
     const [items, setItems] = useState([]);

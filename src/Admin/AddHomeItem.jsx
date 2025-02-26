@@ -20,7 +20,7 @@ const AddHomeItems = () => {
 
     const fetchCategories = async () => {
         try {
-            const response = await fetch('https://mahaspice.desoftimp.com/ms3/getHomeCategory.php');
+            const response = await fetch('https://adminmahaspice.in/ms3/getHomeCategory.php');
             const data = await response.json();
             if (data.success) {
                 setCategories(data.categories);
@@ -80,7 +80,7 @@ const AddHomeItems = () => {
         });
 
         try {
-            const response = await fetch('https://mahaspice.desoftimp.com/ms3/addHomeItem.php', {
+            const response = await fetch('https://adminmahaspice.in/ms3/addHomeItem.php', {
                 method: 'POST',
                 body: form,
             });

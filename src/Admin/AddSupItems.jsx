@@ -27,7 +27,7 @@ const SuperfastItems = () => {
         is_veg: ''
     });
 
-    const BASE_URL = 'https://mahaspice.desoftimp.com/ms3/';
+    const BASE_URL = 'https://adminmahaspice.in/ms3/';
 
     // Fetch initial data
     useEffect(() => {

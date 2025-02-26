@@ -13,7 +13,7 @@ const EditSection = () => {
 
   const fetchServices = async () => {
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/getSectionTwo.php');
+      const response = await fetch('https://adminmahaspice.in/ms3/getSectionTwo.php');
       const data = await response.json();
       setServices(data);
       setLoading(false);
@@ -25,7 +25,7 @@ const EditSection = () => {
 
   const handleNameUpdate = async (oldServiceName) => {
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/updateServiceName.php', {
+      const response = await fetch('https://adminmahaspice.in/ms3/updateServiceName.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ const EditSection = () => {
       formData.append('service_name', serviceName);
       formData.append('image', file);
 
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/updateSection.php', {
+      const response = await fetch('https://adminmahaspice.in/ms3/updateSection.php', {
         method: 'POST',
         body: formData
       });
@@ -127,7 +127,7 @@ const EditSection = () => {
             </div>
             <div className="flex items-center gap-4">
               <img
-                src={`https://mahaspice.desoftimp.com/ms3/${service.image_path}`}
+                src={`https://adminmahaspice.in/ms3/${service.image_path}`}
                 alt={service.service_name}
                 className="w-32 h-32 object-cover rounded"
               />

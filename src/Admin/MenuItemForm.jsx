@@ -36,8 +36,8 @@ const MenuItemForm = () => {
     const fetchData = async () => {
       try {
         const [categoriesRes, eventsRes] = await Promise.all([
-          axios.get("https://mahaspice.desoftimp.com/ms3/getcategory.php"),
-          axios.get("https://mahaspice.desoftimp.com/ms3/get_events.php"),
+          axios.get("https://adminmahaspice.in/ms3/getcategory.php"),
+          axios.get("https://adminmahaspice.in/ms3/get_events.php"),
         ]);
         const uniqueCategories = Array.from(
           new Set(categoriesRes.data.map((cat) => cat.category_name))
@@ -140,7 +140,7 @@ const MenuItemForm = () => {
         price: parseFloat(formData.price),
       };
       const response = await axios.post(
-        "https://mahaspice.desoftimp.com/ms3/insert_menu_item.php",
+        "https://adminmahaspice.in/ms3/insert_menu_item.php",
         jsonData,
         {
           headers: {

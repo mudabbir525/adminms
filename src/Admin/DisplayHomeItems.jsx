@@ -24,7 +24,7 @@ const DisplayHomeItems = () => {
 
     const fetchItems = async () => {
         try {
-            const response = await fetch('https://mahaspice.desoftimp.com/ms3/getHomeItems.php');
+            const response = await fetch('https://adminmahaspice.in/ms3/getHomeItems.php');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -55,7 +55,7 @@ const DisplayHomeItems = () => {
         if (!window.confirm('Are you sure you want to delete this item?')) return;
 
         try {
-            const response = await fetch('https://mahaspice.desoftimp.com/ms3/deleteHomeItems.php', {
+            const response = await fetch('https://adminmahaspice.in/ms3/deleteHomeItems.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -269,7 +269,7 @@ const DisplayHomeItems = () => {
                             <div key={item.id} className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                                 <div className="relative group">
                                     <img 
-                                        src={`https://mahaspice.desoftimp.com/ms3/uploads/homeCategory/${item.image_path}`}
+                                        src={`https://adminmahaspice.in/ms3/uploads/homeCategory/${item.image_path}`}
                                         alt={item.title}
                                         className="w-full h-48 object-cover"
                                     />

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PlusCircle, Edit2, Trash2, X, Upload } from 'lucide-react';
 
-const BASE_URL = 'https://mahaspice.desoftimp.com/ms3';
+const BASE_URL = 'https://adminmahaspice.in/ms3';
 
 const FAQ = () => {
   const [faqs, setFaqs] = useState([]);

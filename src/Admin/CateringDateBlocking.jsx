@@ -23,7 +23,7 @@ const CateringDateBlocking = () => {
   // Fetch all locations data
   const fetchLocations = async () => {
     try {
-      const response = await fetch("https://mahaspice.desoftimp.com/ms3/catering_locations.php");
+      const response = await fetch("https://adminmahaspice.in/ms3/catering_locations.php");
       const data = await response.json();
       setLocationData(data); // Store full data for reference
       
@@ -53,7 +53,7 @@ const CateringDateBlocking = () => {
   // Fetch blocked dates
   const fetchBlockedDates = async () => {
     try {
-      const response = await fetch("https://mahaspice.desoftimp.com/ms3/cat_date_blocking.php");
+      const response = await fetch("https://adminmahaspice.in/ms3/cat_date_blocking.php");
       const data = await response.json();
       setBlockedDates(data);
     } catch (error) {
@@ -116,7 +116,7 @@ const CateringDateBlocking = () => {
         }
       }
 
-      const response = await fetch("https://mahaspice.desoftimp.com/ms3/cat_date_blocking.php", {
+      const response = await fetch("https://adminmahaspice.in/ms3/cat_date_blocking.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -140,7 +140,7 @@ const CateringDateBlocking = () => {
   // Handle delete action
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`https://mahaspice.desoftimp.com/ms3/cat_date_blocking.php?id=${id}`, {
+      const response = await fetch(`https://adminmahaspice.in/ms3/cat_date_blocking.php?id=${id}`, {
         method: "DELETE",
       });
       if (response.ok) {

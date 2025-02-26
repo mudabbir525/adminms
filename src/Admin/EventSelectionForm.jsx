@@ -9,7 +9,7 @@ const EventSelectionForm = ({ onEventSelect, initialValues }) => {
     const [selectedCategory, setSelectedCategory] = useState(initialValues?.event_category || '');
     const [error, setError] = useState('');
     
-    const BASE_URL = 'https://mahaspice.desoftimp.com/ms3/';
+    const BASE_URL = 'https://adminmahaspice.in/ms3/';
 
     // Initial fetch of events
     useEffect(() => {

@@ -6,7 +6,7 @@ const EventEditPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const BASE_URL = 'https://mahaspice.desoftimp.com/ms3/';
+  const BASE_URL = 'https://adminmahaspice.in/ms3/';
 
   const [event, setEvent] = useState({
     event_name: '',

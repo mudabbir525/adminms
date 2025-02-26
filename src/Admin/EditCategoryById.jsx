@@ -15,8 +15,8 @@ const EditCategoryById = () => {
     const [currentCategory, setCurrentCategory] = useState(null);
 
     useEffect(() => {
-        const fetchMenuTypes = axios.get('https://mahaspice.desoftimp.com/ms3/getMenuTypes.php');
-        const fetchCategoryDetails = axios.get(`https://mahaspice.desoftimp.com/ms3/getcategorybyid.php?id=${id}`);
+        const fetchMenuTypes = axios.get('https://adminmahaspice.in/ms3/getMenuTypes.php');
+        const fetchCategoryDetails = axios.get(`https://adminmahaspice.in/ms3/getcategorybyid.php?id=${id}`);
 
         Promise.all([fetchMenuTypes, fetchCategoryDetails])
             .then(([menuTypesResponse, categoryResponse]) => {
@@ -96,7 +96,7 @@ const EditCategoryById = () => {
             positions: menuPositions
         };
 
-        axios.post('https://mahaspice.desoftimp.com/ms3/updatecategory.php', formData)
+        axios.post('https://adminmahaspice.in/ms3/updatecategory.php', formData)
             .then(response => {
                 alert(response.data.message);
                 navigate('/admincategory');

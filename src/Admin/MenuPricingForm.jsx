@@ -18,8 +18,8 @@ const MenuPricingForm = () => {
     const fetchData = async () => {
       try {
         const [eventsResponse, gscdResponse] = await Promise.all([
-          fetch('https://mahaspice.desoftimp.com/ms3/get_events.php'),
-          fetch('https://mahaspice.desoftimp.com/ms3/getgscd.php')
+          fetch('https://adminmahaspice.in/ms3/get_events.php'),
+          fetch('https://adminmahaspice.in/ms3/getgscd.php')
         ]);
 
         if (!eventsResponse.ok || !gscdResponse.ok) {
@@ -47,7 +47,7 @@ const MenuPricingForm = () => {
     setSuccess('');
 
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/insert_pricing.php', {
+      const response = await fetch('https://adminmahaspice.in/ms3/insert_pricing.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

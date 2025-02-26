@@ -21,7 +21,7 @@ const DisplayGST = () => {
 
   const fetchGSTRates = async () => {
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/displaygst.php');
+      const response = await fetch('https://adminmahaspice.in/ms3/displaygst.php');
       const data = await response.json();
       
       if (data.success) {
@@ -44,7 +44,7 @@ const DisplayGST = () => {
 
   const handleSave = async (id) => {
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/editgst.php', {
+      const response = await fetch('https://adminmahaspice.in/ms3/editgst.php', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ const DisplayGST = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this GST rate?')) {
       try {
-        const response = await fetch('https://mahaspice.desoftimp.com/ms3/editgst.php', {
+        const response = await fetch('https://adminmahaspice.in/ms3/editgst.php', {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',

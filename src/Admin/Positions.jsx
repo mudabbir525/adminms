@@ -21,7 +21,7 @@ const FoodPackagesDisplay = () => {
 
   const fetchPackages = async () => {
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/cptypes.php');
+      const response = await fetch('https://adminmahaspice.in/ms3/cptypes.php');
       const data = await response.json();
       setPackages(data);
       setLoading(false);
@@ -115,7 +115,7 @@ const FoodPackagesDisplay = () => {
 
     setSaving(true);
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/update_positions.php', {
+      const response = await fetch('https://adminmahaspice.in/ms3/update_positions.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

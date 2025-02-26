@@ -26,7 +26,7 @@ const DateBlocking = () => {
 
   const fetchRecords = async () => {
     try {
-      const response = await fetch('https://mahaspice.desoftimp.com/ms3/dateblocking.php');
+      const response = await fetch('https://adminmahaspice.in/ms3/dateblocking.php');
       const data = await response.json();
       setRecords(data);
     } catch (error) {
@@ -38,8 +38,8 @@ const DateBlocking = () => {
     e.preventDefault();
     const method = isEditing ? 'PUT' : 'POST';
     const url = isEditing 
-      ? `https://mahaspice.desoftimp.com/ms3/dateblocking.php?id=${currentRecord.id}`
-      : 'https://mahaspice.desoftimp.com/ms3/dateblocking.php';
+      ? `https://adminmahaspice.in/ms3/dateblocking.php?id=${currentRecord.id}`
+      : 'https://adminmahaspice.in/ms3/dateblocking.php';
 
     try {
       await fetch(url, {
@@ -65,7 +65,7 @@ const DateBlocking = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this record?')) {
       try {
-        await fetch(`https://mahaspice.desoftimp.com/ms3/dateblocking.php?id=${id}`, {
+        await fetch(`https://adminmahaspice.in/ms3/dateblocking.php?id=${id}`, {
           method: 'DELETE',
         });
         fetchRecords();

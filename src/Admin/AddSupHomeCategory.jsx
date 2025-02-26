@@ -23,7 +23,7 @@ const AddSupHomeCategory = () => {
 
 
         try {
-            const response = await fetch('https://mahaspice.desoftimp.com/ms3/addSupHomeCategory.php', {
+            const response = await fetch('https://adminmahaspice.in/ms3/addSupHomeCategory.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

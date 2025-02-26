@@ -236,7 +236,7 @@ const CateringOrdersDisplay = () => {
   const fetchOrders = async () => {
     try {
       const response = await fetch(
-        "https://mahaspice.desoftimp.com/ms3/get_catering_order_details.php"
+        "https://adminmahaspice.in/ms3/get_catering_order_details.php"
       );
       const data = await response.json();
       if (data.status === "success") {
