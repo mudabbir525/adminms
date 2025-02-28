@@ -11,18 +11,20 @@ import {
   CheckCircle2,
   ChevronDown,
   Menu,
+  Plus,
+  Trash2,
+  Hash
 } from "lucide-react";
 import axios from "axios";
 
 const MenuItemForm = () => {
+  const [batchSize, setBatchSize] = useState(1);
   const [formData, setFormData] = useState({
-    itemName: "",
+    items: [{ itemName: "", price: "" }],
     categoryId: "",
     menuTypeId: "",
     isVeg: true,
     selectedEvents: [],
-    price: "",
-    image: null,
   });
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
@@ -66,6 +68,31 @@ const MenuItemForm = () => {
     fetchData();
   }, []);
 
+  const handleBatchSizeChange = (e) => {
+    const newSize = parseInt(e.target.value) || 1;
+    const currentItems = [...formData.items];
+    
+    if (newSize > currentItems.length) {
+      // Add more empty items
+      const newItems = [...currentItems];
+      for (let i = currentItems.length; i < newSize; i++) {
+        newItems.push({ itemName: "", price: "" });
+      }
+      setFormData({ ...formData, items: newItems });
+    } else if (newSize < currentItems.length) {
+      // Remove excess items
+      setFormData({ ...formData, items: currentItems.slice(0, newSize) });
+    }
+    
+    setBatchSize(newSize);
+  };
+
+  const handleItemChange = (index, field, value) => {
+    const updatedItems = [...formData.items];
+    updatedItems[index] = { ...updatedItems[index], [field]: value };
+    setFormData({ ...formData, items: updatedItems });
+  };
+
   const handleSelectAllEvents = (isChecked) => {
     if (isChecked) {
       // Map all events to the format needed for selectedEvents
@@ -83,7 +110,6 @@ const MenuItemForm = () => {
     }
   };
 
-  // Rest of your existing handlers...
   const handleCategoryChange = (categoryName) => {
     const category = categories.find((cat) => cat.name === categoryName);
     setSelectedCategory(category);
@@ -125,20 +151,40 @@ const MenuItemForm = () => {
     e.preventDefault();
     setError("");
     setSuccess("");
+    
+    // Validate form data
     if (!selectedMenuType) {
       setError("Please select a menu type");
       return;
     }
+    
+    // Check if any item names are empty
+    const emptyItems = formData.items.some(item => !item.itemName.trim());
+    if (emptyItems) {
+      setError("All item names are required");
+      return;
+    }
+    
+    // Check if any prices are empty or invalid
+    const invalidPrices = formData.items.some(item => !item.price || isNaN(parseFloat(item.price)));
+    if (invalidPrices) {
+      setError("All items must have valid prices");
+      return;
+    }
+    
     setLoading(true);
     try {
       const jsonData = {
-        itemName: formData.itemName,
+        items: formData.items.map(item => ({
+          itemName: item.itemName,
+          price: parseFloat(item.price)
+        })),
         categoryId: formData.categoryId,
         menuTypeId: formData.menuTypeId,
         isVeg: formData.isVeg,
         selectedEvents: formData.selectedEvents,
-        price: parseFloat(formData.price),
       };
+      
       const response = await axios.post(
         "https://adminmahaspice.in/ms3/insert_menu_item.php",
         jsonData,
@@ -148,24 +194,25 @@ const MenuItemForm = () => {
           },
         }
       );
+      
       if (response.data.success) {
-        setSuccess("Menu item added successfully!");
+        setSuccess(`${formData.items.length} menu item(s) added successfully!`);
         setFormData({
-          itemName: "",
+          items: [{ itemName: "", price: "" }],
           categoryId: "",
           menuTypeId: "",
           isVeg: true,
           selectedEvents: [],
-          price: "",
         });
         setSelectedCategory(null);
         setSelectedMenuType(null);
+        setBatchSize(1);
       } else {
-        setError(response.data.message || "Failed to add menu item");
+        setError(response.data.message || "Failed to add menu items");
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      setError(error.response?.data?.message || "Error adding menu item");
+      setError(error.response?.data?.message || "Error adding menu items");
     }
     setLoading(false);
   };
@@ -185,27 +232,75 @@ const MenuItemForm = () => {
         <div className="p-6">
           <h2 className="text-2xl font-bold mb-6 flex items-center">
             <Menu className="mr-2" />
-            Add Menu Item
+            Add Menu Items
           </h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-6">
+              {/* Batch Size Input */}
               <div className="relative">
                 <div className="flex items-center gap-2 mb-2">
-                  <UtensilsCrossed className="w-5 h-5 text-gray-600" />
+                  <Hash className="w-5 h-5 text-gray-600" />
                   <label className="block text-sm font-semibold text-gray-700">
-                    Item Name
+                    Number of Items to Add
                   </label>
                 </div>
                 <input
-                  type="text"
-                  required
-                  className="mt-1 block w-1/3 p-3 rounded-lg border-2 shadow-sm focus:border-green-500 focus:ring-green-500 focus:outline-black transition-colors"
-                  value={formData.itemName}
-                  onChange={(e) =>
-                    setFormData({ ...formData, itemName: e.target.value })
-                  }
-                  placeholder="Enter item name"
+                  type="number"
+                  min="1"
+                  max="20"
+                  className="mt-1 block w-24 p-3 rounded-lg border-2 shadow-sm focus:border-green-500 focus:ring-green-500 focus:outline-black transition-colors"
+                  value={batchSize}
+                  onChange={handleBatchSizeChange}
+                  placeholder="Batch size"
                 />
+              </div>
+
+              {/* Multiple Item Fields */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <UtensilsCrossed className="w-5 h-5 text-gray-600" />
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Item Details
+                  </label>
+                </div>
+                
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="grid grid-cols-12 gap-4 mb-2 font-medium text-gray-700">
+                    <div className="col-span-1">#</div>
+                    <div className="col-span-7">Item Name</div>
+                    <div className="col-span-4">Price (₹)</div>
+                  </div>
+                  
+                  {formData.items.map((item, index) => (
+                    <div key={index} className="grid grid-cols-12 gap-4 mb-3 items-center">
+                      <div className="col-span-1 text-gray-500">{index + 1}</div>
+                      <div className="col-span-7">
+                        <input
+                          type="text"
+                          required
+                          className="w-full p-2 rounded-lg border-2 shadow-sm focus:border-green-500 focus:ring-green-500 focus:outline-black transition-colors"
+                          value={item.itemName}
+                          onChange={(e) => handleItemChange(index, "itemName", e.target.value)}
+                          placeholder="Enter item name"
+                        />
+                      </div>
+                      <div className="col-span-4 relative">
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                          ₹
+                        </span>
+                        <input
+                          type="number"
+                          required
+                          min="0"
+                          step="0.01"
+                          className="pl-8 w-full p-2 border-2 rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                          value={item.price}
+                          onChange={(e) => handleItemChange(index, "price", e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div>
@@ -236,7 +331,7 @@ const MenuItemForm = () => {
                       />
                       <label
                         htmlFor={`category-${category.name}`}
-                        className="ml-3 text-gray-700 font-medium"
+                        className="ml-3 text-gray-700 font-medium cursor-pointer"
                       >
                         {category.name}
                       </label>
@@ -272,7 +367,7 @@ const MenuItemForm = () => {
                           checked={selectedMenuType?.id === type.id}
                           onChange={() => {}}
                         />
-                        <label htmlFor={`type-${type.id}`} className="ml-3">
+                        <label htmlFor={`type-${type.id}`} className="ml-3 cursor-pointer">
                           <span className="text-gray-700 font-medium">
                             {type.name}
                           </span>
@@ -323,7 +418,6 @@ const MenuItemForm = () => {
                 </div>
               </div>
 
-              {/* <div className="space-y-2"> */}
               <label className="block text-sm font-medium">
                 <Calendar className="inline-block w-4 h-4 mr-1" />
                 Event Types
@@ -387,30 +481,6 @@ const MenuItemForm = () => {
                   );
                 })}
               </div>
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <DollarSign className="w-5 h-5 text-gray-600" />
-                  <label className="block text-sm font-semibold text-gray-700">
-                    Price
-                  </label>
-                </div>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                    ₹
-                  </span>
-                  <input
-                    type="number"
-                    required
-                    min="0"
-                    step="0.01"
-                    className="pl-8 mt-1 block w-1/4 p-3 border-2 rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-                    value={formData.price}
-                    onChange={(e) =>
-                      setFormData({ ...formData, price: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
             </div>
 
             {error && (
@@ -435,7 +505,9 @@ const MenuItemForm = () => {
                   Submitting...
                 </>
               ) : (
-                "Add Menu Item"
+                <>
+                  Add {formData.items.length} Menu Item{formData.items.length > 1 ? 's' : ''}
+                </>
               )}
             </button>
           </form>
@@ -446,4 +518,3 @@ const MenuItemForm = () => {
 };
 
 export default MenuItemForm;
-
