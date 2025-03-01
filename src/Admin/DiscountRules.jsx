@@ -38,7 +38,7 @@ const DiscountRulesManager = () => {
     try {
       // Create request body with ID for the backend
       const requestBody = {
-        id: editingRule.id || editingRule.people_count,
+        id: editingRule.id,
         people_count: editingRule.people_count,
         discount_amount: editingRule.discount_amount
       };
