@@ -8,6 +8,7 @@ const EditCategoryById = () => {
     const navigate = useNavigate();
 
     const [categoryName, setCategoryName] = useState('');
+    const [categoryType, setCategoryType] = useState('');
     const [menuTypes, setMenuTypes] = useState([]);
     const [selectedMenuTypes, setSelectedMenuTypes] = useState([]);
     const [menuLimits, setMenuLimits] = useState({});
@@ -42,6 +43,7 @@ const EditCategoryById = () => {
                     setMenuLimits(initialLimits);
                     setMenuPositions(initialPositions);
                     setCategoryName(categoryResponse.data[0].category_name);
+                    setCategoryType(categoryResponse.data[0].category_type || '');
                 }
             })
             .catch(error => {
@@ -83,7 +85,7 @@ const EditCategoryById = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!categoryName || selectedMenuTypes.length === 0) {
+        if (!categoryName || selectedMenuTypes.length === 0 || !categoryType) {
             alert('Please fill all fields');
             return;
         }
@@ -91,6 +93,7 @@ const EditCategoryById = () => {
         const formData = {
             category_id: id,
             category_name: categoryName,
+            category_type: categoryType,
             menu_type: selectedMenuTypes,
             category_limits: menuLimits,
             positions: menuPositions
@@ -108,7 +111,7 @@ const EditCategoryById = () => {
     };
 
     const handleGoBack = () => {
-        navigate('admincategory');
+        window.location.href='/admincategory'
     };
 
     if (!currentCategory) {
@@ -141,6 +144,23 @@ const EditCategoryById = () => {
                         onChange={(e) => setCategoryName(e.target.value)}
                         required
                     />
+                </div>
+
+                <div className="mb-4">
+                    <label htmlFor="category_type" className="block text-gray-700 font-bold mb-2">
+                        Category Type
+                    </label>
+                    <select
+                        id="category_type"
+                        className="w-full p-2 border border-gray-300 rounded"
+                        value={categoryType}
+                        onChange={(e) => setCategoryType(e.target.value)}
+                        required
+                    >
+                        <option value="">Select Type</option>
+                        <option value="veg">Vegetarian</option>
+                        <option value="nonveg">Non-Vegetarian</option>
+                    </select>
                 </div>
 
                 <div className="mb-4">

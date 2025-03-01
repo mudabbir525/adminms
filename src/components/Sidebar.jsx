@@ -32,6 +32,7 @@ import {
 import { UserPlus } from 'lucide-react';
 
 import { GiFruitBowl, GiPositionMarker } from "react-icons/gi";
+import { BsCash } from "react-icons/bs";
 
 const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -231,6 +232,11 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath }) => {
           label: "Resources",
           path: "/resources",
           icon: <Table className="w-4 h-4" />,
+        },
+        {
+          label: "Discounts",
+          path: "/discounts",
+          icon: <BsCash className="w-4 h-4" />,
         },
       ],
     },

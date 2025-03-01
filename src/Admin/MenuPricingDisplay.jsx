@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Pencil, Trash2, X, Loader2, AlertCircle } from 'lucide-react';
+import { Pencil, Trash2, X, Loader2, AlertCircle, Filter } from 'lucide-react';
 
 const MenuPricingDisplay = () => {
   const [pricings, setPricings] = useState([]);
+  const [filteredPricings, setFilteredPricings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [events, setEvents] = useState([]);
@@ -15,10 +16,21 @@ const MenuPricingDisplay = () => {
     veg_price: '',
     nonveg_price: ''
   });
+  
+  // Filter state
+  const [filters, setFilters] = useState({
+    event_category: '',
+    gscd: ''
+  });
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  // Apply filters whenever pricings or filters change
+  useEffect(() => {
+    applyFilters();
+  }, [pricings, filters]);
 
   const fetchData = async () => {
     try {
@@ -35,6 +47,7 @@ const MenuPricingDisplay = () => {
       ]);
 
       setPricings(pricingsData.data || []);
+      setFilteredPricings(pricingsData.data || []);
       setEvents(eventsData || []);
       setGscdMenus(gscdData.data || []);
     } catch (err) {
@@ -42,6 +55,40 @@ const MenuPricingDisplay = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const applyFilters = () => {
+    let result = [...pricings];
+    
+    // Filter by event category
+    if (filters.event_category) {
+      result = result.filter(pricing => 
+        pricing.event_category === filters.event_category
+      );
+    }
+    
+    // Filter by menu type
+    if (filters.gscd) {
+      result = result.filter(pricing => 
+        pricing.gscd === filters.gscd
+      );
+    }
+    
+    setFilteredPricings(result);
+  };
+
+  const handleFilterChange = (field, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const resetFilters = () => {
+    setFilters({
+      event_category: '',
+      gscd: ''
+    });
   };
 
   const handleEdit = (pricing) => {
@@ -118,6 +165,66 @@ const MenuPricingDisplay = () => {
         </div>
       )}
 
+      {/* Filter section */}
+      <div className="mb-6 bg-gray-50 p-4 rounded-lg shadow-sm">
+        <div className="flex items-center gap-2 mb-3">
+          <Filter className="w-5 h-5 text-gray-600" />
+          <h3 className="font-medium text-gray-700">Filter Options</h3>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Event Category
+            </label>
+            <select
+              value={filters.event_category}
+              onChange={(e) => handleFilterChange('event_category', e.target.value)}
+              className="w-full p-2 border rounded focus:ring-2 focus:ring-green-500"
+            >
+              <option value="">All Event Categories</option>
+              {events.map((event) => (
+                <option key={event.event_id} value={event.event_category}>
+                  {event.event_category}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Menu Type
+            </label>
+            <select
+              value={filters.gscd}
+              onChange={(e) => handleFilterChange('gscd', e.target.value)}
+              className="w-full p-2 border rounded focus:ring-2 focus:ring-green-500"
+            >
+              <option value="">All Menu Types</option>
+              {gscdMenus.map((menu) => (
+                <option key={menu.id} value={menu.menu_type}>
+                  {menu.menu_type}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          <div className="flex items-end">
+            <button
+              onClick={resetFilters}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+            >
+              Reset Filters
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Results count */}
+      <div className="mb-4 text-sm text-gray-600">
+        Showing {filteredPricings.length} of {pricings.length} pricing entries
+      </div>
+
       <div className="overflow-x-auto">
         <table className="w-full bg-white shadow-lg rounded-lg">
           <thead className="bg-gray-50">
@@ -130,28 +237,36 @@ const MenuPricingDisplay = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {pricings.map((pricing) => (
-              <tr key={pricing.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 text-sm text-gray-700">{pricing.event_category}</td>
-                <td className="px-6 py-4 text-sm text-gray-700">{pricing.gscd}</td>
-                <td className="px-6 py-4 text-sm text-gray-700">{pricing.veg_price}</td>
-                <td className="px-6 py-4 text-sm text-gray-700">{pricing.nonveg_price}</td>
-                <td className="px-6 py-4 text-sm space-x-2">
-                  <button
-                    onClick={() => handleEdit(pricing)}
-                    className="text-blue-600 hover:text-blue-800"
-                  >
-                    <Pencil className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(pricing.id)}
-                    className="text-red-600 hover:text-red-800"
-                  >
-                    <Trash2 className="w-5 h-5" />
-                  </button>
+            {filteredPricings.length > 0 ? (
+              filteredPricings.map((pricing) => (
+                <tr key={pricing.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 text-sm text-gray-700">{pricing.event_category}</td>
+                  <td className="px-6 py-4 text-sm text-gray-700">{pricing.gscd}</td>
+                  <td className="px-6 py-4 text-sm text-gray-700">{pricing.veg_price}</td>
+                  <td className="px-6 py-4 text-sm text-gray-700">{pricing.nonveg_price}</td>
+                  <td className="px-6 py-4 text-sm space-x-2">
+                    <button
+                      onClick={() => handleEdit(pricing)}
+                      className="text-blue-600 hover:text-blue-800"
+                    >
+                      <Pencil className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(pricing.id)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
+                  No pricing entries match your filter criteria
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

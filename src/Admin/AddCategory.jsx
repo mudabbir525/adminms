@@ -8,6 +8,7 @@ const AddCategory = () => {
   const [selectedMenuTypes, setSelectedMenuTypes] = useState([]);
   const [menuLimits, setMenuLimits] = useState({});
   const [menuPositions, setMenuPositions] = useState({});
+  const [categoryType, setCategoryType] = useState('veg'); // Default is 'veg'
   const [error, setError] = useState('');
   const [existingCategories, setExistingCategories] = useState([]);
   const [occupiedPositions, setOccupiedPositions] = useState({});
@@ -145,7 +146,8 @@ const AddCategory = () => {
       category_name: categoryName.trim(),
       menu_type: selectedMenuTypes,
       category_limits: menuLimits,
-      positions: menuPositions
+      positions: menuPositions,
+      category_type: categoryType // Add the category type (veg/non-veg)
     };
 
     axios.post('https://adminmahaspice.in/ms3/addcategory.php', formData)
@@ -156,6 +158,7 @@ const AddCategory = () => {
         setSelectedMenuTypes([]);
         setMenuLimits({});
         setMenuPositions({});
+        setCategoryType('veg'); // Reset to default
         setError('');
         // Refresh the list of existing categories
         fetchExistingCategories();
@@ -201,6 +204,41 @@ const AddCategory = () => {
                   onChange={(e) => setCategoryName(e.target.value)}
                   required
                 />
+              </div>
+              
+              {/* Category Type Radio Buttons */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Category Type
+                </label>
+                <div className="flex space-x-6">
+                  <div className="flex items-center">
+                    <input
+                      id="veg-radio"
+                      name="category-type"
+                      type="radio"
+                      checked={categoryType === 'veg'}
+                      onChange={() => setCategoryType('veg')}
+                      className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
+                    />
+                    <label htmlFor="veg-radio" className="ml-2 block text-sm text-gray-700">
+                      Vegetarian
+                    </label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      id="nonveg-radio"
+                      name="category-type"
+                      type="radio"
+                      checked={categoryType === 'nonveg'}
+                      onChange={() => setCategoryType('nonveg')}
+                      className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
+                    />
+                    <label htmlFor="nonveg-radio" className="ml-2 block text-sm text-gray-700">
+                      Non-Vegetarian
+                    </label>
+                  </div>
+                </div>
               </div>
               
               {/* Menu Types Section */}

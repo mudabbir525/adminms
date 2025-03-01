@@ -76,6 +76,7 @@ import FAQ from "./Admin/FAQ";
 import CateringOrderDisplay from "./Admin/CateringOrdersDisplay";
 import CateringLocations from "./Admin/CateringLocations";
 import CateringDateBlocking from "./Admin/CateringDateBlocking";
+import DiscountRulesManager from "./Admin/DiscountRules";
 
 
 
@@ -184,6 +185,7 @@ function App() {
               <Route path="/faq" element={<FAQ />} />
               <Route path="/catlocations" element={<CateringLocations />} />
               <Route path="/catdateblock" element={<CateringDateBlocking />} />
+              <Route path="/discounts" element={<DiscountRulesManager />} />
 
 
 
