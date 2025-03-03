@@ -11,6 +11,7 @@ const MenuPricingDisplay = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editFormData, setEditFormData] = useState({
     id: '',
+    event_name: '',
     event_category: '',
     gscd: '',
     veg_price: '',
@@ -19,6 +20,7 @@ const MenuPricingDisplay = () => {
   
   // Filter state
   const [filters, setFilters] = useState({
+    event_name: '',
     event_category: '',
     gscd: ''
   });
@@ -46,8 +48,19 @@ const MenuPricingDisplay = () => {
         gscdRes.json()
       ]);
 
-      setPricings(pricingsData.data || []);
-      setFilteredPricings(pricingsData.data || []);
+      // Merge event_name into pricing data
+      const pricingsWithEventName = (pricingsData.data || []).map(pricing => {
+        const matchingEvent = eventsData.find(event => 
+          event.event_category === pricing.event_category
+        );
+        return {
+          ...pricing,
+          event_name: matchingEvent ? matchingEvent.event_name : ''
+        };
+      });
+
+      setPricings(pricingsWithEventName);
+      setFilteredPricings(pricingsWithEventName);
       setEvents(eventsData || []);
       setGscdMenus(gscdData.data || []);
     } catch (err) {
@@ -59,6 +72,13 @@ const MenuPricingDisplay = () => {
 
   const applyFilters = () => {
     let result = [...pricings];
+    
+    // Filter by event name
+    if (filters.event_name) {
+      result = result.filter(pricing => 
+        pricing.event_name === filters.event_name
+      );
+    }
     
     // Filter by event category
     if (filters.event_category) {
@@ -78,14 +98,25 @@ const MenuPricingDisplay = () => {
   };
 
   const handleFilterChange = (field, value) => {
-    setFilters(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    // If changing event_name, reset event_category if needed
+    if (field === 'event_name') {
+      setFilters(prev => ({
+        ...prev,
+        [field]: value,
+        // Reset category when changing event name
+        event_category: ''
+      }));
+    } else {
+      setFilters(prev => ({
+        ...prev,
+        [field]: value
+      }));
+    }
   };
 
   const resetFilters = () => {
     setFilters({
+      event_name: '',
       event_category: '',
       gscd: ''
     });
@@ -94,6 +125,7 @@ const MenuPricingDisplay = () => {
   const handleEdit = (pricing) => {
     setEditFormData({
       id: pricing.id,
+      event_name: pricing.event_name || '',
       event_category: pricing.event_category,
       gscd: pricing.gscd,
       veg_price: pricing.veg_price,
@@ -105,10 +137,13 @@ const MenuPricingDisplay = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
+      // Remove event_name from the data sent to the API
+      const { event_name, ...dataToUpdate } = editFormData;
+      
       const response = await fetch('https://adminmahaspice.in/ms3/update_pricing.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editFormData)
+        body: JSON.stringify(dataToUpdate)
       });
 
       const data = await response.json();
@@ -146,6 +181,15 @@ const MenuPricingDisplay = () => {
     }
   };
 
+  // Get unique event names from events data
+  const uniqueEventNames = [...new Set(events.map(event => event.event_name))];
+  
+  // Get filtered event categories based on selected event name
+  const getFilteredEventCategories = () => {
+    if (!filters.event_name) return events;
+    return events.filter(event => event.event_name === filters.event_name);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -172,7 +216,27 @@ const MenuPricingDisplay = () => {
           <h3 className="font-medium text-gray-700">Filter Options</h3>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {/* Event Name Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Event Name
+            </label>
+            <select
+              value={filters.event_name}
+              onChange={(e) => handleFilterChange('event_name', e.target.value)}
+              className="w-full p-2 border rounded focus:ring-2 focus:ring-green-500"
+            >
+              <option value="">All Event Names</option>
+              {uniqueEventNames.map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          {/* Event Category Filter */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Event Category
@@ -183,7 +247,7 @@ const MenuPricingDisplay = () => {
               className="w-full p-2 border rounded focus:ring-2 focus:ring-green-500"
             >
               <option value="">All Event Categories</option>
-              {events.map((event) => (
+              {getFilteredEventCategories().map((event) => (
                 <option key={event.event_id} value={event.event_category}>
                   {event.event_category}
                 </option>
@@ -191,6 +255,7 @@ const MenuPricingDisplay = () => {
             </select>
           </div>
           
+          {/* Menu Type Filter */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Menu Type
@@ -209,6 +274,7 @@ const MenuPricingDisplay = () => {
             </select>
           </div>
           
+          {/* Reset Button */}
           <div className="flex items-end">
             <button
               onClick={resetFilters}
@@ -229,6 +295,7 @@ const MenuPricingDisplay = () => {
         <table className="w-full bg-white shadow-lg rounded-lg">
           <thead className="bg-gray-50">
             <tr>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Event Name</th>
               <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Event Category</th>
               <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Menu Type</th>
               <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Veg Price</th>
@@ -240,6 +307,7 @@ const MenuPricingDisplay = () => {
             {filteredPricings.length > 0 ? (
               filteredPricings.map((pricing) => (
                 <tr key={pricing.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 text-sm text-gray-700">{pricing.event_name}</td>
                   <td className="px-6 py-4 text-sm text-gray-700">{pricing.event_category}</td>
                   <td className="px-6 py-4 text-sm text-gray-700">{pricing.gscd}</td>
                   <td className="px-6 py-4 text-sm text-gray-700">{pricing.veg_price}</td>
@@ -262,7 +330,7 @@ const MenuPricingDisplay = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
+                <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
                   No pricing entries match your filter criteria
                 </td>
               </tr>
@@ -286,16 +354,36 @@ const MenuPricingDisplay = () => {
             </div>
 
             <form onSubmit={handleUpdate} className="space-y-4">
+              {/* Event Name (read-only) */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Event Name
+                </label>
+                <input
+                  type="text"
+                  value={editFormData.event_name}
+                  readOnly
+                  className="w-full p-2 border rounded bg-gray-50 text-gray-700"
+                />
+                <p className="text-xs text-gray-500 mt-1">*Cannot be edited directly</p>
+              </div>
+            
+              {/* Event Category */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Event Category
                 </label>
                 <select
                   value={editFormData.event_category}
-                  onChange={(e) => setEditFormData({
-                    ...editFormData,
-                    event_category: e.target.value
-                  })}
+                  onChange={(e) => {
+                    // Find matching event to get the event_name
+                    const matchingEvent = events.find(event => event.event_category === e.target.value);
+                    setEditFormData({
+                      ...editFormData,
+                      event_category: e.target.value,
+                      event_name: matchingEvent ? matchingEvent.event_name : ''
+                    });
+                  }}
                   className="w-full p-2 border rounded focus:ring-2 focus:ring-green-500"
                   required
                 >
@@ -308,6 +396,7 @@ const MenuPricingDisplay = () => {
                 </select>
               </div>
 
+              {/* Menu Type */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Menu Type
@@ -330,6 +419,7 @@ const MenuPricingDisplay = () => {
                 </select>
               </div>
 
+              {/* Veg Price */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Veg Price
@@ -348,6 +438,7 @@ const MenuPricingDisplay = () => {
                 />
               </div>
 
+              {/* Non-Veg Price */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Non-Veg Price
@@ -366,6 +457,7 @@ const MenuPricingDisplay = () => {
                 />
               </div>
 
+              {/* Action Buttons */}
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
