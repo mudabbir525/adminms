@@ -93,6 +93,7 @@ const EditCategoryById = () => {
         const formData = {
             category_id: id,
             category_name: categoryName,
+            prev_name:categoryName,
             category_type: categoryType,
             menu_type: selectedMenuTypes,
             category_limits: menuLimits,
@@ -119,7 +120,7 @@ const EditCategoryById = () => {
     }
 
     return (
-        <div className="flex justify-center items-center h-full bg-gray-100">
+        <div className="flex justify-center items-center h-auto bg-gray-100">
             <form className="bg-white p-8 rounded shadow-md w-full max-w-md" onSubmit={handleSubmit}>
                 <div className="flex items-center mb-4">
                     <button 

@@ -19,15 +19,18 @@ const AdminEditCategory = () => {
   });
   const [menuTypes, setMenuTypes] = useState([]);
   const [categoryTypes, setCategoryTypes] = useState([]);
+  const [menuItems, setMenuItems] = useState([]);
+  const [categoriesWithNonVeg, setCategoriesWithNonVeg] = useState([]);
 
   useEffect(() => {
     fetchCategories();
+    fetchMenuItems();
   }, []);
 
   useEffect(() => {
     // Apply filters whenever categories or filters change
     applyFilters();
-  }, [categories, filters]);
+  }, [categories, filters, menuItems, categoriesWithNonVeg]);
 
   const fetchCategories = () => {
     axios.get('https://adminmahaspice.in/ms3/getcategory.php')
@@ -62,6 +65,41 @@ const AdminEditCategory = () => {
       });
   };
 
+  const fetchMenuItems = () => {
+    axios.get('https://adminmahaspice.in/ms3/menu_display.php')
+      .then(response => {
+        if (response.data.success) {
+          setMenuItems(response.data.data);
+          
+          // Create a mapping of categories that have non-veg items for each menu type
+          const nonVegCategoriesByMenuType = {};
+          
+          response.data.data.forEach(item => {
+            const { menu_type, category_name, is_veg } = item;
+            
+            if (!nonVegCategoriesByMenuType[menu_type]) {
+              nonVegCategoriesByMenuType[menu_type] = new Set();
+            }
+            
+            if (is_veg === '0') {
+              nonVegCategoriesByMenuType[menu_type].add(category_name);
+            }
+          });
+          
+          // Convert to a more usable format
+          const mappedCategories = {};
+          Object.entries(nonVegCategoriesByMenuType).forEach(([menuType, categorySet]) => {
+            mappedCategories[menuType] = Array.from(categorySet);
+          });
+          
+          setCategoriesWithNonVeg(mappedCategories);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching menu items:', error);
+      });
+  };
+
   const applyFilters = () => {
     let result = [...categories];
 
@@ -72,18 +110,30 @@ const AdminEditCategory = () => {
       );
     }
 
-    // Filter by menu type
-    if (filters.menuType) {
+    // Special case: if menu type is selected and category type is 'nonveg'
+    if (filters.menuType && filters.categoryType === 'nonveg' && categoriesWithNonVeg[filters.menuType]) {
+      // Only show categories that have nonveg items for this menu type
+      const nonVegCategoriesForMenuType = categoriesWithNonVeg[filters.menuType];
+      
       result = result.filter(categoryGroup =>
+        nonVegCategoriesForMenuType.includes(categoryGroup[0].category_name) &&
         categoryGroup.some(category => category.menu_type === filters.menuType)
       );
-    }
+    } else {
+      // Normal filtering
+      // Filter by menu type
+      if (filters.menuType) {
+        result = result.filter(categoryGroup =>
+          categoryGroup.some(category => category.menu_type === filters.menuType)
+        );
+      }
 
-    // Filter by category type (veg/nonveg)
-    if (filters.categoryType) {
-      result = result.filter(categoryGroup =>
-        categoryGroup.some(category => category.category_type === filters.categoryType)
-      );
+      // Filter by category type (veg/nonveg)
+      if (filters.categoryType) {
+        result = result.filter(categoryGroup =>
+          categoryGroup.some(category => category.category_type === filters.categoryType)
+        );
+      }
     }
 
     // Sort the categories

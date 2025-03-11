@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Edit3, Trash2, ChevronDown, Filter, FilterX, Utensils, Calendar, Tag, DollarSign, CircleDot } from "lucide-react";
-import { Menu } from '@headlessui/react';
-import axios from "axios";
+
+import React, { useState, useEffect, useRef } from "react";
+import { Filter, FilterX, Utensils, Calendar, Tag, DollarSign, CircleDot, ChevronDown } from "lucide-react";
 
 const MenuItems = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
+  const [categorizedItems, setCategorizedItems] = useState({});
   const [filters, setFilters] = useState({
     vegType: 'all',
     menuType: 'all',
@@ -14,22 +14,42 @@ const MenuItems = () => {
     eventCategory: 'all',
     priceRange: 'all'
   });
-  const [formData, setFormData] = useState({
-    id: "",
-    item_name: "",
-    is_veg: "0",
-    price: "",
-  });
-  const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const dropdownRefs = useRef({});
 
   useEffect(() => {
     fetchMenuItems();
-  }, []);
+    
+    // Close dropdown when clicking outside
+    const handleClickOutside = (event) => {
+      if (openDropdown && dropdownRefs.current[openDropdown] && !dropdownRefs.current[openDropdown].contains(event.target)) {
+        setOpenDropdown(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [openDropdown]);
 
   useEffect(() => {
     applyFilters();
   }, [filters, menuItems]);
+
+  useEffect(() => {
+    // Group items by category
+    const groupedByCategory = {};
+    filteredItems.forEach(item => {
+      const category = item.category_name;
+      if (!groupedByCategory[category]) {
+        groupedByCategory[category] = [];
+      }
+      groupedByCategory[category].push(item);
+    });
+    setCategorizedItems(groupedByCategory);
+  }, [filteredItems]);
 
   const fetchMenuItems = async () => {
     try {
@@ -58,14 +78,11 @@ const MenuItems = () => {
       if (key === 'priceRange') {
         return getPriceRange(item.price);
       }
-      
       if (key.includes('event')) {
         return safeSplit(item[key]);
       }
-      
       return item[key];
     }).flat().filter(Boolean));
-    
     return ['all', ...Array.from(values)];
   };
 
@@ -79,132 +96,78 @@ const MenuItems = () => {
 
   const applyFilters = () => {
     let result = [...menuItems];
-
     if (filters.vegType !== 'all') {
-      result = result.filter(item => 
+      result = result.filter(item =>
         filters.vegType === 'veg' ? item.is_veg === "1" : item.is_veg === "0"
       );
     }
-
     if (filters.menuType !== 'all') {
       result = result.filter(item => item.menu_type === filters.menuType);
     }
-
     if (filters.category !== 'all') {
       result = result.filter(item => item.category_name === filters.category);
     }
-
     if (filters.eventName !== 'all') {
-      result = result.filter(item => 
+      result = result.filter(item =>
         safeSplit(item.event_names).includes(filters.eventName)
       );
     }
-
     if (filters.eventCategory !== 'all') {
-      result = result.filter(item => 
+      result = result.filter(item =>
         safeSplit(item.event_categories).includes(filters.eventCategory)
       );
     }
-
     if (filters.priceRange !== 'all') {
       result = result.filter(item => getPriceRange(item.price) === filters.priceRange);
     }
-
     setFilteredItems(result);
   };
 
-  const FilterDropdown = ({ label, options, value, onChange, icon: Icon }) => (
-    <Menu as="div" className="relative inline-block text-left">
-      <Menu.Button className="inline-flex w-full justify-center items-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-        <Icon className="size-4 mr-2 text-gray-500" />
-        {label}: {value}
-        <ChevronDown className="size-4 ml-2" />
-      </Menu.Button>
-      <Menu.Items className="absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
-        <div className="py-1">
-          {options.map((option) => (
-            <Menu.Item key={option}>
-              <button
-                className={`block w-full px-4 py-2 text-left text-sm ${
-                  value === option ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                } hover:bg-gray-50`}
-                onClick={() => onChange(option)}
-              >
-                {option}
-              </button>
-            </Menu.Item>
-          ))}
-        </div>
-      </Menu.Items>
-    </Menu>
+  const FilterDropdown = ({ id, label, options, value, onChange, icon: Icon }) => {
+    return (
+      <div className="relative inline-block text-left mr-4 mb-2" ref={el => dropdownRefs.current[id] = el}>
+        <button
+          onClick={() => setOpenDropdown(openDropdown === id ? null : id)}
+          className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none"
+        >
+          <Icon className="w-5 h-5 mr-2" />
+          {label}: {value}
+          <ChevronDown className="w-5 h-5 ml-2 -mr-1" aria-hidden="true" />
+        </button>
+        
+        {openDropdown === id && (
+          <div className="absolute left-0 z-10 w-56 mt-2 origin-top-left bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <div className="px-1 py-1">
+              {options.map((option) => (
+                <button
+                  key={option}
+                  className="group flex rounded-md items-center w-full px-2 py-2 text-sm hover:bg-gray-100 text-gray-700"
+                  onClick={() => {
+                    onChange(option);
+                    setOpenDropdown(null);
+                  }}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const VegIcon = () => (
+    <div className="w-6 h-6 rounded-full border-2 border-green-600 flex items-center justify-center">
+      <div className="w-3 h-3 bg-green-600 rounded-full"></div>
+    </div>
   );
 
-  // Rest of the CRUD operations...
-  const handleEdit = (item) => {
-    setIsEditing(true);
-    setFormData({
-      id: item.id,
-      item_name: item.item_name,
-      is_veg: item.is_veg,
-      price: item.price,
-    });
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: name === "is_veg" ? (value === "1" ? "1" : "0") : value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(
-        "https://adminmahaspice.in/ms3/updateMenuItem.php",
-        formData
-      );
-      if (response.data.success) {
-        fetchMenuItems();
-        setIsEditing(false);
-        setFormData({ id: "", item_name: "", is_veg: "0", price: "" });
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this item?")) {
-        try {
-            const response = await axios.post(
-                "https://adminmahaspice.in/ms3/deleteMenuItem.php",
-                { id: id },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    }
-                }
-            );
-            
-            if (response.data.success) {
-                // Update the local state to remove the deleted item
-                setMenuItems(prevItems => prevItems.filter(item => item.id !== id));
-                setFilteredItems(prevItems => prevItems.filter(item => item.id !== id));
-                alert("Item deleted successfully");
-            } else {
-                alert(response.data.message || "Failed to delete item");
-            }
-        } catch (error) {
-            console.error("Delete error:", error);
-            alert(error.response?.data?.message || "Error deleting item. Please try again.");
-        }
-    }
-};
-
-  if (loading) return <div className="text-center p-4">Loading...</div>;
+  const NonVegIcon = () => (
+    <div className="w-6 h-6 rounded-full border-2 border-red-600 flex items-center justify-center">
+      <div className="w-3 h-3 bg-red-600 rounded-full"></div>
+    </div>
+  );
 
   const resetFilters = () => {
     setFilters({
@@ -217,192 +180,135 @@ const MenuItems = () => {
     });
   };
 
+  if (loading) return <div className="text-center p-10">Loading...</div>;
 
   return (
-    <div className="container mx-auto mt-10 px-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Menu Items</h1>
-        <button
-          onClick={resetFilters}
-          className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700"
-        >
-          <FilterX className="size-4" />
-          Reset Filters
-        </button>
-      </div>
-
-      {/* Filters */}
-      <div className="grid grid-cols-3 lg:grid-cols-3 gap-4 mb-6">
-        <FilterDropdown
-          label="Type"
-          options={['all', 'veg', 'non-veg']}
-          value={filters.vegType}
-          onChange={(value) => setFilters({ ...filters, vegType: value })}
-          icon={CircleDot}
-        />
-        <FilterDropdown
-          label="Menu Type"
-          options={getUniqueValues('menu_type')}
-          value={filters.menuType}
-          onChange={(value) => setFilters({ ...filters, menuType: value })}
-          icon={Utensils}
-        />
-        <FilterDropdown
-          label="Category"
-          options={getUniqueValues('category_name')}
-          value={filters.category}
-          onChange={(value) => setFilters({ ...filters, category: value })}
-          icon={Filter}
-        />
-        <FilterDropdown
-          label="Event Name"
-          options={getUniqueValues('event_names')}
-          value={filters.eventName}
-          onChange={(value) => setFilters({ ...filters, eventName: value })}
-          icon={Calendar}
-        />
-        <FilterDropdown
-          label="Event Category"
-          options={getUniqueValues('event_categories')}
-          value={filters.eventCategory}
-          onChange={(value) => setFilters({ ...filters, eventCategory: value })}
-          icon={Tag}
-        />
-        <FilterDropdown
-          label="Price Range"
-          options={getUniqueValues('priceRange')}
-          value={filters.priceRange}
-          onChange={(value) => setFilters({ ...filters, priceRange: value })}
-          icon={DollarSign}
-        />
-      </div>
-
-
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white shadow-md rounded-lg">
-          <thead>
-            <tr className="bg-gray-500 text-white">
-              <th className="py-2 px-4">Name</th>
-              <th className="py-2 px-4">Menu Type</th>
-              <th className="py-2 px-4">Category</th>
-              <th className="py-2 px-4">Type</th>
-              <th className="py-2 px-4">Price</th>
-              <th className="py-2 px-4">Event Names</th>
-              <th className="py-2 px-4">Event Categories</th>
-              <th className="py-2 px-4">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredItems.map((item) => (
-              <tr key={item.id} className="border-t hover:bg-gray-50">
-                <td className="py-2 px-4">{item.item_name}</td>
-                <td className="py-2 px-4">{item.menu_type}</td>
-                <td className="py-2 px-4">{item.category_name}</td>
-                <td className="py-2 px-4">
-                  <span className={item.is_veg === "1" ? "text-green-500" : "text-red-500"}>
-                    {item.is_veg === "1" ? "Veg" : "Non-veg"}
-                  </span>
-                </td>
-                <td className="py-2 px-4">₹{parseFloat(item.price).toFixed(2)}</td>
-                <td className="py-2 px-4">
-                  <ul className="list-disc pl-4">
-                    {safeSplit(item.event_names).map((event, index) => (
-                      <li key={index} className="text-sm">{event}</li>
-                    ))}
-                  </ul>
-                </td>
-                <td className="py-2 px-4">
-                  <ul className="list-disc pl-4">
-                    {safeSplit(item.event_categories).map((category, index) => (
-                      <li key={index} className="text-sm">{category}</li>
-                    ))}
-                  </ul>
-                </td>
-                <td className="py-2 px-4">
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => handleEdit(item)}
-                      className="text-blue-600 hover:text-blue-800"
-                    >
-                      <Edit3 size={18} />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(item.id)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Edit Modal */}
-      {isEditing && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-          <div className="bg-white p-4 rounded-lg shadow-lg max-w-md w-full mx-4">
-            <h2 className="text-lg font-medium mb-4">Edit Item</h2>
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <div>
-                <input
-                  type="text"
-                  name="item_name"
-                  value={formData.item_name}
-                  onChange={handleChange}
-                  placeholder="Item name"
-                  className="w-full p-2 border rounded"
-                  required
-                />
-              </div>
-              <div>
-                <select
-                  name="is_veg"
-                  value={formData.is_veg}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded"
-                >
-                  <option value="1">Veg</option>
-                  <option value="0">Non-veg</option>
-                </select>
-              </div>
-              <div>
-                <input
-                  type="number"
-                  name="price"
-                  value={formData.price}
-                  onChange={handleChange}
-                  placeholder="Price"
-                  className="w-full p-2 border rounded"
-                  required
-                  step="0.01"
-                />
-              </div>
-              <div className="flex justify-end gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsEditing(false);
-                    setFormData({ id: "", item_name: "", is_veg: "0", price: "" });
-                  }}
-                  className="px-4 py-2 text-gray-600"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
-                  Save
-                </button>
-              </div>
-            </form>
+    <div className="container mx-auto p-4">
+      <div className="bg-white shadow-md rounded-lg p-6">
+        <h1 className="text-2xl font-bold mb-6 text-center">Menu Items</h1>
+        
+        {/* Filters */}
+        <div className="mb-6">
+          <div className="flex flex-wrap items-center mb-4">
+            <h2 className="text-lg font-semibold mr-4">Filters:</h2>
+            <button 
+              onClick={resetFilters}
+              className="px-3 py-1.5 bg-red-100 text-red-700 rounded-md flex items-center"
+            >
+              <FilterX className="w-4 h-4 mr-1" />
+              Reset Filters
+            </button>
+          </div>
+          
+          <div className="flex flex-wrap">
+            <FilterDropdown 
+              id="vegType"
+              label="Food Type" 
+              options={['all', 'veg', 'non-veg']} 
+              value={filters.vegType} 
+              onChange={(value) => setFilters({ ...filters, vegType: value })}
+              icon={CircleDot}
+            />
+            <FilterDropdown 
+              id="menuType"
+              label="Menu Type" 
+              options={getUniqueValues('menu_type')} 
+              value={filters.menuType} 
+              onChange={(value) => setFilters({ ...filters, menuType: value })}
+              icon={Utensils}
+            />
+            <FilterDropdown 
+              id="category"
+              label="Category" 
+              options={getUniqueValues('category_name')} 
+              value={filters.category} 
+              onChange={(value) => setFilters({ ...filters, category: value })}
+              icon={Filter}
+            />
+            <FilterDropdown 
+              id="eventName"
+              label="Event" 
+              options={getUniqueValues('event_names')} 
+              value={filters.eventName} 
+              onChange={(value) => setFilters({ ...filters, eventName: value })}
+              icon={Calendar}
+            />
+            <FilterDropdown 
+              id="eventCategory"
+              label="Event Category" 
+              options={getUniqueValues('event_categories')} 
+              value={filters.eventCategory} 
+              onChange={(value) => setFilters({ ...filters, eventCategory: value })}
+              icon={Tag}
+            />
+            <FilterDropdown 
+              id="priceRange"
+              label="Price Range" 
+              options={['all', '₹0-100', '₹101-200', '₹201-500', '₹500+']} 
+              value={filters.priceRange} 
+              onChange={(value) => setFilters({ ...filters, priceRange: value })}
+              icon={DollarSign}
+            />
           </div>
         </div>
-      )}
+        
+        {/* Categorized Menu Display */}
+        <div>
+          {Object.keys(categorizedItems).length === 0 ? (
+            <div className="text-center py-8 text-gray-500">No menu items found matching your filters.</div>
+          ) : (
+            Object.entries(categorizedItems).map(([category, items]) => (
+              <div key={category} className="mb-8">
+                <h2 className="text-xl font-bold mb-4 pb-2 border-b-2 border-gray-200">{category}</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {items.map((item) => (
+                    <div key={item.id} className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="text-lg font-semibold">{item.item_name}</h3>
+                        {item.is_veg === "1" ? <VegIcon /> : <NonVegIcon />}
+                      </div>
+                      
+                      <div className="text-lg font-bold text-green-700 mb-2">
+                        ₹{parseFloat(item.price).toFixed(2)}
+                      </div>
+                      
+                      <div className="text-sm text-gray-600 mb-1">
+                        Menu Type: <span className="font-medium">{item.menu_type}</span>
+                      </div>
+                      
+                      {/* {item.event_names && (
+                        <div className="mb-2">
+                          <div className="text-sm text-gray-600">Events:</div>
+                          <div className="flex flex-wrap mt-1">
+                            {safeSplit(item.event_names).map((event, index) => (
+                              <span key={index} className="text-xs bg-blue-100 text-blue-800 rounded-full px-2 py-1 mr-1 mb-1">
+                                {event}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {item.event_categories && (
+                        <div>
+                          <div className="text-sm text-gray-600">Event Categories:</div>
+                          <div className="flex flex-wrap mt-1">
+                            {safeSplit(item.event_categories).map((category, index) => (
+                              <span key={index} className="text-xs bg-purple-100 text-purple-800 rounded-full px-2 py-1 mr-1 mb-1">
+                                {category}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )} */}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
     </div>
   );
 };
