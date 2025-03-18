@@ -1,6 +1,6 @@
-
 import React, { useState, useEffect, useRef } from "react";
-import { Filter, FilterX, Utensils, Calendar, Tag, DollarSign, CircleDot, ChevronDown } from "lucide-react";
+import { Filter, FilterX, Utensils, Calendar, Tag, DollarSign, CircleDot, ChevronDown, Edit3, Trash2 } from "lucide-react";
+import axios from "axios";
 
 const MenuItems = () => {
   const [menuItems, setMenuItems] = useState([]);
@@ -17,6 +17,15 @@ const MenuItems = () => {
   const [loading, setLoading] = useState(true);
   const [openDropdown, setOpenDropdown] = useState(null);
   const dropdownRefs = useRef({});
+  
+  // Added for edit functionality
+  const [formData, setFormData] = useState({
+    id: "",
+    item_name: "",
+    is_veg: "0",
+    price: "",
+  });
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     fetchMenuItems();
@@ -180,6 +189,70 @@ const MenuItems = () => {
     });
   };
 
+  // Edit functionality from the commented code
+  const handleEdit = (item) => {
+    setIsEditing(true);
+    setFormData({
+      id: item.id,
+      item_name: item.item_name,
+      is_veg: item.is_veg,
+      price: item.price,
+    });
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: name === "is_veg" ? (value === "1" ? "1" : "0") : value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "https://adminmahaspice.in/ms3/updateMenuItem.php",
+        formData
+      );
+      if (response.data.success) {
+        fetchMenuItems();
+        setIsEditing(false);
+        setFormData({ id: "", item_name: "", is_veg: "0", price: "" });
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this item?")) {
+      try {
+        const response = await axios.post(
+          "https://adminmahaspice.in/ms3/deleteMenuItem.php",
+          { id: id },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            }
+          }
+        );
+          
+        if (response.data.success) {
+          setMenuItems(prevItems => prevItems.filter(item => item.id !== id));
+          setFilteredItems(prevItems => prevItems.filter(item => item.id !== id));
+          alert("Item deleted successfully");
+        } else {
+          alert(response.data.message || "Failed to delete item");
+        }
+      } catch (error) {
+        console.error("Delete error:", error);
+        alert(error.response?.data?.message || "Error deleting item. Please try again.");
+      }
+    }
+  };
+
   if (loading) return <div className="text-center p-10">Loading...</div>;
 
   return (
@@ -276,31 +349,21 @@ const MenuItems = () => {
                         Menu Type: <span className="font-medium">{item.menu_type}</span>
                       </div>
                       
-                      {/* {item.event_names && (
-                        <div className="mb-2">
-                          <div className="text-sm text-gray-600">Events:</div>
-                          <div className="flex flex-wrap mt-1">
-                            {safeSplit(item.event_names).map((event, index) => (
-                              <span key={index} className="text-xs bg-blue-100 text-blue-800 rounded-full px-2 py-1 mr-1 mb-1">
-                                {event}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                      
-                      {item.event_categories && (
-                        <div>
-                          <div className="text-sm text-gray-600">Event Categories:</div>
-                          <div className="flex flex-wrap mt-1">
-                            {safeSplit(item.event_categories).map((category, index) => (
-                              <span key={index} className="text-xs bg-purple-100 text-purple-800 rounded-full px-2 py-1 mr-1 mb-1">
-                                {category}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )} */}
+                      {/* Actions */}
+                      <div className="flex justify-end mt-3 space-x-2">
+                        <button
+                          onClick={() => handleEdit(item)}
+                          className="p-1 text-blue-600 hover:text-blue-800 rounded-full hover:bg-blue-100"
+                        >
+                          <Edit3 className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(item.id)}
+                          className="p-1 text-red-600 hover:text-red-800 rounded-full hover:bg-red-100"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -309,6 +372,72 @@ const MenuItems = () => {
           )}
         </div>
       </div>
+      
+      {/* Edit Modal */}
+      {isEditing && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+            <h2 className="text-xl font-bold mb-4">Edit Menu Item</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Item Name</label>
+                <input
+                  type="text"
+                  name="item_name"
+                  value={formData.item_name}
+                  onChange={handleChange}
+                  placeholder="Item name"
+                  className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                <select
+                  name="is_veg"
+                  value={formData.is_veg}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="1">Veg</option>
+                  <option value="0">Non-veg</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
+                <input
+                  type="number"
+                  name="price"
+                  value={formData.price}
+                  onChange={handleChange}
+                  placeholder="Price"
+                  className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
+                  required
+                  step="0.01"
+                />
+              </div>
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsEditing(false);
+                    setFormData({ id: "", item_name: "", is_veg: "0", price: "" });
+                  }}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

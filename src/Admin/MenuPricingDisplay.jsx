@@ -48,6 +48,8 @@ const MenuPricingDisplay = () => {
         gscdRes.json()
       ]);
 
+      console.log(eventsData);
+
       // Merge event_name into pricing data
       const pricingsWithEventName = (pricingsData.data || []).map(pricing => {
         const matchingEvent = eventsData.find(event => 
